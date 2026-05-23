@@ -197,7 +197,7 @@ router.get("/simulados/recent-results", async (req, res): Promise<void> => {
       completedAt: r.completedAt.toISOString(),
       subjectBreakdown: (r.subjectBreakdown as any[]) ?? [],
       triScore: null,
-      questionResults: (r.subjectBreakdown as any) ?? [],
+      questionResults: [],
     };
   }));
 
@@ -292,9 +292,9 @@ router.post("/simulados/:id/start", async (req, res): Promise<void> => {
         contextText: q.contextText ?? null,
         difficulty: row?.difficulty ?? "medio",
         estimatedTimeSeconds: row?.estimatedTimeSeconds ?? 120,
-        alternatives: q.alternatives.map(a => ({ id: a.letter, text: a.text })),
-        correctAnswer: q.correctAnswer,
-        explanation: q.explanation,
+        alternatives: q.alternatives.map(a => ({ id: (a as any).id ?? a.letter ?? "A", text: a.text })),
+        correctAnswer: q.correctAnswer ?? (q as any).correct_answer ?? "A",
+        explanation: q.explanation ?? "",
       };
     });
   } else {
