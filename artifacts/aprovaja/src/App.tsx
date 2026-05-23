@@ -20,6 +20,8 @@ import Pratica from "@/pages/pratica";
 import EstudeHoje from "@/pages/estude-hoje";
 import ProfessorIA from "@/pages/professor-ia";
 import IaConteudo from "@/pages/ia-conteudo";
+import PoliticaDePrivacidade from "@/pages/politica-de-privacidade";
+import TermosDeServico from "@/pages/termos-de-servico";
 import { Layout } from "@/components/Layout";
 
 const queryClient = new QueryClient();
@@ -38,7 +40,9 @@ function Router() {
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
-      
+      <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
+      <Route path="/termos-de-servico" component={TermosDeServico} />
+
       {/* Auth routes */}
       <Route path="/dashboard"><AuthRoute component={Dashboard} /></Route>
       <Route path="/plano-de-estudos"><AuthRoute component={StudyPlans} /></Route>

@@ -1,0 +1,148 @@
+You are a senior SaaS legal-content writer and full-stack developer responsible for implementing legal pages in the “AprovaJá” educational platform.
+
+====================================================
+OBJECTIVE
+====================================================
+
+Create and integrate TWO essential legal pages into the SaaS:
+
+1. Política de Privacidade (Privacy Policy)
+2. Termos de Serviço (Terms of Service)
+
+Both must be:
+- written in Brazilian Portuguese (pt-BR)
+- professional, clear, and legally structured for a SaaS EdTech platform
+- consistent with modern digital education platforms
+- compliant in tone with data privacy best practices (LGPD-oriented language in Brazil)
+
+====================================================
+IMPLEMENTATION REQUIREMENTS
+====================================================
+
+Add these pages to the system:
+
+- /politica-de-privacidade
+- /termos-de-servico
+
+They must be accessible from:
+- footer (all pages)
+- signup page
+- login page
+- settings page
+- subscription/billing page
+
+====================================================
+DESIGN REQUIREMENTS
+====================================================
+
+The pages must follow the SaaS design system:
+- modern UI
+- dark mode support
+- glassmorphism cards
+- clean typography
+- mobile responsive layout
+- smooth scrolling
+- section-based layout
+
+====================================================
+POLÍTICA DE PRIVACIDADE (CONTENT REQUIREMENTS)
+====================================================
+
+Include clearly structured sections:
+
+1. Introdução
+- Explanation of data collection and purpose
+
+2. Data Collected
+- Name, email, study progress, performance data
+- Flashcards usage
+- Simulated exam results
+- Essay submissions
+- Device and usage data
+
+3. How Data is Used
+- Personalization of study plans
+- AI recommendations
+- Performance tracking
+- Gamification (XP, streaks, rankings)
+
+4. Data Storage & Security
+- Secure storage practices
+- Encryption where applicable
+- Access control
+
+5. Third-Party Services
+- Payment processors (if applicable)
+- AI services integration (e.g., OpenAI API)
+
+6. User Rights
+- Access data
+- Modify data
+- Request deletion
+
+7. Cookies & Tracking
+- Usage analytics
+- Performance tracking
+
+8. Contact Information
+- Support email: cttvertice@gmail.com
+
+====================================================
+TERMOS DE SERVIÇO (CONTENT REQUIREMENTS)
+====================================================
+
+Include clearly structured sections:
+
+1. Acceptance of Terms
+- Use of platform implies agreement
+
+2. Platform Description
+- Educational SaaS for ENEM, school, and exam preparation
+
+3. User Responsibilities
+- Proper use of platform
+- No misuse or fraud
+
+4. Subscription & Payments
+- Paid-only access model
+- Billing terms
+- No free plan usage
+
+5. Intellectual Property
+- Platform content ownership
+- Restrictions on copying
+
+6. Account Termination
+- Right to suspend or delete accounts
+
+7. Limitations of Liability
+- No guaranteed approval or results
+
+8. Modifications
+- Terms can be updated anytime
+
+9. Contact
+- Support email: cttvertice@gmail.com
+
+====================================================
+INTEGRATION REQUIREMENTS
+====================================================
+
+- Add navigation links in footer
+- Ensure SEO-friendly metadata
+- Add proper page titles and descriptions
+- Ensure accessibility compliance
+- Add loading performance optimization
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- The SaaS must have fully functional Privacy Policy and Terms of Service pages
+- Pages must look professional, premium, and legally structured
+- Users must be able to access them easily from anywhere in the platform
+- The platform must be compliant, trustworthy, and production-ready
+
+Generate full frontend pages + routing + UI + structured legal content.

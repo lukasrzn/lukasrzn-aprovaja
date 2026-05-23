@@ -283,7 +283,10 @@ export default function Login() {
       </Card>
       
       <p className="mt-8 text-sm text-muted-foreground relative z-10 text-center max-w-sm">
-        Ao continuar, você concorda com nossos <a href="#" className="underline hover:text-foreground">Termos de Serviço</a> e <a href="#" className="underline hover:text-foreground">Política de Privacidade</a>.
+        Ao continuar, você concorda com nossos{" "}
+        <Link href="/termos-de-servico" className="underline hover:text-foreground">Termos de Serviço</Link>
+        {" "}e{" "}
+        <Link href="/politica-de-privacidade" className="underline hover:text-foreground">Política de Privacidade</Link>.
       </p>
     </div>
   );

@@ -446,13 +446,28 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-white/5 text-center text-muted-foreground text-sm">
+      <footer className="py-12 border-t border-white/5 text-muted-foreground text-sm">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-primary" />
-            <span className="text-lg font-bold text-white">AprovaJá</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-primary" />
+              <span className="text-lg font-bold text-white">AprovaJá</span>
+            </div>
+            <p className="text-center text-muted-foreground/60 text-xs">
+              © {new Date().getFullYear()} AprovaJá Educacional. Todos os direitos reservados.
+            </p>
+            <div className="flex items-center gap-6 text-xs">
+              <Link href="/politica-de-privacidade" className="hover:text-white transition-colors">
+                Política de Privacidade
+              </Link>
+              <Link href="/termos-de-servico" className="hover:text-white transition-colors">
+                Termos de Serviço
+              </Link>
+              <a href="mailto:cttvertice@gmail.com" className="hover:text-white transition-colors">
+                Suporte
+              </a>
+            </div>
           </div>
-          <p>© {new Date().getFullYear()} AprovaJá Educacional. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>
