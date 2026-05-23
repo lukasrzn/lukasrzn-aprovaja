@@ -1,0 +1,122 @@
+
+====================================================
+NEW REQUIRED FEATURE
+====================================================
+
+The platform currently does NOT have a proper “Sair da Conta” (Logout) option.
+
+This is a critical usability and security issue.
+
+Your mission is to implement a complete and secure logout system across the entire platform.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Add a fully functional “Sair da Conta” button and authentication logout flow.
+
+Users must be able to safely exit their accounts from:
+- desktop
+- tablet
+- mobile devices
+
+====================================================
+FUNCTIONAL REQUIREMENTS
+====================================================
+
+Implement:
+- logout button
+- session termination
+- token/session cleanup
+- redirect after logout
+- authentication state reset
+- protection against unauthorized access after logout
+
+====================================================
+WHERE TO ADD
+====================================================
+
+Add the “Sair da Conta” option in:
+- sidebar menu
+- profile dropdown
+- mobile navigation menu
+- account settings page
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+The logout experience must feel:
+- smooth
+- premium
+- modern
+- intuitive
+
+Add:
+- animated dropdown
+- hover effects
+- smooth transitions
+- loading state while logging out
+- confirmation feedback
+
+====================================================
+SECURITY REQUIREMENTS
+====================================================
+
+Ensure:
+- JWT/session tokens are invalidated
+- cookies are cleared
+- local storage/session storage is cleaned
+- protected routes become inaccessible after logout
+- authentication state updates instantly
+
+====================================================
+REDIRECT BEHAVIOR
+====================================================
+
+After logout:
+- redirect user to landing page or login screen
+- show friendly confirmation message:
+  “Você saiu da sua conta com sucesso.”
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+Ensure:
+- responsive logout UI
+- mobile-friendly interactions
+- smooth navigation
+- proper menu closing after logout
+
+====================================================
+VISUAL DESIGN
+====================================================
+
+The logout button should:
+- match the futuristic platform style
+- support dark mode
+- include modern icons
+- use subtle red warning accent
+- include premium hover animations
+
+====================================================
+ERROR HANDLING
+====================================================
+
+If logout fails:
+- show friendly retry message
+- prevent broken auth states
+- avoid infinite loading
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- Users must be able to securely exit their accounts anytime.
+- The authentication system must feel professional and production-ready.
+- The logout experience must be smooth, secure, responsive, and visually polished.
+
+Generate production-ready frontend, backend, authentication logic, and UI implementation.

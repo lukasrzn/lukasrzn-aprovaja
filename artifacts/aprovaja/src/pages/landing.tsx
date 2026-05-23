@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Rocket, 
   Brain, 
@@ -13,10 +15,28 @@ import {
   Users, 
   BookOpen,
   Layers,
-  PenTool
+  PenTool,
+  CheckCircle,
 } from "lucide-react";
 
 export default function Landing() {
+  const { toast } = useToast();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("saiu") === "true") {
+      // Clean the URL without re-triggering navigation
+      window.history.replaceState({}, "", window.location.pathname);
+      setTimeout(() => {
+        toast({
+          title: "Sessão encerrada",
+          description: "Você saiu da sua conta com sucesso.",
+          duration: 4000,
+        });
+      }, 300);
+    }
+  }, [toast]);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
