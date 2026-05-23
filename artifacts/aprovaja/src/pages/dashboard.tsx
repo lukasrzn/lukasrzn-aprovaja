@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Flame, Target, Trophy, Clock, CheckCircle2, TrendingUp, AlertCircle, Zap, Coins } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
 export default function Dashboard() {
   const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
@@ -16,6 +18,19 @@ export default function Dashboard() {
   const { data: missions, isLoading: loadingMissions, refetch: refetchMissions } = useGetTodayMissions();
   const completeMission = useCompleteMission();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const plano = params.get("plano");
+    if (plano === "ativo") {
+      toast({
+        title: "🎉 Bem-vindo ao AprovaJá Pro!",
+        description: "Sua assinatura está ativa. Bons estudos!",
+      });
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
 
   const handleCompleteMission = (id: number) => {
     completeMission.mutate(
