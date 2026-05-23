@@ -53,7 +53,7 @@ export default function Redacao() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Laboratório de Redação</h2>
-          <p className="text-muted-foreground">Correção instantânea pelos critérios do ENEM utilizando IA.</p>
+          <p className="text-muted-foreground">Correção instantânea pelas 5 competências do ENEM 2026 com inteligência artificial.</p>
         </div>
       </div>
 

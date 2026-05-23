@@ -32,7 +32,7 @@ router.get("/rankings/global", async (req, res): Promise<void> => {
     xp: g?.xp ?? 500,
     level: Math.floor(Math.sqrt((g?.xp ?? 500) / 100)) + 1,
     streak: g?.streak ?? 3,
-    goal: "ENEM",
+    goal: "ENEM 2026",
     isCurrentUser: true,
   };
 

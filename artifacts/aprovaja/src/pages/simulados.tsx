@@ -14,8 +14,8 @@ export default function Simulados() {
     <div className="flex-1 space-y-8 p-6 md:p-8 pt-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Simulados</h2>
-          <p className="text-muted-foreground">Treine com provas reais e inéditas. Ganhe resistência e precisão.</p>
+          <h2 className="text-3xl font-bold tracking-tight">Simulados ENEM 2026</h2>
+          <p className="text-muted-foreground">Treine com provas no estilo ENEM 2026. Ganhe resistência, precisão e domine cada área de conhecimento.</p>
         </div>
       </div>
 

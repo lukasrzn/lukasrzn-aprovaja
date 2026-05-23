@@ -84,15 +84,15 @@ export default function Landing() {
             >
               <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-primary mb-6">
                 <Rocket className="w-4 h-4" />
-                <span>O futuro do estudo no Brasil</span>
+                <span>Prepare-se para o ENEM 2026</span>
               </motion.div>
               
               <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-                Sua aprovação não é sorte. É <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-300% animate-gradient">ciência de dados.</span>
+                Sua aprovação no ENEM 2026 não é sorte. É <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-300% animate-gradient">ciência de dados.</span>
               </motion.h1>
               
               <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-                Transforme sua preparação para o ENEM, vestibulares e concursos. Uma plataforma gamificada com inteligência artificial que se adapta ao seu ritmo e maximiza seus resultados.
+                Plano ENEM 2026 Inteligente com IA. Transforme sua preparação com simulados, correção de redação e gamificação que se adapta ao seu ritmo e maximiza seus resultados. Sua aprovação começa agora.
               </motion.p>
               
               <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
@@ -143,8 +143,8 @@ export default function Landing() {
       <section id="recursos" className="py-24 bg-card/30 border-y border-white/5 relative">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">O cockpit da sua aprovação</h2>
-            <p className="text-lg text-muted-foreground">Tudo que você precisa em um único lugar, desenhado para manter seu foco extremo e motivação em alta.</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">O cockpit da sua aprovação no ENEM 2026</h2>
+            <p className="text-lg text-muted-foreground">Tudo que você precisa em um único lugar, desenhado para manter seu foco extremo e motivação em alta até o dia da prova.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
@@ -153,8 +153,8 @@ export default function Landing() {
                 <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-6">
                   <Brain className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Plano com IA</h3>
-                <p className="text-muted-foreground leading-relaxed">Nosso algoritmo analisa seus pontos fracos e fortes para montar o cronograma perfeito de estudos que se adapta diariamente.</p>
+                <h3 className="text-xl font-bold mb-3">Plano ENEM 2026 com IA</h3>
+                <p className="text-muted-foreground leading-relaxed">Nosso algoritmo analisa seus pontos fracos e fortes e monta o cronograma perfeito para você gabaritar o ENEM 2026, adaptando-se diariamente ao seu ritmo.</p>
               </CardContent>
             </Card>
             
@@ -173,8 +173,8 @@ export default function Landing() {
                 <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-6">
                   <Target className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Simulados Precisos</h3>
-                <p className="text-muted-foreground leading-relaxed">Treine com provas reais (ENEM, FUVEST) com correção TRI instantânea e raio-X completo do seu desempenho.</p>
+                <h3 className="text-xl font-bold mb-3">Simulados ENEM 2026</h3>
+                <p className="text-muted-foreground leading-relaxed">Treine com provas no estilo ENEM 2026 e FUVEST com correção TRI instantânea e raio-X completo do seu desempenho por área de conhecimento.</p>
               </CardContent>
             </Card>
 
@@ -183,8 +183,8 @@ export default function Landing() {
                 <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center mb-6">
                   <PenTool className="w-6 h-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Redação com Feedback IA</h3>
-                <p className="text-muted-foreground leading-relaxed">Envie sua redação e receba uma correção detalhada pelas 5 competências do ENEM em segundos, com sugestões práticas.</p>
+                <h3 className="text-xl font-bold mb-3">Redação ENEM 2026 com IA</h3>
+                <p className="text-muted-foreground leading-relaxed">Envie sua redação e receba correção detalhada pelas 5 competências do ENEM 2026 em segundos, com sugestões práticas e previsão de nota.</p>
               </CardContent>
             </Card>
 
@@ -295,7 +295,7 @@ export default function Landing() {
                 <div className="flex gap-1 mb-4 text-yellow-500">
                   ★ ★ ★ ★ ★
                 </div>
-                <p className="text-lg text-foreground/90 italic mb-6">"A correção de redação por IA é surreal. Em 5 segundos eu sabia exatamente onde tava perdendo ponto na competência 3. Minha nota saltou de 680 pra 940 no ENEM."</p>
+                <p className="text-lg text-foreground/90 italic mb-6">"A correção de redação por IA é surreal. Em 5 segundos eu sabia exatamente onde estava perdendo ponto na competência 3. Minha nota saltou de 680 pra 940 no ENEM 2026."</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">AC</div>
                   <div>
@@ -388,7 +388,7 @@ export default function Landing() {
             <Card className="bg-background/50 border-white/5 backdrop-blur-sm flex flex-col">
               <CardContent className="p-8 flex-1 flex flex-col">
                 <h3 className="text-2xl font-bold mb-2 text-accent">Premium</h3>
-                <p className="text-muted-foreground mb-6">Gabarite o ENEM e Vestibulares</p>
+                <p className="text-muted-foreground mb-6">Gabarite o ENEM 2026 e Vestibulares</p>
                 <div className="mb-6">
                   <span className="text-4xl font-bold">R$ 59,90</span>
                   <span className="text-muted-foreground">/mês</span>
@@ -415,9 +415,16 @@ export default function Landing() {
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-semibold text-white mb-6">
+            <Rocket className="w-4 h-4" />
+            <span>ENEM 2026 — Sua aprovação começa agora</span>
+          </div>
           <h2 className="text-4xl md:text-6xl font-bold mb-8 max-w-4xl mx-auto leading-tight">
-            Pronto para transformar sua rotina de estudos?
+            Pronto para transformar sua preparação para o ENEM 2026?
           </h2>
+          <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
+            Mais de 50 mil estudantes já escolheram o AprovaJá para garantir sua aprovação. Comece grátis hoje e descubra o caminho mais inteligente para o ENEM 2026.
+          </p>
           <Link href="/login">
             <Button size="lg" className="h-16 px-10 text-xl rounded-full bg-white text-black hover:bg-gray-200 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
               Comece sua aprovação hoje

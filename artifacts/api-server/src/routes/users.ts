@@ -29,7 +29,7 @@ router.get("/users/me", async (req, res): Promise<void> => {
     [user] = await db.insert(usersTable).values({
       name: "Estudante AprovaJá",
       email: "estudante@aprovaja.com.br",
-      goal: "ENEM",
+      goal: "ENEM 2026",
     }).returning();
     await db.insert(gamificationTable).values({ userId: user.id });
   }

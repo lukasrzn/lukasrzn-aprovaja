@@ -49,7 +49,7 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
     flashcardsReviewedToday,
     currentStreak: g?.streak ?? 0,
     xpThisWeek,
-    nextMilestone: "Completar 5 simulados",
+    nextMilestone: "Completar 5 simulados ENEM 2026",
   }));
 });
 
