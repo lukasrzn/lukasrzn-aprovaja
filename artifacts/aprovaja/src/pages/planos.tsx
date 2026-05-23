@@ -91,7 +91,9 @@ export default function Planos() {
 
       const data = await resp.json() as { url?: string };
       if (data.url) {
-        window.location.href = data.url;
+        // Break out of any iframe (Replit preview pane) so Stripe Checkout
+        // loads at the top-level browsing context — Stripe blocks iframes.
+        (window.top ?? window).location.href = data.url;
       } else {
         throw new Error("Resposta inválida do servidor.");
       }

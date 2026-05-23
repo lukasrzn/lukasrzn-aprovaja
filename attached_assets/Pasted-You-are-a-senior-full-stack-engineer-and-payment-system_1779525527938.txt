@@ -1,0 +1,114 @@
+You are a senior full-stack engineer and payment systems specialist responsible for fixing a critical issue in the “AprovaJá” SaaS platform.
+
+====================================================
+CRITICAL ISSUE (PAYMENT FLOW BUG)
+====================================================
+
+The platform has a serious problem in the checkout flow:
+
+- When users try to proceed to payment (Stripe Checkout), the system is NOT redirecting correctly.
+- The checkout process is failing, freezing, or not opening in some cases.
+- Users are unable to complete subscription payments.
+
+This is a HIGH PRIORITY issue affecting revenue and user conversion.
+
+====================================================
+YOUR MISSION
+====================================================
+
+1. Identify why the checkout redirect is failing.
+2. Fix the Stripe Checkout flow completely.
+3. Ensure stable, fast, and reliable payment redirection.
+4. Guarantee compatibility across desktop and mobile devices.
+
+====================================================
+EXPECTED BEHAVIOR (FIX REQUIRED)
+====================================================
+
+When the user clicks:
+
+- “Assinar agora”
+OR
+- Any subscription CTA button
+
+The system MUST:
+
+1. Create a secure Stripe Checkout session in the backend
+2. Return a valid checkout URL
+3. Redirect the user immediately to Stripe Checkout page
+4. Show loading state during request
+5. Prevent duplicate clicks or multiple sessions
+
+====================================================
+POSSIBLE ROOT CAUSES TO FIX
+====================================================
+
+Check and fix:
+
+- Broken API endpoint for checkout session creation
+- Missing or incorrect Stripe API keys
+- Frontend redirect logic errors
+- Async handling issues
+- CORS or network blocking issues
+- Webhook misconfiguration affecting session validation
+- Incorrect success/cancel URLs
+- Backend not returning session.url properly
+
+====================================================
+BACKEND REQUIREMENTS
+====================================================
+
+- Ensure secure creation of Stripe Checkout Session
+- Validate user authentication before session creation
+- Return correct session URL to frontend
+- Log checkout attempts and failures
+- Handle errors gracefully
+
+====================================================
+FRONTEND REQUIREMENTS
+====================================================
+
+- Fix redirect logic to Stripe Checkout
+- Add loading spinner during payment initialization
+- Disable button during request
+- Handle error states properly
+- Ensure mobile compatibility
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+Improve payment flow UX:
+
+- Fast response when clicking checkout
+- Smooth transition to Stripe page
+- Clear messaging:
+  “Redirecionando para pagamento seguro...”
+
+If failure occurs:
+- Show retry button
+- Show friendly error message:
+  “Não foi possível iniciar o pagamento. Tente novamente.”
+
+====================================================
+SECURITY REQUIREMENTS
+====================================================
+
+- Never expose Stripe secret key on frontend
+- Validate all checkout sessions on backend
+- Ensure session cannot be spoofed
+- Protect endpoint against abuse
+
+====================================================
+FINAL GOAL
+====================================================
+
+After fix:
+
+- Checkout redirect must work 100% of the time
+- Users must be instantly sent to Stripe Checkout
+- No freezing, no broken redirects, no failed sessions
+- Payment flow must be stable, secure, and production-ready
+- Revenue conversion must be fully functional
+
+Generate production-ready fixes for frontend, backend, and Stripe integration flow.

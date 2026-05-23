@@ -48,10 +48,14 @@ router.post("/stripe/checkout", async (req, res) => {
     return;
   }
 
-  const host = `${req.protocol}://${req.get('host')}`;
+  // Use REPLIT_DOMAINS for the correct public HTTPS URL; fall back to host header
+  const publicDomain = process.env.REPLIT_DOMAINS?.split(",")[0];
+  const baseUrl = publicDomain
+    ? `https://${publicDomain}`
+    : `${req.protocol === "http" && req.get("x-forwarded-proto") === "https" ? "https" : req.protocol}://${req.get("host")}`;
   const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
-  const successUrl = `${host}/dashboard?plano=ativo`;
-  const cancelUrl  = `${host}${cancelPath}?plano=cancelado`;
+  const successUrl = `${baseUrl}/dashboard?plano=ativo`;
+  const cancelUrl  = `${baseUrl}${cancelPath}?plano=cancelado`;
 
   const session = await stripeService.createCheckoutSession(
     planSlug as 'pro' | 'premium',

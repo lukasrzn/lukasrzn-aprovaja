@@ -78,7 +78,8 @@ export default function Login() {
 
       const data = await resp.json();
       if (data.url) {
-        window.location.href = data.url;
+        // Break out of any iframe so Stripe Checkout loads at top-level context
+        (window.top ?? window).location.href = data.url;
       } else {
         throw new Error("Resposta inválida do servidor.");
       }

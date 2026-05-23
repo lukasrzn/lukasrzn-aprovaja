@@ -21,6 +21,12 @@ async function startCheckout(planSlug: "pro" | "premium"): Promise<string> {
   return data.url;
 }
 
+function redirectToCheckout(url: string) {
+  // Break out of any iframe (e.g. Replit preview pane) so Stripe Checkout
+  // loads at the top-level browsing context — Stripe blocks iframes.
+  (window.top ?? window).location.href = url;
+}
+
 export default function Landing() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
@@ -40,7 +46,7 @@ export default function Landing() {
     setCheckoutLoading(plan);
     try {
       const url = await startCheckout(plan);
-      window.location.href = url;
+      redirectToCheckout(url);
     } catch (err: unknown) {
       setCheckoutLoading(null);
       toast({
