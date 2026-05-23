@@ -1,65 +1,70 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Rocket, 
-  Brain, 
-  Target, 
-  Trophy, 
-  Zap, 
-  CheckCircle2, 
-  BarChart3, 
-  Users, 
-  BookOpen,
-  Layers,
-  PenTool,
-  CheckCircle,
-} from "lucide-react";
+import { Loader2, Rocket, Brain, Target, Trophy, Zap, CheckCircle2, BarChart3, Users, BookOpen, Layers, PenTool, CheckCircle } from "lucide-react";
+
+async function startCheckout(planSlug: "pro" | "premium"): Promise<string> {
+  const resp = await fetch("/api/stripe/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ planSlug, cancelPath: "/planos" }),
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error((err as any).error ?? `Erro ${resp.status}`);
+  }
+  const data = await resp.json() as { url?: string };
+  if (!data.url) throw new Error("Resposta inválida do servidor.");
+  return data.url;
+}
 
 export default function Landing() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
+  const [checkoutLoading, setCheckoutLoading] = useState<"pro" | "premium" | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("saiu") === "true") {
-      // Clean the URL without re-triggering navigation
       window.history.replaceState({}, "", window.location.pathname);
       setTimeout(() => {
-        toast({
-          title: "Sessão encerrada",
-          description: "Você saiu da sua conta com sucesso.",
-          duration: 4000,
-        });
+        toast({ title: "Sessão encerrada", description: "Você saiu da sua conta com sucesso.", duration: 4000 });
       }, 300);
     }
   }, [toast]);
+
+  const handleDirectCheckout = async (plan: "pro" | "premium") => {
+    setCheckoutLoading(plan);
+    try {
+      const url = await startCheckout(plan);
+      window.location.href = url;
+    } catch (err: unknown) {
+      setCheckoutLoading(null);
+      toast({
+        title: "Erro ao iniciar pagamento",
+        description: err instanceof Error ? err.message : "Tente novamente em instantes.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring" as const, stiffness: 100 }
-    }
+    visible: { y: 0, opacity: 1, transition: { type: "spring" as const, stiffness: 100 } }
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30">
       <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxwYXRoIGQ9Ik0wIDBIMVYxSDBaTTIgMEgzVjFIMlpNMSAxSDJWMkgxWk0zIDFINFYySDNaTTAgMkgxVjNIMFpNMiAySDNWM0gyWk0xIDNIMlY0SDFaTTMgM0g0VjRIM1oiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none z-50 opacity-[0.03]"></div>
-      
+
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-40 border-b border-white/5 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -80,11 +85,13 @@ export default function Landing() {
             <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
               Entrar
             </Link>
-            <Link href="/login">
-              <Button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-6 shadow-[0_0_20px_rgba(var(--primary),0.4)]">
-                Assinar Agora
-              </Button>
-            </Link>
+            <Button
+              onClick={() => handleDirectCheckout("pro")}
+              disabled={checkoutLoading !== null}
+              className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-6 shadow-[0_0_20px_rgba(var(--primary),0.4)]"
+            >
+              {checkoutLoading === "pro" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Assinar Agora"}
+            </Button>
           </div>
         </div>
       </nav>
@@ -116,17 +123,22 @@ export default function Landing() {
               </motion.p>
               
               <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-                <Link href="/login">
-                  <Button size="lg" className="h-14 px-8 text-lg rounded-full bg-primary hover:bg-primary/90 text-white shadow-[0_0_30px_rgba(var(--primary),0.5)]">
-                    Comece sua aprovação hoje
-                  </Button>
-                </Link>
-                <Link href="/dashboard">
-                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-white/10 hover:bg-white/5 gap-2">
-                    <span>Ver demonstração</span>
-                    <span className="text-xs opacity-60 font-normal">ao vivo →</span>
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  onClick={() => navigate("/planos")}
+                  className="h-14 px-8 text-lg rounded-full bg-primary hover:bg-primary/90 text-white shadow-[0_0_30px_rgba(var(--primary),0.5)]"
+                >
+                  Comece sua aprovação hoje
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => navigate("/planos")}
+                  className="h-14 px-8 text-lg rounded-full border-white/10 hover:bg-white/5 gap-2"
+                >
+                  <span>Ver planos e preços</span>
+                  <span className="text-xs opacity-60 font-normal">→</span>
+                </Button>
               </motion.div>
               
               <motion.div variants={itemVariants} className="mt-12 flex items-center gap-8 border-t border-white/5 pt-8">
@@ -299,9 +311,7 @@ export default function Landing() {
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-background/50 border-white/5 backdrop-blur-sm">
               <CardContent className="p-8">
-                <div className="flex gap-1 mb-4 text-yellow-500">
-                  ★ ★ ★ ★ ★
-                </div>
+                <div className="flex gap-1 mb-4 text-yellow-500">★ ★ ★ ★ ★</div>
                 <p className="text-lg text-foreground/90 italic mb-6">"O sistema de gamificação mudou tudo pra mim. Eu estudava 2h arrastado, agora estudo 5h tentando manter minha ofensiva e subir no ranking. Passei em Medicina na federal."</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">LM</div>
@@ -315,9 +325,7 @@ export default function Landing() {
 
             <Card className="bg-background/50 border-white/5 backdrop-blur-sm">
               <CardContent className="p-8">
-                <div className="flex gap-1 mb-4 text-yellow-500">
-                  ★ ★ ★ ★ ★
-                </div>
+                <div className="flex gap-1 mb-4 text-yellow-500">★ ★ ★ ★ ★</div>
                 <p className="text-lg text-foreground/90 italic mb-6">"A correção de redação por IA é surreal. Em 5 segundos eu sabia exatamente onde estava perdendo ponto na competência 3. Minha nota saltou de 680 pra 940 no ENEM 2026."</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">AC</div>
@@ -331,9 +339,7 @@ export default function Landing() {
 
             <Card className="bg-background/50 border-white/5 backdrop-blur-sm">
               <CardContent className="p-8">
-                <div className="flex gap-1 mb-4 text-yellow-500">
-                  ★ ★ ★ ★ ★
-                </div>
+                <div className="flex gap-1 mb-4 text-yellow-500">★ ★ ★ ★ ★</div>
                 <p className="text-lg text-foreground/90 italic mb-6">"Os flashcards e a análise de desempenho mostram o que preciso focar. O AprovaJá foi o melhor investimento que fiz no meu ano de vestibular. Vale cada centavo."</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">RF</div>
@@ -380,11 +386,15 @@ export default function Landing() {
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>2 Correções de Redação/mês</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>Gamificação completa (XP, Ranking)</span></div>
                 </div>
-                <Link href="/login" className="w-full">
-                  <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary),0.4)]">
-                    Assinar Pro
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => handleDirectCheckout("pro")}
+                  disabled={checkoutLoading !== null}
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary),0.4)]"
+                >
+                  {checkoutLoading === "pro" ? (
+                    <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Abrindo checkout…</span>
+                  ) : "Assinar Pro"}
+                </Button>
               </CardContent>
             </Card>
 
@@ -408,11 +418,16 @@ export default function Landing() {
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Métricas avançadas no Ranking</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Suporte prioritário 24h</span></div>
                 </div>
-                <Link href="/login" className="w-full">
-                  <Button variant="outline" className="w-full h-12 border-accent text-accent hover:bg-accent hover:text-white transition-colors font-bold">
-                    Assinar Premium
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => handleDirectCheckout("premium")}
+                  disabled={checkoutLoading !== null}
+                  className="w-full h-12 border-accent text-accent hover:bg-accent hover:text-white transition-colors font-bold"
+                >
+                  {checkoutLoading === "premium" ? (
+                    <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Abrindo checkout…</span>
+                  ) : "Assinar Premium"}
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -437,11 +452,13 @@ export default function Landing() {
           <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
             Mais de 50 mil estudantes já escolheram o AprovaJá para garantir sua aprovação. Assine hoje e descubra o caminho mais inteligente e comprovado para o ENEM 2026.
           </p>
-          <Link href="/login">
-            <Button size="lg" className="h-16 px-10 text-xl rounded-full bg-white text-black hover:bg-gray-200 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-              Comece sua aprovação hoje
-            </Button>
-          </Link>
+          <Button
+            size="lg"
+            onClick={() => navigate("/planos")}
+            className="h-16 px-10 text-xl rounded-full bg-white text-black hover:bg-gray-200 shadow-[0_0_40px_rgba(255,255,255,0.3)]"
+          >
+            Comece sua aprovação hoje
+          </Button>
         </div>
       </section>
 

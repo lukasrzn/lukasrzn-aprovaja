@@ -13,10 +13,16 @@ import studyTodayRouter from "./study-today";
 import openaiRouter from "./openai/index";
 import aiGenerateRouter from "./ai-generate.js";
 import stripeRouter from "./stripe";
+import { requireSubscription } from "../middleware/requireSubscription";
 
 const router: IRouter = Router();
 
+// Public routes — no subscription required
 router.use(healthRouter);
+router.use(stripeRouter);
+
+// Premium routes — require an active Stripe subscription
+router.use(requireSubscription);
 router.use(usersRouter);
 router.use(dashboardRouter);
 router.use(studyPlansRouter);
@@ -29,6 +35,5 @@ router.use(questionsRouter);
 router.use(studyTodayRouter);
 router.use(openaiRouter);
 router.use(aiGenerateRouter);
-router.use(stripeRouter);
 
 export default router;

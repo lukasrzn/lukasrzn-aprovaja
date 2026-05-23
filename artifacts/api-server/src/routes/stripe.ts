@@ -49,8 +49,9 @@ router.post("/stripe/checkout", async (req, res) => {
   }
 
   const host = `${req.protocol}://${req.get('host')}`;
+  const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
   const successUrl = `${host}/dashboard?plano=ativo`;
-  const cancelUrl  = `${host}/login?plano=cancelado`;
+  const cancelUrl  = `${host}${cancelPath}?plano=cancelado`;
 
   const session = await stripeService.createCheckoutSession(
     planSlug as 'pro' | 'premium',
