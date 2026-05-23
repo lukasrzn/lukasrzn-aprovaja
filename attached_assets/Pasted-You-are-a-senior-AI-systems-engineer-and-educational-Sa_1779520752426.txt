@@ -1,0 +1,171 @@
+You are a senior AI systems engineer and educational SaaS architect responsible for improving the “Simulado de Redação” system inside the “AprovaJá” platform.
+
+====================================================
+CRITICAL IMPROVEMENT REQUIRED
+====================================================
+
+The current “Simulado de Redação” system is too repetitive and has too few questions/topics.
+
+Students are receiving repeated themes and limited practice experiences.
+
+This MUST be fixed immediately.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Create a DYNAMIC and INTELLIGENT essay simulation system where:
+
+- Every time the student restarts or redoes a simulation, NEW questions and themes are generated automatically.
+- The platform NEVER feels repetitive.
+- Students always receive fresh writing challenges.
+
+====================================================
+NEW GENERATION SYSTEM
+====================================================
+
+Implement an AI-powered dynamic generation engine capable of:
+
+- generating NEW redação themes every time
+- rotating support texts
+- changing contextual scenarios
+- varying writing difficulty
+- generating interdisciplinary topics
+- creating fresh argumentation challenges
+- randomizing structures intelligently
+
+====================================================
+ADD MORE QUESTIONS / CONTENT
+====================================================
+
+Expand the amount of content inside each simulation by adding:
+
+- more contextual support texts
+- interpretation questions before writing
+- argumentation challenges
+- thesis-building exercises
+- repertório sociocultural suggestions
+- intervention proposal mini tasks
+- grammar and cohesion exercises
+- vocabulary enhancement exercises
+
+====================================================
+THEME ROTATION
+====================================================
+
+The system must dynamically generate and rotate themes involving:
+
+- tecnologia
+- educação
+- saúde mental
+- inteligência artificial
+- meio ambiente
+- democracia
+- redes sociais
+- fake news
+- cidadania
+- desigualdade social
+- violência urbana
+- juventude
+- mercado de trabalho
+- cultura digital
+- inclusão social
+- saúde pública
+- sustentabilidade
+- ciência
+- segurança pública
+
+====================================================
+INTELLIGENT RANDOMIZATION
+====================================================
+
+The AI must:
+- avoid repeating recent themes
+- prioritize unseen themes
+- adapt difficulty based on student level
+- generate unique combinations of support texts and proposals
+- simulate realistic ENEM experiences
+
+====================================================
+SIMULATION FLOW
+====================================================
+
+Each simulation should include:
+
+1. Theme introduction
+2. Contextual support texts
+3. Interpretation mini-questions
+4. Argument structure exercises
+5. Writing proposal
+6. AI writing assistance (optional)
+7. Final redação submission
+8. Automatic correction and feedback
+
+====================================================
+AI FEATURES
+====================================================
+
+Add:
+- AI-generated writing hints
+- repertório suggestions
+- thesis suggestions
+- vocabulary recommendations
+- coherence analysis
+- argument improvement suggestions
+
+====================================================
+VISUAL EXPERIENCE
+====================================================
+
+The simulation area must feel:
+- immersive
+- modern
+- premium
+- motivational
+
+Add:
+- futuristic writing dashboard
+- animated transitions
+- progress indicators
+- AI typing effects
+- focus mode
+- smooth animations
+- premium dark mode
+- glassmorphism UI
+
+====================================================
+GAMIFICATION
+====================================================
+
+Reward students with:
+- XP
+- medals
+- writing streaks
+- ranking points
+- achievements
+- progression levels
+
+====================================================
+PERFORMANCE & DATABASE
+====================================================
+
+Ensure:
+- simulations are scalable
+- themes are stored intelligently
+- repetition prevention logic exists
+- AI generation is optimized
+- essay history is preserved
+- recommendations adapt to performance
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- Every new simulation attempt must feel fresh and unique.
+- Students must NEVER feel the system is repetitive.
+- The amount of questions and educational interactions inside the simulation must be significantly larger.
+- The feature must feel like a premium AI-powered writing laboratory for ENEM preparation.
+
+Generate production-ready logic, architecture, AI integration, and scalable implementation.

@@ -666,6 +666,36 @@ export const AiGenerateSimuladoBody = zod.object({
 
 
 /**
+ * @summary Generate a dynamic AI essay simulation with theme, support texts, and exercises
+ */
+export const AiGenerateRedacaoSimuladoBody = zod.object({
+  "difficulty": zod.string().optional(),
+  "avoidThemes": zod.array(zod.string()).optional()
+})
+
+export const AiGenerateRedacaoSimuladoResponse = zod.object({
+  "theme": zod.string(),
+  "themeContext": zod.string(),
+  "supportTexts": zod.array(zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "content": zod.string(),
+  "source": zod.string()
+})),
+  "interpretationQuestions": zod.array(zod.object({
+  "id": zod.number(),
+  "question": zod.string(),
+  "options": zod.array(zod.string()),
+  "correct": zod.number()
+})),
+  "writingProposal": zod.string(),
+  "thesisSuggestions": zod.array(zod.string()),
+  "repertorio": zod.array(zod.string()),
+  "argumentStrategies": zod.array(zod.string())
+})
+
+
+/**
  * @summary List all conversations
  */
 export const ListOpenaiConversationsResponseItem = zod.object({

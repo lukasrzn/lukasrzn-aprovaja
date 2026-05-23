@@ -289,4 +289,123 @@ PT-BR acadêmico. Estilo autêntico ENEM.`;
   });
 });
 
+// ─── Redação simulado generation ──────────────────────────────────────────────
+
+const RECENT_THEMES: string[] = [];
+const MAX_RECENT = 12;
+
+const ALL_THEMES = [
+  "tecnologia e privacidade digital",
+  "saúde mental dos jovens brasileiros",
+  "inteligência artificial e mercado de trabalho",
+  "desmatamento e crise climática no Brasil",
+  "democracia e desinformação nas redes sociais",
+  "desigualdade social e acesso à educação",
+  "fake news e cidadania digital",
+  "violência urbana e segurança pública",
+  "inclusão social de pessoas com deficiência",
+  "saúde pública e acesso a medicamentos",
+  "sustentabilidade e consumo consciente",
+  "cultura digital e identidade juvenil",
+  "reforma tributária e justiça social",
+  "crise hídrica e saneamento básico",
+  "racismo estrutural no Brasil",
+  "empreendedorismo feminino e equidade de gênero",
+  "educação financeira e endividamento familiar",
+  "trabalho remoto e qualidade de vida",
+  "biodiversidade e conhecimento tradicional",
+];
+
+router.post("/ai/generate/redacao-simulado", async (req, res): Promise<void> => {
+  const { difficulty = "medio", avoidThemes = [] } = (req.body ?? {}) as {
+    difficulty?: string;
+    avoidThemes?: string[];
+  };
+
+  const allAvoid = [...RECENT_THEMES, ...avoidThemes];
+  const available = ALL_THEMES.filter(t => !allAvoid.includes(t));
+  const themeHints = (available.length > 0 ? available : ALL_THEMES).slice(0, 8);
+  const diffLabel = difficulty === "facil" ? "básico" : difficulty === "dificil" ? "avançado" : "intermediário";
+
+  const prompt = `Você é um especialista em ENEM e redação dissertativa-argumentativa para estudantes brasileiros.
+
+Gere um simulado de redação ÚNICO e CRIATIVO de nível ${diffLabel} sobre um dos seguintes campos temáticos (escolha O MAIS INTERESSANTE e atual):
+${themeHints.map((t, i) => `${i + 1}. ${t}`).join("\n")}
+
+Responda APENAS com JSON válido, sem nenhum texto fora do JSON:
+{
+  "theme": "título exato e instigante do tema (máx 90 chars, estilo ENEM)",
+  "themeContext": "parágrafo contextualizando o tema (3-4 frases, dados reais ou simulados, estatísticas, atualidade)",
+  "supportTexts": [
+    {
+      "id": 1,
+      "title": "título do texto de apoio 1",
+      "content": "conteúdo do texto de apoio (3-5 frases, perspectiva diferente do texto 2, pode ser trecho jornalístico, científico ou literário)",
+      "source": "Fonte realista: Jornal, Revista, Relatório, 2024"
+    },
+    {
+      "id": 2,
+      "title": "título do texto de apoio 2",
+      "content": "conteúdo do texto de apoio 2 (perspectiva complementar ou contrastante, 3-5 frases)",
+      "source": "Fonte realista diferente"
+    }
+  ],
+  "interpretationQuestions": [
+    {
+      "id": 1,
+      "question": "pergunta de interpretação sobre os textos de apoio",
+      "options": ["opção A", "opção B", "opção C", "opção D"],
+      "correct": 0
+    },
+    {
+      "id": 2,
+      "question": "segunda pergunta de compreensão e análise crítica",
+      "options": ["opção A", "opção B", "opção C", "opção D"],
+      "correct": 1
+    }
+  ],
+  "writingProposal": "proposta de intervenção detalhada: o que o estudante deve escrever, qual o problema a ser discutido, que tipo de solução defender (3-4 frases, estilo ENEM oficial)",
+  "thesisSuggestions": [
+    "tese 1: argumento central que pode sustentar a redação (1-2 frases)",
+    "tese 2: argumento alternativo para outra perspectiva (1-2 frases)"
+  ],
+  "repertorio": [
+    "referência cultural/filosófica/histórica relevante (ex: pensador, obra, evento histórico)",
+    "dado estatístico ou fato científico aplicável ao tema",
+    "exemplo de política pública, lei ou movimento social relevante"
+  ],
+  "argumentStrategies": [
+    "estratégia de argumentação 1: como estruturar o 1º argumento com evidência e exemplificação",
+    "estratégia de argumentação 2: como conectar o 2º argumento com causa-consequência",
+    "sugestão para a proposta de intervenção: agente + ação + finalidade"
+  ]
+}`;
+
+  let simulado: Record<string, unknown>;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: MODEL,
+      response_format: { type: "json_object" },
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.9,
+    });
+    simulado = JSON.parse(completion.choices[0].message.content ?? "{}");
+  } catch {
+    res.status(502).json({ error: "Falha ao gerar simulado. Tente novamente." });
+    return;
+  }
+
+  if (typeof simulado.theme !== "string") {
+    res.status(502).json({ error: "Resposta inválida da IA. Tente novamente." });
+    return;
+  }
+
+  // Track recent themes
+  RECENT_THEMES.push(simulado.theme as string);
+  if (RECENT_THEMES.length > MAX_RECENT) RECENT_THEMES.shift();
+
+  res.json(simulado);
+});
+
 export default router;

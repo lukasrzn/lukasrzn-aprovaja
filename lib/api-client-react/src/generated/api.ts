@@ -24,6 +24,7 @@ import type {
   AiGenerateFlashcardsResponse,
   AiGenerateQuestionsBody,
   AiGenerateQuestionsResponse,
+  AiGenerateRedacaoSimuladoBody,
   AiGenerateSimuladoBody,
   AiGenerateSimuladoResponse,
   DashboardSummary,
@@ -54,6 +55,7 @@ import type {
   RankingEntry,
   Redacao,
   RedacaoInput,
+  RedacaoSimuladoData,
   Simulado,
   SimuladoAnswers,
   SimuladoDetail,
@@ -2953,6 +2955,77 @@ export const useAiGenerateSimulado = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getAiGenerateSimuladoMutationOptions(options));
+    }
+
+export const getAiGenerateRedacaoSimuladoUrl = () => {
+
+
+
+
+  return `/api/ai/generate/redacao-simulado`
+}
+
+/**
+ * @summary Generate a dynamic AI essay simulation with theme, support texts, and exercises
+ */
+export const aiGenerateRedacaoSimulado = async (aiGenerateRedacaoSimuladoBody?: AiGenerateRedacaoSimuladoBody, options?: RequestInit): Promise<RedacaoSimuladoData> => {
+
+  return customFetch<RedacaoSimuladoData>(getAiGenerateRedacaoSimuladoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiGenerateRedacaoSimuladoBody,)
+  }
+);}
+
+
+
+
+export const getAiGenerateRedacaoSimuladoMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>, TError,{data?: BodyType<AiGenerateRedacaoSimuladoBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>, TError,{data?: BodyType<AiGenerateRedacaoSimuladoBody>}, TContext> => {
+
+const mutationKey = ['aiGenerateRedacaoSimulado'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>, {data?: BodyType<AiGenerateRedacaoSimuladoBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  aiGenerateRedacaoSimulado(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AiGenerateRedacaoSimuladoMutationResult = NonNullable<Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>>
+    export type AiGenerateRedacaoSimuladoMutationBody = BodyType<AiGenerateRedacaoSimuladoBody> | undefined
+    export type AiGenerateRedacaoSimuladoMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate a dynamic AI essay simulation with theme, support texts, and exercises
+ */
+export const useAiGenerateRedacaoSimulado = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>, TError,{data?: BodyType<AiGenerateRedacaoSimuladoBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof aiGenerateRedacaoSimulado>>,
+        TError,
+        {data?: BodyType<AiGenerateRedacaoSimuladoBody>},
+        TContext
+      > => {
+      return useMutation(getAiGenerateRedacaoSimuladoMutationOptions(options));
     }
 
 export const getListOpenaiConversationsUrl = () => {

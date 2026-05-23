@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { incrementMissionProgress } from "./mission-progress.js";
 import { eq } from "drizzle-orm";
 import { db, redacoesTable, gamificationTable } from "@workspace/db";
+import { openai } from "@workspace/integrations-openai-ai-server";
 import {
   SubmitRedacaoBody,
   GetRedacaoParams,
@@ -12,52 +13,92 @@ import {
 const router: IRouter = Router();
 const DEFAULT_USER_ID = 1;
 
-function generateAiFeedback(content: string) {
-  const wordCount = content.split(/\s+/).length;
-  const baseScore = Math.min(1000, Math.max(300, wordCount * 2));
+async function generateAiFeedback(theme: string, content: string) {
+  const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
 
-  const competencias = [
-    {
-      number: 1,
-      description: "Domínio da escrita formal da língua portuguesa",
-      score: Math.min(200, Math.floor(baseScore * 0.22)),
-      maxScore: 200,
-      feedback: "Boa utilização das normas da língua portuguesa. Atenção à concordância verbal em alguns trechos.",
-    },
-    {
-      number: 2,
-      description: "Compreensão da proposta e desenvolvimento do tema",
-      score: Math.min(200, Math.floor(baseScore * 0.20)),
-      maxScore: 200,
-      feedback: "Tema compreendido com clareza. Desenvolva mais os argumentos centrais para maior profundidade.",
-    },
-    {
-      number: 3,
-      description: "Seleção, relação e organização das informações",
-      score: Math.min(200, Math.floor(baseScore * 0.21)),
-      maxScore: 200,
-      feedback: "Estrutura argumentativa presente. Fortaleça as evidências com dados concretos.",
-    },
-    {
-      number: 4,
-      description: "Conhecimento dos mecanismos linguísticos",
-      score: Math.min(200, Math.floor(baseScore * 0.19)),
-      maxScore: 200,
-      feedback: "Boa coesão textual. Variar os conectivos pode enriquecer a progressão do texto.",
-    },
-    {
-      number: 5,
-      description: "Elaboração de proposta de intervenção social",
-      score: Math.min(200, Math.floor(baseScore * 0.18)),
-      maxScore: 200,
-      feedback: "Proposta de intervenção presente. Detalhe melhor os agentes, ações e finalidades.",
-    },
-  ];
+  const prompt = `Você é um corretor especialista em redação do ENEM. Corrija a redação abaixo com critério técnico e feedback didático.
 
-  const totalScore = competencias.reduce((acc, c) => acc + c.score, 0);
-  const feedback = `Sua redação apresenta estrutura sólida com ${wordCount} palavras. ${totalScore >= 700 ? "Excelente trabalho! Continue desenvolvendo sua escrita." : totalScore >= 500 ? "Bom desenvolvimento. Há espaço para aprimorar os argumentos." : "Continue praticando! A consistência trará melhores resultados."}`;
+TEMA: ${theme}
 
-  return { score: totalScore, competencias, feedback };
+REDAÇÃO:
+${content}
+
+Avalie pelas 5 competências do ENEM (0 a 200 cada). Considere que o texto tem ${wordCount} palavras.
+
+Responda SOMENTE com JSON válido:
+{
+  "competencias": [
+    {
+      "number": 1,
+      "description": "Domínio da escrita formal da língua portuguesa",
+      "score": <0-200, múltiplo de 40>,
+      "maxScore": 200,
+      "feedback": "feedback específico e didático sobre gramática, ortografia e norma culta (2-3 frases)"
+    },
+    {
+      "number": 2,
+      "description": "Compreensão da proposta de redação e aplicação de conceitos das áreas de conhecimento",
+      "score": <0-200>,
+      "maxScore": 200,
+      "feedback": "feedback sobre aderência ao tema e repertório sociocultural (2-3 frases)"
+    },
+    {
+      "number": 3,
+      "description": "Seleção, relação, organização e interpretação de informações",
+      "score": <0-200>,
+      "maxScore": 200,
+      "feedback": "feedback sobre argumentação, estrutura e organização das ideias (2-3 frases)"
+    },
+    {
+      "number": 4,
+      "description": "Conhecimento dos mecanismos linguísticos necessários para a coesão textual",
+      "score": <0-200>,
+      "maxScore": 200,
+      "feedback": "feedback sobre conectivos, coesão referencial e progressão temática (2-3 frases)"
+    },
+    {
+      "number": 5,
+      "description": "Elaboração de proposta de intervenção social, respeitando os direitos humanos",
+      "score": <0-200>,
+      "maxScore": 200,
+      "feedback": "feedback sobre a proposta de intervenção: agente, ação, modo, finalidade (2-3 frases)"
+    }
+  ],
+  "overallFeedback": "parecer geral construtivo e motivador sobre a redação (3-4 frases, mencione pontos fortes e áreas de melhoria)"
+}`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      response_format: { type: "json_object" },
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.3,
+    });
+
+    const parsed = JSON.parse(completion.choices[0].message.content ?? "{}");
+    const competencias = Array.isArray(parsed.competencias) ? parsed.competencias : [];
+    const totalScore = competencias.reduce((acc: number, c: { score: number }) => acc + (c.score ?? 0), 0);
+
+    return {
+      score: Math.min(1000, Math.max(0, totalScore)),
+      competencias,
+      feedback: parsed.overallFeedback ?? "Redação analisada pela IA.",
+    };
+  } catch {
+    // Fallback to heuristic if AI fails
+    const baseScore = Math.min(1000, Math.max(300, wordCount * 2));
+    return {
+      score: baseScore,
+      competencias: [
+        { number: 1, description: "Domínio da escrita formal da língua portuguesa", score: Math.min(200, Math.floor(baseScore * 0.22)), maxScore: 200, feedback: "Boa utilização das normas da língua portuguesa." },
+        { number: 2, description: "Compreensão da proposta de redação", score: Math.min(200, Math.floor(baseScore * 0.20)), maxScore: 200, feedback: "Tema compreendido com clareza." },
+        { number: 3, description: "Seleção e organização das informações", score: Math.min(200, Math.floor(baseScore * 0.21)), maxScore: 200, feedback: "Estrutura argumentativa presente." },
+        { number: 4, description: "Conhecimento dos mecanismos linguísticos", score: Math.min(200, Math.floor(baseScore * 0.19)), maxScore: 200, feedback: "Boa coesão textual." },
+        { number: 5, description: "Elaboração de proposta de intervenção", score: Math.min(200, Math.floor(baseScore * 0.18)), maxScore: 200, feedback: "Proposta de intervenção presente." },
+      ],
+      feedback: `Sua redação com ${wordCount} palavras foi analisada. Continue praticando para melhorar seus resultados!`,
+    };
+  }
 }
 
 router.get("/redacoes", async (req, res): Promise<void> => {
@@ -84,7 +125,7 @@ router.post("/redacoes", async (req, res): Promise<void> => {
     return;
   }
 
-  const { score, competencias, feedback } = generateAiFeedback(parsed.data.content);
+  const { score, competencias, feedback } = await generateAiFeedback(parsed.data.theme, parsed.data.content);
   const xpEarned = Math.floor(score / 20);
 
   const [redacao] = await db.insert(redacoesTable).values({

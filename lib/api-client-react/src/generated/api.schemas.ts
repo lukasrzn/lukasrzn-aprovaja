@@ -449,6 +449,31 @@ export interface AiGenerateQuestionsResponse {
   questionIds: number[];
 }
 
+export type RedacaoSimuladoDataSupportTextsItem = {
+  id: number;
+  title: string;
+  content: string;
+  source: string;
+};
+
+export type RedacaoSimuladoDataInterpretationQuestionsItem = {
+  id: number;
+  question: string;
+  options: string[];
+  correct: number;
+};
+
+export interface RedacaoSimuladoData {
+  theme: string;
+  themeContext: string;
+  supportTexts: RedacaoSimuladoDataSupportTextsItem[];
+  interpretationQuestions: RedacaoSimuladoDataInterpretationQuestionsItem[];
+  writingProposal: string;
+  thesisSuggestions: string[];
+  repertorio: string[];
+  argumentStrategies: string[];
+}
+
 export interface AiGenerateSimuladoResponse {
   simuladoId: number;
   title: string;
@@ -509,6 +534,11 @@ export type AiGenerateSimuladoBody = {
   subjects: string[];
   difficulty?: string;
   questionsPerSubject?: number;
+};
+
+export type AiGenerateRedacaoSimuladoBody = {
+  difficulty?: string;
+  avoidThemes?: string[];
 };
 
 export type GetStudyTodayRecommendationParams = {
