@@ -1,0 +1,107 @@
+You are a senior full-stack engineer and DevOps assistant responsible for setting up the Node.js backend environment for the “AprovaJá” SaaS project in Replit.
+
+====================================================
+TASK: TERMINAL + ENVIRONMENT SETUP
+====================================================
+
+The user is having difficulty finding and using the terminal (Shell) and needs the full backend environment initialized automatically.
+
+You must:
+
+1. Ensure Node.js environment is correctly configured in Replit
+2. Install all required dependencies
+3. Confirm the project is ready to run a backend server
+4. Set up environment structure for a SaaS authentication system
+
+====================================================
+STEP 1 — ENSURE TERMINAL ACCESS
+====================================================
+
+If using Replit:
+
+- Open the “Shell” tab automatically (or ensure it is visible)
+- If Shell is not visible, enable it in the Replit interface
+- Confirm terminal is ready to execute commands
+
+====================================================
+STEP 2 — INSTALL DEPENDENCIES
+====================================================
+
+Run the following command in the terminal:
+
+npm install express mongoose bcryptjs crypto dotenv @sendgrid/mail cors
+
+====================================================
+STEP 3 — VERIFY NODE ENVIRONMENT
+====================================================
+
+Run:
+
+node -v
+
+Confirm Node.js is installed and active.
+
+====================================================
+STEP 4 — CREATE BASIC PROJECT STRUCTURE
+====================================================
+
+Automatically create this structure:
+
+/src
+  server.js
+  routes/
+    auth.js
+  controllers/
+    authController.js
+  models/
+    User.js
+/config
+  db.js
+
+====================================================
+STEP 5 — INITIAL SERVER SETUP
+====================================================
+
+Create a working Express server with:
+
+- Express app initialization
+- JSON middleware
+- CORS enabled
+- Basic route test endpoint "/"
+- Server running on process.env.PORT or 3000
+
+====================================================
+STEP 6 — ENVIRONMENT VARIABLES
+====================================================
+
+Create a .env file with placeholders:
+
+SENDGRID_API_KEY=YOUR_KEY_HERE
+FROM_EMAIL=cttvertice@gmail.com
+MONGO_URI=YOUR_MONGO_CONNECTION_STRING
+JWT_SECRET=YOUR_SECRET_KEY
+
+====================================================
+STEP 7 — CONFIRMATION
+====================================================
+
+After setup is complete, confirm:
+
+- Node environment is working
+- Dependencies installed successfully
+- Server runs without errors
+- Project is ready for authentication system implementation
+
+====================================================
+FINAL GOAL
+====================================================
+
+The project must be fully initialized in Replit with:
+
+✔ Working Node.js backend
+✔ Installed dependencies
+✔ Proper folder structure
+✔ Ready for authentication and password recovery system
+✔ No manual terminal steps required from the user
+
+If any step fails, automatically fix and retry setup until successful.
