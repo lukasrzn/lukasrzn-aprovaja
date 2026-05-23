@@ -10,6 +10,7 @@ import StudyPlans from "@/pages/study-plans";
 import Simulados from "@/pages/simulados";
 import Redacao from "@/pages/redacao";
 import Flashcards from "@/pages/flashcards";
+import FlashcardReview from "@/pages/flashcard-review";
 import Ranking from "@/pages/ranking";
 import Perfil from "@/pages/perfil";
 import Missoes from "@/pages/missoes";
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/simulados"><AuthRoute component={Simulados} /></Route>
       <Route path="/redacao"><AuthRoute component={Redacao} /></Route>
       <Route path="/flashcards"><AuthRoute component={Flashcards} /></Route>
+      <Route path="/flashcards/revisar/:deckId"><AuthRoute component={FlashcardReview} /></Route>
       <Route path="/ranking"><AuthRoute component={Ranking} /></Route>
       <Route path="/perfil"><AuthRoute component={Perfil} /></Route>
       <Route path="/missoes"><AuthRoute component={Missoes} /></Route>

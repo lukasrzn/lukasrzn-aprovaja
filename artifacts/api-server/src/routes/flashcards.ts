@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
-import { eq, and, count } from "drizzle-orm";
-import { db, flashcardDecksTable, flashcardsTable } from "@workspace/db";
+import { eq, and, gte } from "drizzle-orm";
+import { db, flashcardDecksTable, flashcardsTable, gamificationTable } from "@workspace/db";
 import {
   CreateFlashcardDeckBody,
   GetFlashcardCardsParams,
@@ -155,6 +155,14 @@ router.post("/flashcards/:deckId/cards/:cardId/review", async (req, res): Promis
     nextReviewAt,
     mastered,
   }).where(eq(flashcardsTable.id, params.data.cardId)).returning();
+
+  const xpGained = q >= 5 ? 15 : q >= 4 ? 10 : q >= 2 ? 5 : 2;
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  if (g) {
+    await db.update(gamificationTable).set({
+      xp: g.xp + xpGained,
+    }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  }
 
   res.json(ReviewFlashcardResponse.parse({
     id: updated.id,

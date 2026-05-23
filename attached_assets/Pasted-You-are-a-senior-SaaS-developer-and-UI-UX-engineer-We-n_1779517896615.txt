@@ -1,0 +1,97 @@
+You are a senior SaaS developer and UI/UX engineer.  
+
+We need to fix a critical issue in the “AprovaJá” educational platform:
+
+====================================================
+ISSUE
+====================================================
+
+The Flashcards section currently has INACTIVE cards.  
+Students cannot interact with the cards.  
+This is breaking the study flow and reducing engagement.
+
+Your task is to:
+
+1. Identify why the flashcards are inactive.
+2. Fix all frontend and backend issues to make flashcards fully interactive.
+3. Ensure cards can:
+   - Flip
+   - Show question/answer
+   - Track progress (seen, correct, incorrect)
+   - Save user performance in the database
+   - Display difficulty level and topic
+
+4. Ensure the flashcards system is connected to:
+   - AI-generated content
+   - Student progress
+   - Study schedules
+   - Gamification rewards (XP, streaks, medals)
+
+====================================================
+IF ADDITIONAL INFORMATION IS MISSING
+====================================================
+
+Only if there is missing data in the flashcards, automatically populate it with realistic content based on the study levels of the platform:
+
+Study Levels:
+- Ensino Fundamental: Portuguese, Math, Science, History, Geography
+- Ensino Médio: Advanced Portuguese, Mathematics, Physics, Chemistry, Biology, History, Geography
+- ENEM: Interdisciplinary questions, contextual texts, TRIs, essay practice
+- Concurso Público: Portuguese, Raciocínio Lógico, Direito Constitucional, Administração Pública, Atualidades, Informática
+- Advanced topics for revision: Grammar, Functions, Trigonometry, Chemistry Organic/Physical, Genetics, Ecology, Philosophy, Sociology, English comprehension
+
+Content for each flashcard should include:
+- Question / statement
+- Answer
+- Difficulty
+- Topic / subject
+- Estimated response time
+- Tags
+- AI-generated hint (optional)
+
+====================================================
+UI / UX REQUIREMENTS
+====================================================
+
+- Flashcards must be fully interactive on all devices (desktop and mobile)
+- Smooth animations for flipping
+- Modern glassmorphism design
+- Neon highlights for correct/incorrect answers
+- Hover effects, shadows, and glow on active cards
+- Progress tracking and percentage of completion
+- Responsive and mobile-first
+- Integrate streaks, XP, and rewards in card interactions
+
+====================================================
+BACKEND / DATABASE
+====================================================
+
+- Ensure flashcard progress is stored per user
+- Track correct/incorrect answers
+- Link cards to AI question generator
+- Include historical performance data
+- Support adaptive difficulty for future sessions
+
+====================================================
+FINAL GOAL
+====================================================
+
+After this fix, the flashcards section must be:
+
+- Fully functional and interactive
+- AI-integrated for automatic updates
+- Gamified
+- Motivating for students
+- Mobile and desktop responsive
+- Ready for production without bugs
+
+====================================================
+IMPORTANT NOTES
+====================================================
+
+- Only add additional study content if it is necessary for cards to be functional.  
+- If cards already have data, do NOT overwrite.  
+- Maintain all current visual design standards of “AprovaJá”.
+- Make sure the user experience is smooth and addictive.
+
+Generate production-ready code and implementation plan.

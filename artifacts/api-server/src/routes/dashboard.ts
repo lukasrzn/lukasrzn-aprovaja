@@ -32,7 +32,15 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
     .from(flashcardDecksTable)
     .where(eq(flashcardDecksTable.userId, DEFAULT_USER_ID));
 
-  const flashcardsReviewedToday = 0;
+  const deckIdList = deckIds.map(d => d.id);
+  let flashcardsReviewedToday = 0;
+  if (deckIdList.length > 0) {
+    const reviewed = await db.select().from(flashcardsTable)
+      .where(gte(flashcardsTable.nextReviewAt, today));
+    flashcardsReviewedToday = reviewed.filter(c =>
+      deckIdList.includes(c.deckId) && c.repetitions > 0
+    ).length;
+  }
 
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
