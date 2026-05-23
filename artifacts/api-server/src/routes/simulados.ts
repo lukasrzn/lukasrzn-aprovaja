@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { incrementMissionProgress } from "./mission-progress.js";
 import { eq, and, inArray } from "drizzle-orm";
 import { db, simuladosTable, simuladoResultsTable, gamificationTable, performanceLogTable, questionsTable, examSessionsTable } from "@workspace/db";
 import {
@@ -394,6 +395,8 @@ router.post("/simulados/:id/submit", async (req, res): Promise<void> => {
     questionsCorrect: correct,
     questionsTotal: total,
   });
+
+  await incrementMissionProgress("simulado", 1);
 
   res.json(SubmitSimuladoResponse.parse({
     id: result.id,

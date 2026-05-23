@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { incrementMissionProgress } from "./mission-progress.js";
 import { eq } from "drizzle-orm";
 import { db, redacoesTable, gamificationTable } from "@workspace/db";
 import {
@@ -100,6 +101,8 @@ router.post("/redacoes", async (req, res): Promise<void> => {
   if (g) {
     await db.update(gamificationTable).set({ xp: g.xp + xpEarned }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
   }
+
+  await incrementMissionProgress("redacao", 1);
 
   res.status(201).json({
     id: redacao.id,

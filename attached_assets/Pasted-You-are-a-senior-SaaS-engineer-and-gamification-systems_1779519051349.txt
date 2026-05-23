@@ -1,0 +1,152 @@
+You are a senior SaaS engineer and gamification systems specialist responsible for improving the “AprovaJá” educational platform.
+
+====================================================
+CRITICAL ISSUE
+====================================================
+
+The “Missões” (Missions) section is currently malfunctioning.
+
+Current problems:
+- Missions are not always being counted correctly.
+- Student progress is failing to update consistently.
+- Some completed missions are not rewarding XP, coins, or streaks.
+- Mini logos/icons inside the missions area are generic or missing educational visuals.
+
+This must be fixed immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+1. Fix the entire Missions system logic.
+2. Ensure ALL missions are always correctly tracked and counted.
+3. Improve the visual design of the missions section.
+4. Add educational-themed images and mini logos.
+5. Ensure the gamification system works perfectly.
+
+====================================================
+MISSION TRACKING FIX
+====================================================
+
+Ensure missions are ALWAYS contabilized correctly for actions such as:
+- Completing study sessions
+- Finishing simulations
+- Completing flashcards
+- Writing essays
+- Maintaining streaks
+- Studying daily
+- Completing weekly goals
+- Finishing AI recommendations
+- Completing revision cycles
+
+Mission progress must update:
+- in real time
+- automatically
+- without requiring page refresh
+
+====================================================
+GAMIFICATION SYSTEM
+====================================================
+
+Correct and validate:
+- XP rewards
+- streak counting
+- medals
+- coins
+- level progression
+- daily missions
+- weekly challenges
+- achievement unlocking
+
+Prevent:
+- duplicated rewards
+- missing rewards
+- delayed updates
+- reset bugs
+- incorrect counters
+
+====================================================
+VISUAL IMPROVEMENTS
+====================================================
+
+Add modern educational images and mini logos related to:
+- books
+- notebooks
+- graduation caps
+- students studying
+- ENEM themes
+- brain/AI icons
+- productivity
+- charts and evolution
+- focus mode
+- medals and trophies
+
+Mini logos/icons must:
+- look premium
+- match the futuristic UI
+- use modern gradients
+- support dark mode
+- have glowing/neon effects
+
+====================================================
+UI / UX REQUIREMENTS
+====================================================
+
+The Missions section must feel:
+- addictive
+- motivating
+- modern
+- highly interactive
+
+Add:
+- smooth animations
+- confetti effects
+- progress bars
+- completion effects
+- hover interactions
+- glowing cards
+- mission completion popups
+- animated counters
+
+====================================================
+DATABASE & BACKEND
+====================================================
+
+Verify:
+- mission tracking logic
+- database synchronization
+- user progress persistence
+- reward distribution
+- streak validation
+- async updates
+- event listeners
+
+Ensure:
+- missions never fail silently
+- all actions are stored correctly
+- progress syncs across devices
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+Optimize for:
+- mobile responsiveness
+- fast loading
+- touch interactions
+- smooth scrolling
+- app-like experience
+
+====================================================
+FINAL GOAL
+====================================================
+
+After the fix:
+
+- Missions must always count correctly.
+- Students must instantly receive rewards and progress updates.
+- The section must become highly engaging and visually premium.
+- Educational visuals and mini logos must make the experience feel immersive and motivating.
+- The system must be stable, scalable, and production-ready.
+
+Generate production-level fixes and improvements for the entire Missions system.

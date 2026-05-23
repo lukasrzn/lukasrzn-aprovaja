@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { incrementMissionProgress } from "./mission-progress.js";
 import { eq, and } from "drizzle-orm";
 import { db, studyPlansTable, studySessionsTable, gamificationTable, performanceLogTable } from "@workspace/db";
 import {
@@ -161,6 +162,8 @@ router.post("/study-plans/:id/sessions", async (req, res): Promise<void> => {
     questionsCorrect: 0,
     questionsTotal: 0,
   });
+
+  await incrementMissionProgress("study", 1);
 
   res.status(201).json({
     id: session.id,
