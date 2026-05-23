@@ -82,7 +82,7 @@ export default function Landing() {
             </Link>
             <Link href="/login">
               <Button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-6 shadow-[0_0_20px_rgba(var(--primary),0.4)]">
-                Começar Grátis
+                Assinar Agora
               </Button>
             </Link>
           </div>
@@ -349,36 +349,16 @@ export default function Landing() {
       <section id="planos" className="py-24">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">Planos para todos os bolsos</h2>
-            <p className="text-lg text-muted-foreground">Escolha o plano ideal para sua jornada de aprovação.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-sm font-semibold text-primary mb-4">
+              <Zap className="w-3.5 h-3.5" /> Acesso Premium — Exclusivo
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">Invista na sua aprovação</h2>
+            <p className="text-lg text-muted-foreground">Planos 100% premium. Acesso completo às ferramentas de IA que aprovam.</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Free */}
-            <Card className="bg-background/50 border-white/5 backdrop-blur-sm flex flex-col">
-              <CardContent className="p-8 flex-1 flex flex-col">
-                <h3 className="text-2xl font-bold mb-2">Grátis</h3>
-                <p className="text-muted-foreground mb-6">Para dar os primeiros passos</p>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">R$ 0</span>
-                  <span className="text-muted-foreground">/mês</span>
-                </div>
-                <div className="space-y-4 mb-8 flex-1">
-                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-muted-foreground" /> <span className="text-muted-foreground">Plano de estudos básico</span></div>
-                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-muted-foreground" /> <span className="text-muted-foreground">Gamificação (XP e Níveis)</span></div>
-                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-muted-foreground" /> <span className="text-muted-foreground">1 Simulado por mês</span></div>
-                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-muted-foreground" /> <span className="text-muted-foreground">100 Flashcards</span></div>
-                </div>
-                <Link href="/login" className="w-full">
-                  <Button variant="outline" className="w-full h-12 border-white/10 hover:bg-white/5">
-                    Começar Grátis
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
+          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {/* Pro */}
-            <Card className="bg-background border-primary relative transform md:-translate-y-4 shadow-[0_0_30px_rgba(var(--primary),0.2)] flex flex-col">
+            <Card className="bg-background border-primary relative shadow-[0_0_40px_rgba(var(--primary),0.25)] flex flex-col">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wide">
                 MAIS POPULAR
               </div>
@@ -395,9 +375,10 @@ export default function Landing() {
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>Simulados ilimitados</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>Flashcards ilimitados</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>2 Correções de Redação/mês</span></div>
+                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-primary" /> <span>Gamificação completa (XP, Ranking)</span></div>
                 </div>
                 <Link href="/login" className="w-full">
-                  <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold">
+                  <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary),0.4)]">
                     Assinar Pro
                   </Button>
                 </Link>
@@ -405,7 +386,10 @@ export default function Landing() {
             </Card>
 
             {/* Premium */}
-            <Card className="bg-background/50 border-white/5 backdrop-blur-sm flex flex-col">
+            <Card className="bg-background/50 border-accent/40 shadow-[0_0_40px_rgba(var(--accent),0.15)] flex flex-col relative">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-primary to-accent text-white px-4 py-1 rounded-full text-sm font-bold tracking-wide whitespace-nowrap">
+                NOTA 1000 NO ENEM
+              </div>
               <CardContent className="p-8 flex-1 flex flex-col">
                 <h3 className="text-2xl font-bold mb-2 text-accent">Premium</h3>
                 <p className="text-muted-foreground mb-6">Gabarite o ENEM 2026 e Vestibulares</p>
@@ -415,19 +399,24 @@ export default function Landing() {
                 </div>
                 <div className="space-y-4 mb-8 flex-1">
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Tudo do plano Pro</span></div>
-                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Correção de Redação ilimitada</span></div>
+                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Correção de Redação ilimitada por IA</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Professor IA 24/7 para dúvidas</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Simulados inéditos semanais</span></div>
                   <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Métricas avançadas no Ranking</span></div>
+                  <div className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-accent" /> <span>Suporte prioritário 24h</span></div>
                 </div>
                 <Link href="/login" className="w-full">
-                  <Button variant="outline" className="w-full h-12 border-accent text-accent hover:bg-accent hover:text-white transition-colors">
+                  <Button variant="outline" className="w-full h-12 border-accent text-accent hover:bg-accent hover:text-white transition-colors font-bold">
                     Assinar Premium
                   </Button>
                 </Link>
               </CardContent>
             </Card>
           </div>
+
+          <p className="text-center text-sm text-muted-foreground/60 mt-8">
+            Cancele quando quiser · Pagamento seguro · Acesso imediato
+          </p>
         </div>
       </section>
 
@@ -443,7 +432,7 @@ export default function Landing() {
             Pronto para transformar sua preparação para o ENEM 2026?
           </h2>
           <p className="text-lg text-white/70 mb-10 max-w-2xl mx-auto">
-            Mais de 50 mil estudantes já escolheram o AprovaJá para garantir sua aprovação. Comece grátis hoje e descubra o caminho mais inteligente para o ENEM 2026.
+            Mais de 50 mil estudantes já escolheram o AprovaJá para garantir sua aprovação. Assine hoje e descubra o caminho mais inteligente e comprovado para o ENEM 2026.
           </p>
           <Link href="/login">
             <Button size="lg" className="h-16 px-10 text-xl rounded-full bg-white text-black hover:bg-gray-200 shadow-[0_0_40px_rgba(255,255,255,0.3)]">

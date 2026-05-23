@@ -1,0 +1,97 @@
+You are a senior SaaS developer and subscription management engineer responsible for updating the “AprovaJá” platform.
+
+====================================================
+FEATURE REMOVAL REQUEST
+====================================================
+
+The platform currently offers a **free plan**. This plan must be **completely removed** or disabled, so only paid subscription plans remain accessible.
+
+This affects:
+- user registration
+- plan selection page
+- dashboard access
+- feature availability
+- promotional banners
+- trial logic
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Remove all traces of the free plan and ensure:
+
+- new users cannot select a free plan
+- existing free plan users are prompted to upgrade
+- platform features align with paid plans
+- billing system only references paid subscriptions
+
+====================================================
+FUNCTIONAL REQUIREMENTS
+====================================================
+
+1. **Plan Selection**
+- Remove free plan from registration/signup flow
+- Update UI to show only paid options
+- Remove any free plan pricing cards or references
+
+2. **User Accounts**
+- Identify existing free plan users
+- Prompt them to upgrade at next login
+- Optionally migrate them to default paid plan
+- Restrict access to free-only features
+
+3. **Dashboard & Features**
+- Ensure features previously free-only now require paid plan
+- Remove any trial/free badges
+- Update progress indicators, gamification, and simulations to reflect paid plan access
+
+4. **Billing System**
+- Remove free plan from subscription logic
+- Update payment and trial handling
+- Ensure no free subscriptions are created automatically
+
+5. **Notifications & Messages**
+- Update all in-app messages promoting free access
+- Notify users that free plan is no longer available
+- Encourage upgrade with premium messaging
+
+====================================================
+UI / UX
+====================================================
+
+- Clean removal of free plan cards
+- Smooth transition for users upgrading
+- Clear messaging about new subscription policy
+- Modern design consistent with platform aesthetics
+- Avoid broken states or empty dashboards
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+- Update mobile app views
+- Ensure signup, upgrade, and plan selection reflect only paid plans
+- Responsive messages and prompts for upgrading users
+
+====================================================
+ERROR HANDLING
+====================================================
+
+- Prevent free plan creation by any means
+- Handle users attempting free access gracefully
+- Provide clear guidance to upgrade
+- Log attempts for analytics
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- The free plan is completely removed
+- All platform features align with paid subscription logic
+- New and existing users are guided toward paid plans
+- System remains stable, secure, and production-ready
+- Billing, gamification, dashboard, and all integrations function correctly under paid-only access
+
+Generate production-ready frontend, backend, and subscription logic updates to fully remove the free plan option.
