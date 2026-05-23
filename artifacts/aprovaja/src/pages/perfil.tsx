@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "wouter";
 import {
   useGetMe,
   useGetGamificationStats,
@@ -16,7 +17,7 @@ import {
   Star, Flame, Zap, Clock, Trophy, Target, Layers,
   PenTool, Crown, BookOpen, Brain, ChevronRight,
   Lock, Sparkles, TrendingUp, Medal as MedalIcon,
-  Shield, Sword, Gem,
+  Shield, Sword, Gem, LogOut, AlertTriangle, Loader2,
 } from "lucide-react";
 
 // ─── Icon registry ────────────────────────────────────────────────────────────
@@ -253,6 +254,17 @@ export default function Perfil() {
   const { data: simulados } = useGetSimulados();
 
   const [activeTab, setActiveTab] = useState<"conquistas" | "estatisticas">("conquistas");
+  const [logoutStage, setLogoutStage] = useState<"idle" | "confirm" | "loading">("idle");
+  const [, navigate] = useLocation();
+
+  const handleLogout = () => {
+    if (logoutStage === "idle") { setLogoutStage("confirm"); return; }
+    if (logoutStage === "confirm") {
+      setLogoutStage("loading");
+      try { localStorage.clear(); sessionStorage.clear(); } catch {}
+      setTimeout(() => navigate("/?saiu=true"), 900);
+    }
+  };
 
   const xpPct = stats
     ? Math.round((stats.xp / (stats.xp + stats.xpToNextLevel)) * 100)
@@ -537,6 +549,94 @@ export default function Perfil() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Account / Logout section ─────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden"
+      >
+        <div className="px-5 py-4 border-b border-white/[0.05]">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Conta</p>
+        </div>
+
+        <div className="p-4">
+          <AnimatePresence mode="wait">
+            {logoutStage === "loading" ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center justify-center gap-3 py-4"
+              >
+                <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                <span className="text-sm text-muted-foreground">Encerrando sua sessão…</span>
+              </motion.div>
+            ) : logoutStage === "confirm" ? (
+              <motion.div
+                key="confirm"
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                transition={{ duration: 0.18 }}
+                className="rounded-xl border border-rose-500/25 bg-rose-500/[0.07] p-4 space-y-3"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/25 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="w-4 h-4 text-rose-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">Sair da conta?</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Você será redirecionado para a página inicial. Seu progresso está salvo.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setLogoutStage("idle")}
+                    className="flex-1 border-white/[0.12] text-xs"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleLogout}
+                    className="flex-1 bg-rose-500/15 border border-rose-500/40 text-rose-400 hover:bg-rose-500/25 hover:text-rose-300 hover:border-rose-500/60 text-xs font-semibold"
+                    variant="outline"
+                  >
+                    Confirmar saída
+                  </Button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.button
+                key="idle"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                whileHover={{ x: 3 }}
+                onClick={handleLogout}
+                className="group w-full flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-rose-500/20 hover:bg-rose-500/[0.06] transition-all text-left"
+              >
+                <div className="w-10 h-10 rounded-xl border border-white/[0.08] bg-white/[0.04] group-hover:border-rose-500/30 group-hover:bg-rose-500/10 flex items-center justify-center transition-all shrink-0">
+                  <LogOut className="w-4 h-4 text-muted-foreground/50 group-hover:text-rose-400 transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white/80 group-hover:text-rose-400 transition-colors">Sair da Conta</p>
+                  <p className="text-xs text-muted-foreground/60">Encerrar sessão atual</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-rose-400/50 transition-colors shrink-0" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
     </div>
   );
 }
