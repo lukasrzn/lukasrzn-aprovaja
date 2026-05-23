@@ -1,0 +1,90 @@
+You are a senior full-stack developer and SaaS architecture engineer responsible for fixing authentication and pricing logic in the “AprovaJá” platform.
+
+====================================================
+CRITICAL ISSUE
+====================================================
+
+In the “Cadastrar” (Sign Up) page, there is still an option allowing users to register for FREE.
+
+This is a serious business and system inconsistency because the platform should NOT offer any free registration or free plan access.
+
+This must be fixed immediately.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Remove or disable ALL free registration options from the signup flow and ensure only paid subscription-based registration is possible.
+
+====================================================
+REQUIRED FIXES
+====================================================
+
+1. SIGNUP FLOW
+- Remove “cadastro grátis” or any free plan option from the registration page
+- Ensure users are required to select a paid plan before completing registration
+- Block any bypass attempts to create a free account
+
+2. FRONTEND
+- Update UI to show ONLY paid plans
+- Remove free badges, free buttons, and free pricing cards
+- Ensure signup form validates selected paid plan only
+
+3. BACKEND
+- Prevent creation of accounts without an active paid subscription
+- Validate subscription status before completing user registration
+- Block API calls that attempt to create free accounts
+
+4. DATABASE
+- Remove or deactivate any “free plan” entries
+- Ensure all new users are assigned to paid plans only
+- Migrate existing free users if necessary
+
+5. BILLING LOGIC
+- Ensure Stripe/payment system (or equivalent) only processes paid plans
+- Remove trial/free subscription logic completely
+- Prevent default fallback to free tier
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+- Replace free option with premium messaging:
+  “Escolha seu plano para começar sua jornada de aprovação”
+
+- Make the signup process feel:
+  - premium
+  - exclusive
+  - high-value
+  - serious and professional
+
+====================================================
+ERROR HANDLING
+====================================================
+
+If a user attempts to register without selecting a paid plan:
+- Show a clear message:
+  “É necessário escolher um plano pago para continuar.”
+- Prevent account creation completely
+- Log attempt for monitoring
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+- Ensure signup page is fully responsive
+- Paid plan selection must be easy on mobile
+- No hidden free options on smaller screens
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- There must be ZERO possibility of free registration
+- All users must go through paid plan selection
+- Signup system must be secure, consistent, and production-ready
+- UI/UX must reflect a premium EdTech SaaS product
+
+Generate production-ready frontend, backend, authentication, and billing fixes.
