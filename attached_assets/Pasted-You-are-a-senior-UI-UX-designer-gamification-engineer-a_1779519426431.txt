@@ -1,0 +1,145 @@
+You are a senior UI/UX designer, gamification engineer, and SaaS developer responsible for improving the “AprovaJá” educational platform.
+
+====================================================
+NEW FEATURE & IMPROVEMENT REQUEST
+====================================================
+
+The “Perfil de Conquistas do Estudante” section needs major improvements.
+
+Currently:
+- Achievement visuals are weak or incomplete.
+- Profile badges/logos are missing or generic.
+- The experience does not feel interactive or rewarding enough.
+
+Your mission is to completely redesign and improve this area.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Create a PREMIUM and HIGHLY INTERACTIVE “Perfil de Conquistas” experience that motivates students to study daily and feel proud of their progress.
+
+====================================================
+ADD ACHIEVEMENT LOGOS / BADGES
+====================================================
+
+Add modern achievement logos, badges, and icons related to:
+- ENEM approval
+- study streaks
+- completed simulations
+- essay achievements
+- flashcard mastery
+- XP levels
+- daily missions
+- productivity
+- focus sessions
+- AI study assistant
+- top ranking positions
+- weekly champions
+- consistency rewards
+
+The logos must:
+- look futuristic
+- have premium quality
+- include neon/glow effects
+- use glassmorphism aesthetics
+- support dark mode
+- have smooth hover animations
+
+====================================================
+INTERACTIVE FEATURES
+====================================================
+
+Make the profile MUCH MORE interactive by adding:
+
+- animated achievement unlocks
+- confetti celebration effects
+- XP progression animations
+- level-up screens
+- achievement sound effects support
+- interactive hover cards
+- rotating 3D badge effects
+- dynamic progress bars
+- achievement rarity system
+- collectible badges
+
+====================================================
+PROFILE STATS
+====================================================
+
+Display:
+- total XP
+- current level
+- study streak
+- completed missions
+- simulations completed
+- redações feitas
+- strongest subjects
+- weakest subjects
+- ranking position
+- total study hours
+
+====================================================
+VISUAL EXPERIENCE
+====================================================
+
+The achievements page should feel like:
+- a premium gaming profile
+- a futuristic learning platform
+- a modern achievement dashboard
+
+Use:
+- floating elements
+- smooth transitions
+- animated backgrounds
+- glowing cards
+- modern charts
+- responsive layouts
+- futuristic icons
+
+====================================================
+GAMIFICATION IMPROVEMENTS
+====================================================
+
+Create:
+- achievement categories
+- bronze/silver/gold/platinum badges
+- hidden achievements
+- legendary achievements
+- daily rewards
+- weekly rewards
+- seasonal rewards
+
+====================================================
+SOCIAL EXPERIENCE
+====================================================
+
+Add optional features for:
+- sharing achievements
+- comparing profiles
+- ranking visibility
+- profile customization
+- favorite badges showcase
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+Ensure:
+- full responsiveness
+- smooth touch interactions
+- app-like experience
+- optimized performance
+
+====================================================
+FINAL GOAL
+====================================================
+
+After the update:
+
+- The “Perfil de Conquistas” must become one of the most addictive and motivating areas of the platform.
+- Students should feel excited to unlock new achievements.
+- The platform should psychologically encourage daily study habits.
+- The visual quality must feel like a billion-dollar EdTech startup.
+
+Generate production-ready UI, backend logic, animations, and gamification systems.
