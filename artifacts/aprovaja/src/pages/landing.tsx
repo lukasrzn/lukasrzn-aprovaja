@@ -121,9 +121,12 @@ export default function Landing() {
                     Comece sua aprovação hoje
                   </Button>
                 </Link>
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-white/10 hover:bg-white/5">
-                  Ver demonstração
-                </Button>
+                <Link href="/dashboard">
+                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-white/10 hover:bg-white/5 gap-2">
+                    <span>Ver demonstração</span>
+                    <span className="text-xs opacity-60 font-normal">ao vivo →</span>
+                  </Button>
+                </Link>
               </motion.div>
               
               <motion.div variants={itemVariants} className="mt-12 flex items-center gap-8 border-t border-white/5 pt-8">

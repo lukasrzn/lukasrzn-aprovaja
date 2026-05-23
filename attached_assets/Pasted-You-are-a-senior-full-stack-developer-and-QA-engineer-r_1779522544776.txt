@@ -1,0 +1,75 @@
+You are a senior full-stack developer and QA engineer responsible for fixing the “Ver Demonstração” section in the “AprovaJá” educational SaaS platform.
+
+====================================================
+CRITICAL BUG REPORT
+====================================================
+
+The “Ver Demonstração” (View Demo) section is **currently not working**.  
+Users cannot access the demo properly, which is affecting conversion, usability, and first impressions.
+
+Your mission is to **identify, fix, and improve** the demo system to ensure it works smoothly across all devices and scenarios.
+
+====================================================
+CURRENT PROBLEMS
+====================================================
+
+- Demo button is unresponsive or broken
+- Modal or page does not load
+- Content may be missing or incorrectly rendered
+- Mobile and desktop versions behave differently
+- Possible broken links, scripts, or API endpoints
+
+====================================================
+REQUIRED FIXES
+====================================================
+
+1. **Functionality**
+- Ensure the demo launches correctly on click
+- Load all demo content (interactive dashboard, features, sample data)
+- Make sure demo is fully functional without login
+- Implement fallback if content fails to load
+
+2. **Backend & API**
+- Verify demo data endpoints
+- Ensure proper database retrieval or mock data
+- Handle errors gracefully
+
+3. **Frontend & UI**
+- Ensure modal or demo page renders properly
+- Smooth animations and transitions
+- Responsive design for mobile and tablet
+- Include loading indicators if demo takes time to render
+- Avoid blank screens
+
+4. **User Experience**
+- Add “Voltar” or “Fechar Demo” button
+- Display clear instructions
+- Highlight key features in the demo
+- Include interactive tooltips or hints
+
+5. **Error Handling**
+- Show friendly messages if demo fails
+- Log errors for developers
+- Prevent the demo from freezing the page
+
+====================================================
+VISUAL IMPROVEMENTS
+====================================================
+
+- Modern, futuristic design consistent with platform
+- Glassmorphism or neon glow effects
+- Animated highlights of key features
+- Mobile-friendly layouts
+- Smooth hover effects and transitions
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- The “Ver Demonstração” section must work **perfectly** across all devices
+- Users should experience a fully functional, interactive demo
+- The demo should reflect the premium and futuristic style of the platform
+- No broken states, missing content, or errors should occur
+- Generate production-ready frontend, backend, and QA fixes for the demo section
