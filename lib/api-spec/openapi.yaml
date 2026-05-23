@@ -18,6 +18,7 @@ tags:
   - name: missions
   - name: dashboard
   - name: questions
+  - name: study-today
 paths:
   /healthz:
     get:
@@ -683,6 +684,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PracticeResult"
+
+  /study-today/recommendation:
+    get:
+      operationId: getStudyTodayRecommendation
+      tags: [study-today]
+      summary: Get AI-powered daily study recommendations
+      parameters:
+        - name: refresh
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Daily study recommendation cards
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyTodayRecommendation"
 
 components:
   schemas:
@@ -1413,3 +1433,55 @@ components:
         xpEarned:
           type: integer
       required: [isCorrect, correctAnswer, explanation, xpEarned]
+
+    StudyCard:
+      type: object
+      properties:
+        id:
+          type: string
+        subject:
+          type: string
+        topic:
+          type: string
+        difficulty:
+          type: string
+        estimatedMinutes:
+          type: integer
+        priorityLevel:
+          type: string
+        enemProbability:
+          type: integer
+        studentProgress:
+          type: integer
+        xpReward:
+          type: integer
+        miniSummary:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        questionCount:
+          type: integer
+        reason:
+          type: string
+      required: [id, subject, topic, difficulty, estimatedMinutes, priorityLevel, enemProbability, studentProgress, xpReward, miniSummary, tags, questionCount, reason]
+
+    StudyTodayRecommendation:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudyCard"
+        generatedAt:
+          type: string
+        analysisInsight:
+          type: string
+        pomodoroSuggestion:
+          type: integer
+        streak:
+          type: integer
+        totalQuestionsAvailable:
+          type: integer
+      required: [recommendations, generatedAt, analysisInsight, pomodoroSuggestion, streak, totalQuestionsAvailable]

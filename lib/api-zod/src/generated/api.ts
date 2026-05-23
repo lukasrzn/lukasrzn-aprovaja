@@ -631,3 +631,34 @@ export const PracticeQuestionResponse = zod.object({
 })
 
 
+/**
+ * @summary Get AI-powered daily study recommendations
+ */
+export const GetStudyTodayRecommendationQueryParams = zod.object({
+  "refresh": zod.coerce.string().optional()
+})
+
+export const GetStudyTodayRecommendationResponse = zod.object({
+  "recommendations": zod.array(zod.object({
+  "id": zod.string(),
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "difficulty": zod.string(),
+  "estimatedMinutes": zod.number(),
+  "priorityLevel": zod.string(),
+  "enemProbability": zod.number(),
+  "studentProgress": zod.number(),
+  "xpReward": zod.number(),
+  "miniSummary": zod.string(),
+  "tags": zod.array(zod.string()),
+  "questionCount": zod.number(),
+  "reason": zod.string()
+})),
+  "generatedAt": zod.string(),
+  "analysisInsight": zod.string(),
+  "pomodoroSuggestion": zod.number(),
+  "streak": zod.number(),
+  "totalQuestionsAvailable": zod.number()
+})
+
+

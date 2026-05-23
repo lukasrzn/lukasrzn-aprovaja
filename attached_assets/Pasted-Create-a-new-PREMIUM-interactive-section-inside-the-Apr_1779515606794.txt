@@ -1,0 +1,158 @@
+Create a new PREMIUM interactive section inside the “AprovaJá” educational SaaS called:
+
+“Qual tópico iremos estudar hoje?”
+
+IMPORTANT:
+- ALL TEXT MUST BE IN BRAZILIAN PORTUGUESE.
+- The feature must feel MODERN, INTELLIGENT, ADDICTIVE, and HIGHLY INTERACTIVE.
+- The design must match the futuristic visual identity of the platform.
+
+====================================================
+FEATURE OBJECTIVE
+====================================================
+
+This section will intelligently suggest what the student should study today based on:
+- weak subjects
+- previous performance
+- AI analysis
+- ENEM priorities
+- Concurso priorities
+- pending revisions
+- study streak
+- available study time
+- recent simulations
+
+The experience must feel like:
+“A personal AI mentor deciding the best topic for the student.”
+
+====================================================
+SECTION TITLE
+====================================================
+
+Main title:
+“Qual tópico iremos estudar hoje?”
+
+Subtitle:
+“Sua IA selecionou o melhor conteúdo para acelerar sua aprovação.”
+
+====================================================
+SMART AI RECOMMENDATION SYSTEM
+====================================================
+
+The AI must:
+- analyze student history
+- identify weak areas
+- prioritize urgent topics
+- alternate subjects intelligently
+- recommend revision cycles
+- suggest difficulty level
+- adapt recommendations daily
+
+====================================================
+INTERACTIVE CARDS
+====================================================
+
+Create modern animated cards showing:
+
+- Matéria
+- Tópico
+- Nível de dificuldade
+- Tempo estimado
+- Prioridade
+- Chance de cair no ENEM
+- Evolução do aluno
+- Botão “Começar agora”
+
+Example:
+- Matemática → Funções do 2º grau
+- Física → Cinemática
+- Português → Interpretação de texto
+
+====================================================
+VISUAL DESIGN
+====================================================
+
+Use:
+- futuristic UI
+- glassmorphism
+- animated gradients
+- glowing borders
+- neon accents
+- smooth hover animations
+- floating elements
+- progress rings
+- AI-inspired dashboard aesthetics
+
+Colors:
+- Blue neon
+- Purple
+- Green
+- Yellow highlights
+
+====================================================
+INTERACTIVE ELEMENTS
+====================================================
+
+Add:
+- AI loading animations
+- motivational phrases
+- daily goals
+- study streak indicators
+- XP rewards
+- progress bars
+- animated icons
+- smart notifications
+
+====================================================
+GAMIFICATION
+====================================================
+
+Include:
+- daily missions
+- XP rewards
+- combo streaks
+- medals
+- completion bonuses
+- study ranking integration
+
+====================================================
+ADVANCED FEATURES
+====================================================
+
+Add:
+- “Trocar tópico” button
+- “Estou com dificuldade” button
+- AI-generated mini summaries
+- quick revision mode
+- focus mode integration
+- pomodoro integration
+- automatic progress tracking
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+The section must be:
+- fully responsive
+- mobile-first
+- smooth like a native app
+- optimized for fast interaction
+
+====================================================
+STUDENT EXPERIENCE
+====================================================
+
+The feature should psychologically create:
+- motivation
+- focus
+- curiosity
+- consistency
+- dopamine engagement
+- feeling of evolution
+
+====================================================
+FINAL GOAL
+====================================================
+
+This section must become one of the MOST ADDICTIVE and USEFUL parts of the platform, making students return every day to discover:
+“Qual tópico iremos estudar hoje?”

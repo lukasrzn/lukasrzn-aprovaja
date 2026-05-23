@@ -405,6 +405,31 @@ export interface PracticeResult {
   xpEarned: number;
 }
 
+export interface StudyCard {
+  id: string;
+  subject: string;
+  topic: string;
+  difficulty: string;
+  estimatedMinutes: number;
+  priorityLevel: string;
+  enemProbability: number;
+  studentProgress: number;
+  xpReward: number;
+  miniSummary: string;
+  tags: string[];
+  questionCount: number;
+  reason: string;
+}
+
+export interface StudyTodayRecommendation {
+  recommendations: StudyCard[];
+  generatedAt: string;
+  analysisInsight: string;
+  pomodoroSuggestion: number;
+  streak: number;
+  totalQuestionsAvailable: number;
+}
+
 export type GetQuestionsParams = {
 subject?: string;
 topic?: string;
@@ -412,5 +437,9 @@ difficulty?: string;
 category?: string;
 limit?: number;
 offset?: number;
+};
+
+export type GetStudyTodayRecommendationParams = {
+refresh?: string;
 };
 

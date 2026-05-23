@@ -29,6 +29,7 @@ import type {
   FlashcardReview,
   GamificationStats,
   GetQuestionsParams,
+  GetStudyTodayRecommendationParams,
   HealthStatus,
   Medal,
   Mission,
@@ -52,6 +53,7 @@ import type {
   StudyPlanUpdate,
   StudySession,
   StudySessionInput,
+  StudyTodayRecommendation,
   SubjectScore,
   SubjectSummary,
   UserProfile,
@@ -2727,4 +2729,88 @@ export const usePracticeQuestion = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getPracticeQuestionMutationOptions(options));
     }
+
+export const getGetStudyTodayRecommendationUrl = (params?: GetStudyTodayRecommendationParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/study-today/recommendation?${stringifiedParams}` : `/api/study-today/recommendation`
+}
+
+/**
+ * @summary Get AI-powered daily study recommendations
+ */
+export const getStudyTodayRecommendation = async (params?: GetStudyTodayRecommendationParams, options?: RequestInit): Promise<StudyTodayRecommendation> => {
+
+  return customFetch<StudyTodayRecommendation>(getGetStudyTodayRecommendationUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetStudyTodayRecommendationQueryKey = (params?: GetStudyTodayRecommendationParams,) => {
+    return [
+    `/api/study-today/recommendation`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetStudyTodayRecommendationQueryOptions = <TData = Awaited<ReturnType<typeof getStudyTodayRecommendation>>, TError = ErrorType<unknown>>(params?: GetStudyTodayRecommendationParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStudyTodayRecommendation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetStudyTodayRecommendationQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getStudyTodayRecommendation>>> = ({ signal }) => getStudyTodayRecommendation(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getStudyTodayRecommendation>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetStudyTodayRecommendationQueryResult = NonNullable<Awaited<ReturnType<typeof getStudyTodayRecommendation>>>
+export type GetStudyTodayRecommendationQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get AI-powered daily study recommendations
+ */
+
+export function useGetStudyTodayRecommendation<TData = Awaited<ReturnType<typeof getStudyTodayRecommendation>>, TError = ErrorType<unknown>>(
+ params?: GetStudyTodayRecommendationParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStudyTodayRecommendation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetStudyTodayRecommendationQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
