@@ -62,4 +62,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
 
+// Global JSON error handler — must have 4 params so Express recognises it as an error handler.
+// Returns a JSON body instead of the default HTML error page so the frontend
+// can always parse the error message.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  const status: number = typeof err.status === "number" ? err.status
+    : typeof err.statusCode === "number" ? err.statusCode
+    : 500;
+  const message: string =
+    status < 500 ? (err.message ?? "Bad request")
+    : "Ocorreu um erro interno. Tente novamente em instantes.";
+  res.status(status).json({ error: message });
+});
+
 export default app;

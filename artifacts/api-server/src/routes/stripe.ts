@@ -1,6 +1,7 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import { stripeStorage } from "../stripeStorage";
 import { stripeService } from "../stripeService";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
@@ -38,41 +39,63 @@ router.get("/stripe/subscription", async (_req, res) => {
   res.json({ subscription: subscription ?? null });
 });
 
-// POST /stripe/checkout — create Stripe Checkout session
-// Body: { planSlug: 'pro' | 'premium' }
-router.post("/stripe/checkout", async (req, res) => {
-  const { planSlug } = req.body as { planSlug?: string };
-
-  if (!planSlug || !['pro', 'premium'].includes(planSlug)) {
-    res.status(400).json({ error: 'planSlug must be "pro" or "premium"' });
-    return;
-  }
-
-  // Use REPLIT_DOMAINS for the correct public HTTPS URL; fall back to host header
+// Resolve the public HTTPS base URL for success/cancel/return URLs.
+// Must be HTTPS — Stripe rejects http:// return URLs in live mode.
+function getBaseUrl(req: Request): string {
   const publicDomain = process.env.REPLIT_DOMAINS?.split(",")[0];
-  const baseUrl = publicDomain
-    ? `https://${publicDomain}`
-    : `${req.protocol === "http" && req.get("x-forwarded-proto") === "https" ? "https" : req.protocol}://${req.get("host")}`;
-  const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
-  const successUrl = `${baseUrl}/dashboard?plano=ativo`;
-  const cancelUrl  = `${baseUrl}${cancelPath}?plano=cancelado`;
+  if (publicDomain) return `https://${publicDomain}`;
+  const proto =
+    req.get("x-forwarded-proto") === "https" ? "https" : req.protocol;
+  return `${proto}://${req.get("host")}`;
+}
 
-  const session = await stripeService.createCheckoutSession(
-    planSlug as 'pro' | 'premium',
-    successUrl,
-    cancelUrl,
-  );
+// POST /stripe/checkout — create Stripe Checkout session
+// Body: { planSlug: 'pro' | 'premium', cancelPath?: string }
+router.post("/stripe/checkout", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { planSlug } = req.body as { planSlug?: string };
 
-  res.json({ url: session.url });
+    if (!planSlug || !["pro", "premium"].includes(planSlug)) {
+      res.status(400).json({ error: 'planSlug must be "pro" or "premium"' });
+      return;
+    }
+
+    const baseUrl = getBaseUrl(req);
+    const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
+    const successUrl = `${baseUrl}/dashboard?plano=ativo`;
+    const cancelUrl  = `${baseUrl}${cancelPath}?plano=cancelado`;
+
+    const session = await stripeService.createCheckoutSession(
+      planSlug as "pro" | "premium",
+      successUrl,
+      cancelUrl,
+    );
+
+    if (!session.url) {
+      logger.error({ sessionId: session.id }, "Stripe session created but url is null");
+      res.status(502).json({ error: "Checkout URL indisponível. Tente novamente." });
+      return;
+    }
+
+    res.json({ url: session.url });
+  } catch (err) {
+    logger.error({ err }, "Failed to create Stripe checkout session");
+    next(err);
+  }
 });
 
 // POST /stripe/portal — create Stripe Billing Portal session
-router.post("/stripe/portal", async (req, res) => {
-  const host = `${req.protocol}://${req.get('host')}`;
-  const returnUrl = req.body?.returnUrl ?? `${host}/dashboard`;
+router.post("/stripe/portal", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const baseUrl = getBaseUrl(req);
+    const returnUrl = (req.body as any)?.returnUrl ?? `${baseUrl}/dashboard`;
 
-  const session = await stripeService.createPortalSession(returnUrl);
-  res.json({ url: session.url });
+    const session = await stripeService.createPortalSession(returnUrl);
+    res.json({ url: session.url });
+  } catch (err) {
+    logger.error({ err }, "Failed to create Stripe portal session");
+    next(err);
+  }
 });
 
 export default router;

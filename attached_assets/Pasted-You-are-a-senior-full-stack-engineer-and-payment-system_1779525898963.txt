@@ -1,0 +1,111 @@
+You are a senior full-stack engineer and payment systems specialist responsible for fixing a critical issue in the “AprovaJá” SaaS platform.
+
+====================================================
+CRITICAL ISSUE (PAYMENT ERROR)
+====================================================
+
+There is a critical bug in the payment initiation flow:
+
+- Users are receiving an error when trying to start the payment process.
+- The Stripe Checkout session is NOT being created properly OR the redirect is failing.
+- This is blocking all subscription purchases and affecting platform revenue.
+
+This issue must be treated as HIGH PRIORITY and fixed immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+1. Identify the root cause of the “error when starting payment”.
+2. Fix the full payment initiation flow (frontend + backend).
+3. Ensure Stripe Checkout sessions are created correctly.
+4. Ensure users are always redirected to a valid checkout URL.
+
+====================================================
+EXPECTED FLOW (MUST WORK PERFECTLY)
+====================================================
+
+When the user clicks “Assinar agora”:
+
+1. Frontend sends request to backend
+2. Backend securely creates Stripe Checkout Session
+3. Backend returns a valid session URL or session ID
+4. Frontend redirects user to Stripe Checkout immediately
+5. Payment process continues without errors
+
+====================================================
+LIKELY CAUSES TO CHECK
+====================================================
+
+Investigate and fix:
+
+- Invalid or missing Stripe API keys
+- Incorrect environment variables (.env misconfiguration)
+- Backend route failure or crash
+- Stripe API request errors
+- Missing priceId or productId
+- Wrong success_url or cancel_url
+- CORS or network blocking issues
+- Frontend not handling async response properly
+- Undefined or null session response
+
+====================================================
+BACKEND REQUIREMENTS
+====================================================
+
+- Ensure Stripe Checkout Session is created securely
+- Validate user authentication before payment
+- Return proper response (session.url or session.id)
+- Add proper error handling and logging
+- Ensure webhook is configured for payment confirmation
+
+====================================================
+FRONTEND REQUIREMENTS
+====================================================
+
+- Fix payment button error handling
+- Add loading state during payment initiation
+- Prevent multiple clicks or duplicate requests
+- Handle API errors gracefully
+- Redirect user only when valid session is returned
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+Improve UX during payment:
+
+- Show loading message:
+  “Iniciando pagamento seguro...”
+
+If error occurs:
+- Show friendly message:
+  “Ocorreu um erro ao iniciar o pagamento. Tente novamente.”
+
+Add:
+- Retry button
+- Clear visual feedback
+- Smooth transitions
+
+====================================================
+SECURITY REQUIREMENTS
+====================================================
+
+- Never expose Stripe secret key in frontend
+- Validate all payment requests in backend
+- Ensure secure session creation
+- Prevent fake or broken checkout URLs
+
+====================================================
+FINAL GOAL
+====================================================
+
+After fix:
+
+- Payment initiation must work 100% reliably
+- No errors when starting checkout
+- Users must always be redirected correctly to Stripe
+- System must be stable, secure, and production-ready
+- Revenue flow must be fully operational
+
+Generate production-level debugging, fixes, and implementation improvements.

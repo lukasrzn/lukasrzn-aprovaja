@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import Login from "@/pages/login";
@@ -29,18 +30,53 @@ import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
 
 const queryClient = new QueryClient();
 
-function SubscriptionGuard({ component: Component }: { component: React.ComponentType }) {
-  const { data, isLoading, isError } = useSubscription();
+// How many times to retry the subscription check before giving up when
+// arriving from a successful Stripe payment (webhook may lag behind redirect).
+const POST_PAYMENT_MAX_RETRIES = 6;
+const POST_PAYMENT_RETRY_DELAY_MS = 2000;
 
-  if (isLoading) {
+function SubscriptionGuard({ component: Component }: { component: React.ComponentType }) {
+  // Detect the ?plano=ativo success redirect from Stripe Checkout
+  const isPostPayment = new URLSearchParams(window.location.search).get("plano") === "ativo";
+  const [retryCount, setRetryCount] = useState(0);
+
+  const { data, isLoading, isError, refetch } = useSubscription();
+
+  const active = isSubscriptionActive(data?.subscription);
+
+  // After a successful payment, Stripe redirects here before the webhook has
+  // necessarily updated the DB. Retry the subscription check a few times so
+  // the user isn't bounced back to /planos just because the webhook lagged.
+  useEffect(() => {
+    if (!isPostPayment) return;
+    if (isLoading || active) return;
+    if (retryCount >= POST_PAYMENT_MAX_RETRIES) return;
+
+    const timer = setTimeout(() => {
+      setRetryCount((n) => n + 1);
+      refetch();
+    }, POST_PAYMENT_RETRY_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [isPostPayment, isLoading, active, retryCount, refetch]);
+
+  const waitingForWebhook =
+    isPostPayment && !active && retryCount < POST_PAYMENT_MAX_RETRIES;
+
+  if (isLoading || waitingForWebhook) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-3">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        {waitingForWebhook && (
+          <p className="text-sm text-muted-foreground animate-pulse">
+            Ativando sua assinatura…
+          </p>
+        )}
       </div>
     );
   }
 
-  if (isError || !isSubscriptionActive(data?.subscription)) {
+  if (isError || !active) {
     return <Redirect to="/planos" />;
   }
 
