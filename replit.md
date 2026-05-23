@@ -1,10 +1,11 @@
-# [Project name]
+# AprovaJá
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Uma plataforma educacional SaaS premium com IA para estudantes brasileiros — ENEM, vestibulares e concursos públicos.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
+- `pnpm --filter @workspace/aprovaja run dev` — run the frontend (port 19323)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
@@ -14,6 +15,7 @@ _Replace the heading above with the project's name, and this line with one sente
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React + Vite, Tailwind CSS, Framer Motion, Recharts, Wouter
 - API: Express 5
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
@@ -22,23 +24,35 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — OpenAPI source of truth
+- `lib/db/src/schema/` — Drizzle schema files (one per domain)
+- `artifacts/api-server/src/routes/` — Express route handlers
+- `artifacts/aprovaja/src/` — React frontend
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Single default user (id=1) with no auth — all routes use DEFAULT_USER_ID=1 for demo
+- SM-2 spaced repetition algorithm implemented in the flashcard review route
+- AI essay correction is simulated server-side (word count → competência scores)
+- Simulado questions are seeded with 5 ENEM-style sample questions; correct answers stored server-side
+- Performance log table tracks daily XP/minutes/questions for chart data
+- Medals seeded directly via SQL; unlocking via specific triggers
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+AprovaJá tem: landing page de marketing, dashboard gamificado (XP, streak, missões diárias), plano de estudos, simulados ENEM, correção de redação por IA, flashcards com repetição espaçada (SM-2), ranking global/semanal, perfil com medalhas, e missões diárias.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- All UI content must be in Brazilian Portuguese
+- Code, comments, and dev logic in English
+- Premium, futuristic, dark-mode-first design
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After schema changes: run `pnpm --filter @workspace/db run push`
+- After OpenAPI spec changes: run `pnpm --filter @workspace/api-spec run codegen`
+- The `simulados/recent-results` route must be defined BEFORE `simulados/:id` in the router (Express 5 path specificity)
 
 ## Pointers
 

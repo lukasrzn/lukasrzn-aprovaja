@@ -1,0 +1,331 @@
+You are a senior billionaire-level SaaS engineer, UI/UX designer, AI architect, growth hacker, and EdTech startup founder.
+
+Your mission is to build a COMPLETE MODERN EDUCATIONAL SAAS PLATFORM called “AprovaJá”.
+
+IMPORTANT:
+- ALL PLATFORM CONTENT MUST BE IN BRAZILIAN PORTUGUESE.
+- THE CODE, STRUCTURE, COMMENTS, AND DEVELOPMENT LOGIC CAN BE IN ENGLISH.
+- THE ENTIRE USER INTERFACE MUST LOOK PREMIUM, VIRAL, MODERN, ADDICTIVE, AND HIGHLY PROFESSIONAL.
+- THIS MUST LOOK LIKE A MULTI-MILLION DOLLAR BRAZILIAN STARTUP.
+
+====================================================
+MAIN CONCEPT
+====================================================
+
+Create a complete AI-powered educational SaaS focused on:
+- Ensino Fundamental
+- Ensino Médio
+- ENEM
+- Vestibulares
+- Concursos Públicos
+- Reforço Escolar
+- Cursos Técnicos
+- Preparação para provas
+- Productivity and focus
+
+The platform should combine:
+- Duolingo gamification
+- Notion organization
+- Discord community feeling
+- Netflix-style UI
+- Modern AI experience
+- Futuristic dashboards
+- Viral engagement mechanics
+
+====================================================
+NAME
+====================================================
+
+Platform Name:
+APROVAJÁ
+
+Alternative names:
+- EstudaMax
+- AprovaX
+- GênioVest
+- BrainUP
+- MetaENEM
+
+====================================================
+TECH STACK
+====================================================
+
+Use:
+- Next.js
+- React
+- Tailwind CSS
+- Framer Motion
+- Node.js
+- PostgreSQL
+- Prisma ORM
+- Firebase Auth
+- Stripe subscription system
+- OpenAI API integration
+- Responsive design
+- Mobile-first architecture
+
+====================================================
+VISUAL STYLE
+====================================================
+
+The design MUST BE:
+- futuristic
+- modern
+- addictive
+- premium
+- extremely polished
+
+Use:
+- glassmorphism
+- neon gradients
+- smooth animations
+- floating cards
+- soft shadows
+- modern charts
+- animated progress bars
+- rounded UI components
+- dashboard aesthetics
+- premium startup style
+
+====================================================
+COLOR PALETTE
+====================================================
+
+Primary:
+- Blue Neon #2563EB
+- Purple #7C3AED
+- Green #22C55E
+- Yellow #FACC15
+
+Background:
+- Dark premium gradient
+- futuristic dark mode
+
+====================================================
+VERY IMPORTANT
+====================================================
+
+ADD MANY VISUAL STUDY INTERACTIONS THROUGHOUT THE PLATFORM.
+
+Include:
+- Brazilian students studying
+- students using notebooks
+- students using tablets
+- online study rooms
+- AI assistant avatars
+- educational illustrations
+- animated charts
+- gamification elements
+- medals
+- XP systems
+- streak systems
+- ranking visuals
+- focus timers
+- interactive dashboards
+- flashcards
+- study maps
+- exam simulations
+- ENEM questions
+- Concurso Público questions
+- modern icons
+- futuristic education scenes
+- collaborative study environment
+
+====================================================
+LANDING PAGE
+====================================================
+
+Create an ULTRA MODERN landing page with:
+- animated hero section
+- strong CTA buttons
+- student success statistics
+- testimonials
+- pricing plans
+- AI study assistant presentation
+- mobile app showcase
+- animated backgrounds
+- floating educational elements
+- futuristic effects
+
+Main CTA:
+“Comece sua aprovação hoje”
+
+====================================================
+MAIN FEATURES
+====================================================
+
+Build ALL these features:
+
+1. AI STUDY PLANNER
+- AI automatically creates study schedules
+- personalized routines
+- adaptive study planning
+
+2. AI PROFESSOR
+- chatbot available 24/7
+- answers questions
+- explains subjects
+- generates summaries
+
+3. SMART MOCK TESTS
+- ENEM simulations
+- Concurso simulations
+- adaptive difficulty
+
+4. ESSAY CORRECTION AI
+- automatic redação correction
+- score prediction
+- grammar improvements
+
+5. FLASHCARDS SYSTEM
+- AI-generated flashcards
+- spaced repetition
+
+6. GAMIFICATION
+- XP
+- levels
+- streaks
+- coins
+- medals
+- rankings
+
+7. PRODUCTIVITY SYSTEM
+- Pomodoro timer
+- Focus Mode
+- anti-distraction mode
+
+8. ANALYTICS
+- performance charts
+- weak subjects analysis
+- evolution graphs
+
+9. SOCIAL FEATURES
+- study groups
+- rankings
+- challenges
+- weekly competitions
+
+10. PARENTS AREA
+- monitor student progress
+- performance reports
+
+11. ADMIN PANEL
+- manage users
+- subscriptions
+- analytics
+- educational content
+
+====================================================
+PAGES REQUIRED
+====================================================
+
+Create these pages:
+
+- Home Page
+- Login/Register
+- Dashboard
+- Study Planner
+- Simulados
+- Redação
+- Flashcards
+- Ranking
+- Perfil
+- Loja de recompensas
+- Área da IA
+- Painel administrativo
+- Área dos pais
+- Configurações
+
+====================================================
+UI/UX DETAILS
+====================================================
+
+Add:
+- smooth page transitions
+- hover effects
+- loading animations
+- futuristic charts
+- dynamic cards
+- animated backgrounds
+- premium typography
+- mobile responsiveness
+- sidebar navigation
+- modern navbar
+- interactive buttons
+- microinteractions
+
+====================================================
+MOBILE APP FEEL
+====================================================
+
+The web app should feel like:
+- a native mobile app
+- ultra fluid
+- fast
+- highly engaging
+
+====================================================
+ENGAGEMENT STRATEGY
+====================================================
+
+Create systems to increase:
+- retention
+- dopamine feedback
+- study consistency
+- user addiction
+- daily return rate
+- engagement
+
+Use:
+- streak rewards
+- daily missions
+- notifications
+- animated rewards
+- confetti celebrations
+- progression systems
+
+====================================================
+BRAZILIAN AUDIENCE
+====================================================
+
+Everything MUST feel localized for Brazil.
+
+Use:
+- Brazilian Portuguese
+- ENEM references
+- Concurso Público references
+- Brazilian student culture
+- realistic study routines
+
+====================================================
+DELIVERABLE
+====================================================
+
+Generate:
+- complete frontend
+- backend structure
+- responsive UI
+- database models
+- authentication system
+- dashboard components
+- beautiful reusable components
+- scalable architecture
+- production-ready code
+
+====================================================
+FINAL OBJECTIVE
+====================================================
+
+This SaaS must look capable of becoming:
+THE BIGGEST EDUCATIONAL PLATFORM IN BRAZIL.
+
+The result should feel:
+- viral
+- premium
+- scalable
+- addictive
+- AI-powered
+- futuristic
+- investor-ready
+
+Build everything with production-level quality.

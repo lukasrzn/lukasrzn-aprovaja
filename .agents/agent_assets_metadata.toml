@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "F0oDYpxCrxRy7BH8zFWNO"
+uri = "file://artifacts/aprovaja/public/images/hero-bg.png"
+type = "image"
+title = "futuristic study cockpit"
+
+[[generated]]
+id = "agldgpTxR1O-EGUw8HkAp"
+uri = "file://artifacts/aprovaja/public/images/feature-ai.png"
+type = "image"
+title = "holographic study dashboard"

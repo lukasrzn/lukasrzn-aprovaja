@@ -1,22 +1,38 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AprovaJá API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User operations
+  - name: gamification
+    description: XP, streaks, coins, medals
+  - name: study-plans
+    description: AI study planner
+  - name: flashcards
+    description: Flashcard system
+  - name: simulados
+    description: Mock exams
+  - name: redacao
+    description: Essay correction
+  - name: rankings
+    description: Leaderboards
+  - name: missions
+    description: Daily missions
+  - name: dashboard
+    description: Dashboard summaries
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +40,560 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ── Users ──────────────────────────────────────────────────────────────────
+  /users/me:
+    get:
+      operationId: getMe
+      tags: [users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    patch:
+      operationId: updateMe
+      tags: [users]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  # ── Gamification ───────────────────────────────────────────────────────────
+  /gamification/stats:
+    get:
+      operationId: getGamificationStats
+      tags: [gamification]
+      summary: Get user XP, level, streaks, coins, medals
+      responses:
+        "200":
+          description: Gamification stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GamificationStats"
+
+  /gamification/medals:
+    get:
+      operationId: getMedals
+      tags: [gamification]
+      summary: List all medals (earned and locked)
+      responses:
+        "200":
+          description: Medals list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medal"
+
+  # ── Dashboard ──────────────────────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard overview stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/performance:
+    get:
+      operationId: getPerformanceData
+      tags: [dashboard]
+      summary: Get weekly/monthly performance chart data
+      responses:
+        "200":
+          description: Performance data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformancePoint"
+
+  /dashboard/weak-subjects:
+    get:
+      operationId: getWeakSubjects
+      tags: [dashboard]
+      summary: Get subjects needing attention
+      responses:
+        "200":
+          description: Weak subjects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubjectScore"
+
+  # ── Study Plans ────────────────────────────────────────────────────────────
+  /study-plans:
+    get:
+      operationId: getStudyPlans
+      tags: [study-plans]
+      summary: List user study plans
+      responses:
+        "200":
+          description: Study plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyPlan"
+    post:
+      operationId: createStudyPlan
+      tags: [study-plans]
+      summary: Create a new study plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyPlanInput"
+      responses:
+        "201":
+          description: Created study plan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyPlan"
+
+  /study-plans/{id}:
+    get:
+      operationId: getStudyPlan
+      tags: [study-plans]
+      summary: Get a specific study plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Study plan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyPlan"
+    patch:
+      operationId: updateStudyPlan
+      tags: [study-plans]
+      summary: Update a study plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyPlanUpdate"
+      responses:
+        "200":
+          description: Updated study plan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyPlan"
+    delete:
+      operationId: deleteStudyPlan
+      tags: [study-plans]
+      summary: Delete a study plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /study-plans/{id}/sessions:
+    get:
+      operationId: getStudySessions
+      tags: [study-plans]
+      summary: Get study sessions for a plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Study sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudySession"
+    post:
+      operationId: createStudySession
+      tags: [study-plans]
+      summary: Log a study session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudySessionInput"
+      responses:
+        "201":
+          description: Created session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+
+  # ── Flashcards ─────────────────────────────────────────────────────────────
+  /flashcards:
+    get:
+      operationId: getFlashcards
+      tags: [flashcards]
+      summary: List flashcard decks
+      responses:
+        "200":
+          description: Flashcard decks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FlashcardDeck"
+    post:
+      operationId: createFlashcardDeck
+      tags: [flashcards]
+      summary: Create a flashcard deck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlashcardDeckInput"
+      responses:
+        "201":
+          description: Created deck
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlashcardDeck"
+
+  /flashcards/{deckId}/cards:
+    get:
+      operationId: getFlashcardCards
+      tags: [flashcards]
+      summary: Get cards in a deck
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Flashcards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Flashcard"
+    post:
+      operationId: createFlashcard
+      tags: [flashcards]
+      summary: Add a card to a deck
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlashcardInput"
+      responses:
+        "201":
+          description: Created flashcard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Flashcard"
+
+  /flashcards/{deckId}/cards/{cardId}/review:
+    post:
+      operationId: reviewFlashcard
+      tags: [flashcards]
+      summary: Submit a flashcard review result
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlashcardReview"
+      responses:
+        "200":
+          description: Review recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Flashcard"
+
+  # ── Simulados ──────────────────────────────────────────────────────────────
+  /simulados:
+    get:
+      operationId: getSimulados
+      tags: [simulados]
+      summary: List available mock exams
+      responses:
+        "200":
+          description: Mock exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Simulado"
+    post:
+      operationId: createSimulado
+      tags: [simulados]
+      summary: Create a mock exam attempt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimuladoInput"
+      responses:
+        "201":
+          description: Created simulado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Simulado"
+
+  /simulados/{id}:
+    get:
+      operationId: getSimulado
+      tags: [simulados]
+      summary: Get a simulado with questions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Simulado detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimuladoDetail"
+
+  /simulados/{id}/submit:
+    post:
+      operationId: submitSimulado
+      tags: [simulados]
+      summary: Submit simulado answers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimuladoAnswers"
+      responses:
+        "200":
+          description: Simulado result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimuladoResult"
+
+  /simulados/recent-results:
+    get:
+      operationId: getRecentSimuladoResults
+      tags: [simulados]
+      summary: Get recent simulado results for the user
+      responses:
+        "200":
+          description: Recent results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SimuladoResult"
+
+  # ── Redação ────────────────────────────────────────────────────────────────
+  /redacoes:
+    get:
+      operationId: getRedacoes
+      tags: [redacao]
+      summary: List user essays
+      responses:
+        "200":
+          description: Essays
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Redacao"
+    post:
+      operationId: submitRedacao
+      tags: [redacao]
+      summary: Submit an essay for AI correction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RedacaoInput"
+      responses:
+        "201":
+          description: Submitted essay with AI feedback
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Redacao"
+
+  /redacoes/{id}:
+    get:
+      operationId: getRedacao
+      tags: [redacao]
+      summary: Get essay with AI feedback
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Essay detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Redacao"
+
+  # ── Rankings ───────────────────────────────────────────────────────────────
+  /rankings/global:
+    get:
+      operationId: getGlobalRanking
+      tags: [rankings]
+      summary: Get global XP leaderboard
+      responses:
+        "200":
+          description: Global ranking
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RankingEntry"
+
+  /rankings/weekly:
+    get:
+      operationId: getWeeklyRanking
+      tags: [rankings]
+      summary: Get weekly XP leaderboard
+      responses:
+        "200":
+          description: Weekly ranking
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RankingEntry"
+
+  # ── Daily Missions ─────────────────────────────────────────────────────────
+  /missions/today:
+    get:
+      operationId: getTodayMissions
+      tags: [missions]
+      summary: Get today's daily missions
+      responses:
+        "200":
+          description: Today's missions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Mission"
+
+  /missions/{id}/complete:
+    post:
+      operationId: completeMission
+      tags: [missions]
+      summary: Mark a mission as complete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Completed mission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Mission"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +601,505 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        goal:
+          type: string
+          description: e.g. ENEM, Medicina, Direito, Concurso Federal
+        school:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, name, email, goal, createdAt]
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        goal:
+          type: string
+        school:
+          type: ["string", "null"]
+
+    GamificationStats:
+      type: object
+      properties:
+        xp:
+          type: integer
+        level:
+          type: integer
+        xpToNextLevel:
+          type: integer
+        streak:
+          type: integer
+        coins:
+          type: integer
+        rank:
+          type: integer
+        totalStudyMinutes:
+          type: integer
+        medalsEarned:
+          type: integer
+      required: [xp, level, xpToNextLevel, streak, coins, rank, totalStudyMinutes, medalsEarned]
+
+    Medal:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        earned:
+          type: boolean
+        earnedAt:
+          type: ["string", "null"]
+        rarity:
+          type: string
+          description: common, rare, epic, legendary
+      required: [id, name, description, icon, earned, rarity]
+
+    DashboardSummary:
+      type: object
+      properties:
+        studyMinutesToday:
+          type: integer
+        questionsAnsweredToday:
+          type: integer
+        simuladosCompleted:
+          type: integer
+        flashcardsReviewedToday:
+          type: integer
+        currentStreak:
+          type: integer
+        xpThisWeek:
+          type: integer
+        nextMilestone:
+          type: string
+      required: [studyMinutesToday, questionsAnsweredToday, simuladosCompleted, flashcardsReviewedToday, currentStreak, xpThisWeek, nextMilestone]
+
+    PerformancePoint:
+      type: object
+      properties:
+        date:
+          type: string
+        xpEarned:
+          type: integer
+        minutesStudied:
+          type: integer
+        questionsCorrect:
+          type: integer
+        questionsTotal:
+          type: integer
+      required: [date, xpEarned, minutesStudied, questionsCorrect, questionsTotal]
+
+    SubjectScore:
+      type: object
+      properties:
+        subject:
+          type: string
+        score:
+          type: number
+        totalQuestions:
+          type: integer
+        correctAnswers:
+          type: integer
+        trend:
+          type: string
+          description: up, down, stable
+      required: [subject, score, totalQuestions, correctAnswers, trend]
+
+    StudyPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        goal:
+          type: string
+        targetDate:
+          type: ["string", "null"]
+        subjects:
+          type: array
+          items:
+            type: string
+        hoursPerDay:
+          type: number
+        progress:
+          type: number
+        createdAt:
+          type: string
+      required: [id, title, goal, subjects, hoursPerDay, progress, createdAt]
+
+    StudyPlanInput:
+      type: object
+      properties:
+        title:
+          type: string
+        goal:
+          type: string
+        targetDate:
+          type: ["string", "null"]
+        subjects:
+          type: array
+          items:
+            type: string
+        hoursPerDay:
+          type: number
+      required: [title, goal, subjects, hoursPerDay]
+
+    StudyPlanUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        goal:
+          type: string
+        targetDate:
+          type: ["string", "null"]
+        subjects:
+          type: array
+          items:
+            type: string
+        hoursPerDay:
+          type: number
+
+    StudySession:
+      type: object
+      properties:
+        id:
+          type: integer
+        planId:
+          type: integer
+        subject:
+          type: string
+        durationMinutes:
+          type: integer
+        notes:
+          type: ["string", "null"]
+        xpEarned:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, planId, subject, durationMinutes, xpEarned, createdAt]
+
+    StudySessionInput:
+      type: object
+      properties:
+        subject:
+          type: string
+        durationMinutes:
+          type: integer
+        notes:
+          type: ["string", "null"]
+      required: [subject, durationMinutes]
+
+    FlashcardDeck:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        subject:
+          type: string
+        cardCount:
+          type: integer
+        dueCount:
+          type: integer
+        masteredCount:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, title, subject, cardCount, dueCount, masteredCount, createdAt]
+
+    FlashcardDeckInput:
+      type: object
+      properties:
+        title:
+          type: string
+        subject:
+          type: string
+      required: [title, subject]
+
+    Flashcard:
+      type: object
+      properties:
+        id:
+          type: integer
+        deckId:
+          type: integer
+        front:
+          type: string
+        back:
+          type: string
+        easeFactor:
+          type: number
+        interval:
+          type: integer
+        repetitions:
+          type: integer
+        nextReviewAt:
+          type: ["string", "null"]
+        mastered:
+          type: boolean
+      required: [id, deckId, front, back, easeFactor, interval, repetitions, mastered]
+
+    FlashcardInput:
+      type: object
+      properties:
+        front:
+          type: string
+        back:
+          type: string
+      required: [front, back]
+
+    FlashcardReview:
+      type: object
+      properties:
+        quality:
+          type: integer
+          description: 0-5 SM2 quality rating
+      required: [quality]
+
+    Simulado:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+          description: ENEM, FUVEST, Concurso, Custom
+        subject:
+          type: ["string", "null"]
+        questionCount:
+          type: integer
+        durationMinutes:
+          type: integer
+        difficulty:
+          type: string
+          description: facil, medio, dificil
+        completedAt:
+          type: ["string", "null"]
+        score:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+      required: [id, title, type, questionCount, durationMinutes, difficulty, createdAt]
+
+    SimuladoInput:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        subject:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+      required: [title, type, difficulty]
+
+    SimuladoDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        difficulty:
+          type: string
+        durationMinutes:
+          type: integer
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+      required: [id, title, type, difficulty, durationMinutes, questions]
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        subject:
+          type: string
+        alternatives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alternative"
+      required: [id, text, subject, alternatives]
+
+    Alternative:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+      required: [id, text]
+
+    SimuladoAnswers:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerItem"
+      required: [answers]
+
+    AnswerItem:
+      type: object
+      properties:
+        questionId:
+          type: integer
+        selectedAlternative:
+          type: string
+      required: [questionId, selectedAlternative]
+
+    SimuladoResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        simuladoId:
+          type: integer
+        simuladoTitle:
+          type: string
+        score:
+          type: number
+        correctCount:
+          type: integer
+        totalCount:
+          type: integer
+        xpEarned:
+          type: integer
+        timeSpentMinutes:
+          type: integer
+        completedAt:
+          type: string
+        subjectBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubjectScore"
+      required: [id, simuladoId, simuladoTitle, score, correctCount, totalCount, xpEarned, timeSpentMinutes, completedAt, subjectBreakdown]
+
+    Redacao:
+      type: object
+      properties:
+        id:
+          type: integer
+        theme:
+          type: string
+        content:
+          type: string
+        score:
+          type: ["integer", "null"]
+        maxScore:
+          type: integer
+        feedback:
+          type: ["string", "null"]
+        competencias:
+          type: ["array", "null"]
+          items:
+            $ref: "#/components/schemas/CompetenciaScore"
+        createdAt:
+          type: string
+      required: [id, theme, content, maxScore, createdAt]
+
+    RedacaoInput:
+      type: object
+      properties:
+        theme:
+          type: string
+        content:
+          type: string
+      required: [theme, content]
+
+    CompetenciaScore:
+      type: object
+      properties:
+        number:
+          type: integer
+        description:
+          type: string
+        score:
+          type: integer
+        maxScore:
+          type: integer
+        feedback:
+          type: string
+      required: [number, description, score, maxScore, feedback]
+
+    RankingEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        xp:
+          type: integer
+        level:
+          type: integer
+        streak:
+          type: integer
+        goal:
+          type: string
+        isCurrentUser:
+          type: boolean
+      required: [rank, userId, name, xp, level, streak, goal, isCurrentUser]
+
+    Mission:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        xpReward:
+          type: integer
+        coinReward:
+          type: integer
+        completed:
+          type: boolean
+        progress:
+          type: integer
+        target:
+          type: integer
+        type:
+          type: string
+          description: study, flashcard, simulado, redacao
+      required: [id, title, description, icon, xpReward, coinReward, completed, progress, target, type]
