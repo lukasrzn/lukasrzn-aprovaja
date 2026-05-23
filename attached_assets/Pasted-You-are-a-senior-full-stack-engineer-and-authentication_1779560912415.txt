@@ -1,0 +1,150 @@
+You are a senior full-stack engineer and authentication/security specialist responsible for implementing a complete and secure password recovery system in the “AprovaJá” SaaS platform.
+
+====================================================
+FEATURE: PASSWORD RECOVERY (RESET DE SENHA)
+====================================================
+
+You must implement a FULL password reset system from end to end, including frontend, backend, database, and email integration.
+
+====================================================
+CORE OBJECTIVE
+====================================================
+
+Allow users to securely reset their password when they forget it, without exposing the old password.
+
+The system must be:
+- secure
+- production-ready
+- scalable
+- resistant to abuse
+
+====================================================
+REQUIRED FLOW
+====================================================
+
+STEP 1 — “Esqueci minha senha”
+- User enters email on login page
+- System sends password reset email if account exists
+
+STEP 2 — TOKEN GENERATION
+- Generate a secure random token (crypto-safe)
+- Token must expire in 30 minutes
+- Store token in database linked to user
+
+STEP 3 — EMAIL SENDING
+- Send email using SendGrid
+- Email must contain:
+  - reset link
+  - token embedded in URL
+  - expiration warning
+
+Example link:
+https://yourdomain.com/reset-password?token=XXXX
+
+STEP 4 — RESET PASSWORD PAGE
+- User opens link
+- System validates token
+- User enters new password
+- System updates password securely
+
+STEP 5 — FINALIZATION
+- Hash new password using bcrypt
+- Delete reset token after success
+- Confirm password change
+
+====================================================
+BACKEND IMPLEMENTATION (NODE.JS)
+====================================================
+
+You must create:
+
+1. POST /auth/forgot-password
+- Input: email
+- Action:
+  - find user
+  - generate token
+  - save token + expiration
+  - send email via SendGrid
+
+2. POST /auth/reset-password
+- Input: token + new password
+- Action:
+  - validate token + expiration
+  - hash new password
+  - update user password
+  - remove token
+
+====================================================
+DATABASE REQUIREMENTS
+====================================================
+
+User model must include:
+
+- email
+- password (hashed)
+- resetPasswordToken
+- resetPasswordExpires
+
+====================================================
+SECURITY REQUIREMENTS (VERY IMPORTANT)
+====================================================
+
+- Never expose whether email exists (return generic message)
+- Token must be cryptographically secure
+- Token must expire in 30 minutes
+- Password must always be hashed (bcrypt)
+- Prevent brute force (rate limiting recommended)
+- Use HTTPS links only
+
+====================================================
+EMAIL TEMPLATE (SENDGRID)
+====================================================
+
+Subject:
+"Recuperação de Senha - AprovaJá"
+
+Body must include:
+- clear instructions
+- reset button/link
+- expiration warning
+- support contact (cttvertice@gmail.com)
+
+====================================================
+FRONTEND REQUIREMENTS
+====================================================
+
+Create 2 screens:
+
+1. ForgotPassword Page:
+- email input
+- submit button
+- success message
+
+2. ResetPassword Page:
+- new password input
+- confirm password input
+- submit button
+- validation of token
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+- Smooth and simple UI
+- Clear success/error messages
+- Loading states during requests
+- No system crash if email fails
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+✔ Users can reset password securely
+✔ SendGrid sends recovery emails correctly
+✔ Token system works with expiration
+✔ Password update is safe and hashed
+✔ Flow is production-ready and fully functional
+
+Generate complete backend + frontend + email integration + database schema.
