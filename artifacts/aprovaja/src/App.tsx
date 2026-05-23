@@ -25,6 +25,7 @@ import ProfessorIA from "@/pages/professor-ia";
 import IaConteudo from "@/pages/ia-conteudo";
 import PoliticaDePrivacidade from "@/pages/politica-de-privacidade";
 import TermosDeServico from "@/pages/termos-de-servico";
+import Sucesso from "@/pages/sucesso";
 import { Layout } from "@/components/Layout";
 import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
 
@@ -94,6 +95,7 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
       <Route path="/planos" component={Planos} />
+      <Route path="/sucesso" component={Sucesso} />
       <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
       <Route path="/termos-de-servico" component={TermosDeServico} />
 

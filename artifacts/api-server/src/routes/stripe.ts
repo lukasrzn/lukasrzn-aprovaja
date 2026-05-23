@@ -62,7 +62,7 @@ router.post("/stripe/checkout", async (req: Request, res: Response, next: NextFu
 
     const baseUrl = getBaseUrl(req);
     const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
-    const successUrl = `${baseUrl}/dashboard?plano=ativo`;
+    const successUrl = `${baseUrl}/sucesso?plano=ativo&plan=${planSlug}`;
     const cancelUrl  = `${baseUrl}${cancelPath}?plano=cancelado`;
 
     const session = await stripeService.createCheckoutSession(

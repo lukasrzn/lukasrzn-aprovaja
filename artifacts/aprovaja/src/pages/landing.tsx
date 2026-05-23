@@ -92,11 +92,10 @@ export default function Landing() {
               Entrar
             </Link>
             <Button
-              onClick={() => handleDirectCheckout("pro")}
-              disabled={checkoutLoading !== null}
+              onClick={() => navigate("/planos")}
               className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-6 shadow-[0_0_20px_rgba(var(--primary),0.4)]"
             >
-              {checkoutLoading === "pro" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Assinar Agora"}
+              Assinar Agora
             </Button>
           </div>
         </div>

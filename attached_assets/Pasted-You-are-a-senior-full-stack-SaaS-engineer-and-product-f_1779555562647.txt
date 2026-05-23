@@ -1,0 +1,147 @@
+You are a senior full-stack SaaS engineer and product flow architect responsible for fixing critical user journey issues in the “AprovaJá” platform.
+
+====================================================
+CRITICAL USER FLOW BUGS
+====================================================
+
+There are TWO major problems in the current system:
+
+1. When users click “Assinar agora”, they are being sent directly to the PRO plan checkout.
+2. After a successful purchase, there is NO proper signup/registration confirmation screen or onboarding step.
+
+Both flows are incorrect and must be fixed immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+Fix and redesign the full subscription + onboarding flow to ensure:
+
+- Users first choose between available plans
+- Users are NOT forced into PRO automatically
+- Users go through a proper post-payment registration/onboarding screen
+
+====================================================
+PROBLEM 1 — PLAN SELECTION FLOW (CRITICAL)
+====================================================
+
+Current issue:
+- Clicking “Assinar agora” sends users directly to PRO plan checkout
+
+Required fix:
+
+1. “Assinar agora” MUST redirect to a PLANS SELECTION PAGE:
+   - /planos
+
+2. This page MUST display ALL available plans:
+   - Plano Básico
+   - Plano Pro
+
+3. Each plan must have:
+   - features list
+   - pricing
+   - CTA button “Selecionar plano”
+
+4. Only AFTER user selects a plan:
+   - then redirect to Stripe Checkout for that specific plan
+
+====================================================
+PROBLEM 2 — POST-PURCHASE FLOW (CRITICAL)
+====================================================
+
+After successful payment:
+
+Currently:
+- User is not properly guided through account setup
+
+Required fix:
+
+Create a POST-PAYMENT REGISTRATION / CONFIRMATION SCREEN:
+
+Flow:
+1. Stripe payment success
+2. Redirect to:
+   /sucesso
+3. Screen must include:
+   - “Pagamento confirmado com sucesso”
+   - Summary of purchased plan
+   - Button: “Criar sua conta” OR “Acessar plataforma”
+   - Optional onboarding form if user account is not yet created
+
+If user already exists:
+- redirect directly to dashboard
+If user does NOT exist:
+- require account creation (email + password)
+
+====================================================
+AUTHENTICATION FLOW FIX
+====================================================
+
+Ensure:
+
+- Account creation is NOT skipped
+- User cannot access dashboard without valid account + subscription
+- Payment and account creation are properly linked
+- Stripe session metadata includes user/plan info
+
+====================================================
+DATABASE REQUIREMENTS
+====================================================
+
+Ensure proper mapping:
+
+- userId
+- stripeCustomerId
+- stripeSubscriptionId
+- selectedPlan
+- subscriptionStatus
+
+====================================================
+FRONTEND REQUIREMENTS
+====================================================
+
+Fix navigation:
+
+- “Assinar agora” → /planos
+- /planos → Stripe Checkout (after selection)
+- Stripe success → /sucesso
+- /sucesso → onboarding or dashboard
+
+Ensure:
+- No direct PRO plan redirect
+- No bypass of plan selection
+- Clean UX flow with clear steps
+
+====================================================
+UX IMPROVEMENTS
+====================================================
+
+Add:
+- smooth transitions between steps
+- loading states
+- confirmation animations
+- clear pricing comparison
+- highlight differences between plans
+
+====================================================
+SECURITY REQUIREMENTS
+====================================================
+
+- Prevent direct access to PRO checkout without plan selection
+- Validate selected plan on backend
+- Ensure Stripe session matches selected plan only
+- Prevent URL manipulation bypass
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- Users always see BOTH plans before subscribing
+- No automatic redirect to PRO plan
+- After payment, users go through proper success + onboarding screen
+- Flow is logical, secure, and production-ready
+- Subscription system is clean and scalable
+
+Generate production-ready frontend routing, backend logic, Stripe flow fixes, and onboarding implementation.
