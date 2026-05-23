@@ -1,0 +1,126 @@
+You are a senior full-stack developer and AI systems engineer responsible for maintaining the “AprovaJá” educational SaaS platform.
+
+====================================================
+CRITICAL ISSUE
+====================================================
+
+There is a bug inside the “Laboratório de Redação” section.
+
+Current problem:
+- Students submit and correct their essays successfully.
+- Essays are being saved inside the “Suas Redações” area.
+- HOWEVER, the “Feedback” section is NOT working correctly.
+
+The AI feedback is not appearing, loading properly, or displaying the correction results after the essay analysis.
+
+This issue must be fixed immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+Identify and fix ALL problems related to:
+- AI feedback rendering
+- backend API response
+- frontend state management
+- essay correction flow
+- database retrieval
+- asynchronous loading
+- broken components
+- missing data binding
+- AI response parsing
+
+====================================================
+EXPECTED BEHAVIOR
+====================================================
+
+After the student submits a redação:
+
+1. The AI must analyze the essay.
+2. The correction must be saved correctly.
+3. The “Suas Redações” area must display:
+   - essay title
+   - submission date
+   - score
+   - correction status
+
+4. The “Feedback” section must display:
+   - grammar corrections
+   - orthographic corrections
+   - ENEM-style analysis
+   - strengths and weaknesses
+   - suggestions for improvement
+   - coherence analysis
+   - argumentation analysis
+   - final score estimate
+   - motivational AI message
+
+====================================================
+UI / UX REQUIREMENTS
+====================================================
+
+The Feedback area must:
+- load smoothly
+- support real-time rendering
+- display beautiful animated cards
+- have modern glassmorphism design
+- use smooth transitions
+- include loading animations
+- include score progress bars
+- include competency charts
+- be fully responsive
+
+====================================================
+ENEM CORRECTION MODEL
+====================================================
+
+The AI feedback system should analyze:
+- Competência 1: Norma culta
+- Competência 2: Compreensão do tema
+- Competência 3: Argumentação
+- Competência 4: Coesão textual
+- Competência 5: Proposta de intervenção
+
+Generate realistic ENEM-style scores and explanations.
+
+====================================================
+BACKEND REQUIREMENTS
+====================================================
+
+Verify:
+- API routes
+- OpenAI integration
+- database queries
+- essay IDs
+- user authentication
+- feedback storage
+- response serialization
+- async request handling
+
+Ensure feedback data is:
+- correctly saved
+- correctly retrieved
+- correctly rendered
+
+====================================================
+ERROR HANDLING
+====================================================
+
+If AI feedback generation fails:
+- display a friendly retry message
+- allow regeneration
+- prevent blank screens
+- log errors properly
+
+====================================================
+FINAL GOAL
+====================================================
+
+After the fix:
+
+- The “Laboratório de Redação” must work perfectly.
+- Students must instantly receive complete AI feedback after essay correction.
+- The experience must feel premium, intelligent, and production-ready.
+- No broken states or missing feedback should exist anymore.
+
+Generate production-ready fixes and ensure the entire essay correction flow is stable and fully functional.
