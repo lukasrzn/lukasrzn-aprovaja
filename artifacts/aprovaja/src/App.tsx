@@ -30,6 +30,7 @@ import Admin from "@/pages/admin";
 import RecuperarSenha from "@/pages/recuperar-senha";
 import { Layout } from "@/components/Layout";
 import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
+import { useSession } from "@/hooks/useSession";
 
 const queryClient = new QueryClient();
 
@@ -43,16 +44,20 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
   const isPostPayment = new URLSearchParams(window.location.search).get("plano") === "ativo";
   const [retryCount, setRetryCount] = useState(0);
 
-  const { data, isLoading, isError, refetch } = useSubscription();
+  // Check session role first — admin users bypass subscription entirely
+  const { data: session, isLoading: isSessionLoading } = useSession();
+  const { data, isLoading: isSubLoading, isError, refetch } = useSubscription();
 
+  const isAdmin = session?.isAdmin === true;
   const active = isSubscriptionActive(data?.subscription);
 
   // After a successful payment, Stripe redirects here before the webhook has
   // necessarily updated the DB. Retry the subscription check a few times so
   // the user isn't bounced back to /planos just because the webhook lagged.
   useEffect(() => {
+    if (isAdmin) return; // admins never need to retry
     if (!isPostPayment) return;
-    if (isLoading || active) return;
+    if (isSubLoading || active) return;
     if (retryCount >= POST_PAYMENT_MAX_RETRIES) return;
 
     const timer = setTimeout(() => {
@@ -61,10 +66,13 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
     }, POST_PAYMENT_RETRY_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [isPostPayment, isLoading, active, retryCount, refetch]);
+  }, [isAdmin, isPostPayment, isSubLoading, active, retryCount, refetch]);
 
   const waitingForWebhook =
-    isPostPayment && !active && retryCount < POST_PAYMENT_MAX_RETRIES;
+    !isAdmin && isPostPayment && !active && retryCount < POST_PAYMENT_MAX_RETRIES;
+
+  // Wait until we know session (and subscription if not admin)
+  const isLoading = isSessionLoading || (!isAdmin && isSubLoading);
 
   if (isLoading || waitingForWebhook) {
     return (
@@ -79,6 +87,16 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
     );
   }
 
+  // Admins always get in regardless of subscription status
+  if (isAdmin) {
+    return (
+      <Layout>
+        <Component />
+      </Layout>
+    );
+  }
+
+  // Non-admin without an active subscription → plans page
   if (isError || !active) {
     return <Redirect to="/planos" />;
   }

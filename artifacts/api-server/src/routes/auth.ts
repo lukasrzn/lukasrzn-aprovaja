@@ -4,7 +4,36 @@ import { db, usersTable } from "@workspace/db";
 import { randomBytes, createHash } from "crypto";
 import { logger } from "../lib/logger";
 
+const DEFAULT_USER_ID = 1;
+
 const router: IRouter = Router();
+
+// GET /auth/session — public, no subscription required
+// Returns the current user's role so the frontend can gate access before
+// the subscription check. This breaks the circular dependency where knowing
+// whether the user is admin requires passing the subscription gate.
+router.get("/auth/session", async (_req, res, next): Promise<void> => {
+  try {
+    const [user] = await db
+      .select({ id: usersTable.id, role: usersTable.role, email: usersTable.email })
+      .from(usersTable)
+      .where(eq(usersTable.id, DEFAULT_USER_ID));
+
+    if (!user) {
+      res.json({ authenticated: false, role: "user", isAdmin: false });
+      return;
+    }
+
+    res.json({
+      authenticated: true,
+      role: user.role,
+      isAdmin: user.role === "admin",
+    });
+  } catch (err) {
+    logger.error({ err }, "auth/session error");
+    next(err);
+  }
+});
 
 // In-memory store for reset tokens (replace with DB table in production)
 // token_hash -> { userId, expiresAt, email }
