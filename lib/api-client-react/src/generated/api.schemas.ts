@@ -438,6 +438,23 @@ export interface PracticeResult {
   xpEarned: number;
 }
 
+export interface AiGenerateFlashcardsResponse {
+  deckId: number;
+  deckTitle: string;
+  cardsCreated: number;
+}
+
+export interface AiGenerateQuestionsResponse {
+  questionsCreated: number;
+  questionIds: number[];
+}
+
+export interface AiGenerateSimuladoResponse {
+  simuladoId: number;
+  title: string;
+  totalQuestions: number;
+}
+
 export interface StudyCard {
   id: string;
   subject: string;
@@ -470,6 +487,28 @@ difficulty?: string;
 category?: string;
 limit?: number;
 offset?: number;
+};
+
+export type AiGenerateFlashcardsBody = {
+  topic: string;
+  subject: string;
+  count?: number;
+  difficulty?: string;
+};
+
+export type AiGenerateQuestionsBody = {
+  subject: string;
+  topic: string;
+  count?: number;
+  difficulty?: string;
+  category?: string;
+};
+
+export type AiGenerateSimuladoBody = {
+  title: string;
+  subjects: string[];
+  difficulty?: string;
+  questionsPerSubject?: number;
 };
 
 export type GetStudyTodayRecommendationParams = {

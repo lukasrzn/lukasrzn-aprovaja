@@ -632,6 +632,40 @@ export const PracticeQuestionResponse = zod.object({
 
 
 /**
+ * @summary Generate AI flashcards for a topic
+ */
+export const AiGenerateFlashcardsBody = zod.object({
+  "topic": zod.string(),
+  "subject": zod.string(),
+  "count": zod.number().optional(),
+  "difficulty": zod.string().optional()
+})
+
+
+/**
+ * @summary Generate AI ENEM-style questions
+ */
+export const AiGenerateQuestionsBody = zod.object({
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "count": zod.number().optional(),
+  "difficulty": zod.string().optional(),
+  "category": zod.string().optional()
+})
+
+
+/**
+ * @summary Generate a full AI simulado
+ */
+export const AiGenerateSimuladoBody = zod.object({
+  "title": zod.string(),
+  "subjects": zod.array(zod.string()),
+  "difficulty": zod.string().optional(),
+  "questionsPerSubject": zod.number().optional()
+})
+
+
+/**
  * @summary List all conversations
  */
 export const ListOpenaiConversationsResponseItem = zod.object({

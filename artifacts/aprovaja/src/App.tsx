@@ -19,6 +19,7 @@ import SimuladoResultado from "@/pages/simulado-resultado";
 import Pratica from "@/pages/pratica";
 import EstudeHoje from "@/pages/estude-hoje";
 import ProfessorIA from "@/pages/professor-ia";
+import IaConteudo from "@/pages/ia-conteudo";
 import { Layout } from "@/components/Layout";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function Router() {
       <Route path="/pratica"><AuthRoute component={Pratica} /></Route>
       <Route path="/estude-hoje"><AuthRoute component={EstudeHoje} /></Route>
       <Route path="/professor-ia"><AuthRoute component={ProfessorIA} /></Route>
+      <Route path="/ia-conteudo"><AuthRoute component={IaConteudo} /></Route>
       <Route path="/simulados/:id/resultado/:resultId"><AuthRoute component={SimuladoResultado} /></Route>
       <Route path="/simulados/:id/exam" component={SimuladoExam} />
 

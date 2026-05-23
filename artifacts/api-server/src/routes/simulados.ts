@@ -216,18 +216,33 @@ router.get("/simulados/:id", async (req, res): Promise<void> => {
     res.status(404).json({ error: "Simulado não encontrado" });
     return;
   }
+  const storedQuestions = simulado.questionsData as Array<{
+    id: number; text: string; subject: string; contextText?: string | null;
+    alternatives: Array<{ letter: string; text: string }>;
+    correctAnswer: string; explanation: string;
+  }> | null;
+
+  const questions = storedQuestions && storedQuestions.length > 0
+    ? storedQuestions.map(q => ({
+        id: q.id,
+        text: q.text,
+        subject: q.subject,
+        alternatives: q.alternatives,
+      }))
+    : FALLBACK_QUESTIONS.map(q => ({
+        id: q.id,
+        text: q.statement,
+        subject: q.subject,
+        alternatives: q.alternatives,
+      }));
+
   res.json(GetSimuladoResponse.parse({
     id: simulado.id,
     title: simulado.title,
     type: simulado.type,
     difficulty: simulado.difficulty,
     durationMinutes: simulado.durationMinutes,
-    questions: FALLBACK_QUESTIONS.map(q => ({
-      id: q.id,
-      text: q.statement,
-      subject: q.subject,
-      alternatives: q.alternatives,
-    })),
+    questions,
   }));
 });
 
@@ -246,36 +261,80 @@ router.post("/simulados/:id/start", async (req, res): Promise<void> => {
     return;
   }
 
-  // Pull questions from question bank
-  let allQuestions = await db.select().from(questionsTable);
-  if (body.success && body.data.subject) {
-    allQuestions = allQuestions.filter(q => q.subject === body.data.subject);
-  }
-  if (body.success && body.data.difficulty) {
-    allQuestions = allQuestions.filter(q => q.difficulty === body.data.difficulty);
-  }
-  if (simulado.difficulty !== "custom") {
-    const filtered = allQuestions.filter(q => q.difficulty === simulado.difficulty);
-    if (filtered.length >= Math.floor(simulado.questionCount * 0.5)) {
-      allQuestions = filtered;
+  // For AI-generated simulados use stored questionsData directly
+  const storedQs = simulado.questionsData as Array<{
+    id: number; text: string; subject: string; contextText?: string | null;
+    alternatives: Array<{ letter: string; text: string }>;
+    correctAnswer: string; explanation: string;
+  }> | null;
+
+  type ExamQuestion = {
+    id: number; subject: string; topic: string; statement: string;
+    contextText: string | null; difficulty: string; estimatedTimeSeconds: number;
+    alternatives: Array<{ id: string; text: string }>;
+    correctAnswer: string; explanation: string;
+  };
+
+  let examQuestions: ExamQuestion[];
+
+  if (storedQs && storedQs.length > 0) {
+    // Use stored AI-generated questions
+    const dbRows = await db.select().from(questionsTable)
+      .where(inArray(questionsTable.id, storedQs.map(q => q.id)));
+    const rowMap = new Map(dbRows.map(r => [r.id, r]));
+    examQuestions = storedQs.map(q => {
+      const row = rowMap.get(q.id);
+      return {
+        id: q.id,
+        subject: q.subject,
+        topic: row?.topic ?? q.subject,
+        statement: q.text,
+        contextText: q.contextText ?? null,
+        difficulty: row?.difficulty ?? "medio",
+        estimatedTimeSeconds: row?.estimatedTimeSeconds ?? 120,
+        alternatives: q.alternatives.map(a => ({ id: a.letter, text: a.text })),
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+      };
+    });
+  } else {
+    // Pull questions from question bank
+    let allQuestions = await db.select().from(questionsTable);
+    if (body.success && body.data.subject) {
+      allQuestions = allQuestions.filter(q => q.subject === body.data.subject);
     }
+    if (body.success && body.data.difficulty) {
+      allQuestions = allQuestions.filter(q => q.difficulty === body.data.difficulty);
+    }
+    if (simulado.difficulty !== "custom") {
+      const filtered = allQuestions.filter(q => q.difficulty === simulado.difficulty);
+      if (filtered.length >= Math.floor(simulado.questionCount * 0.5)) {
+        allQuestions = filtered;
+      }
+    }
+    const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, simulado.questionCount);
+    const padded = picked.length >= simulado.questionCount
+      ? picked
+      : [...picked, ...FALLBACK_QUESTIONS.slice(0, simulado.questionCount - picked.length)];
+    examQuestions = padded.map(q => ({
+      id: q.id,
+      subject: q.subject,
+      topic: q.topic,
+      statement: q.statement,
+      contextText: (q as any).contextText ?? null,
+      difficulty: q.difficulty,
+      estimatedTimeSeconds: q.estimatedTimeSeconds,
+      alternatives: (q.alternatives as Array<{ id?: string; letter?: string; text: string }>).map(a => ({ id: a.id ?? a.letter ?? "A", text: a.text })),
+      correctAnswer: q.correctAnswer,
+      explanation: q.explanation,
+    }));
   }
-
-  // Shuffle and pick
-  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-  const picked = shuffled.slice(0, simulado.questionCount);
-
-  // If not enough DB questions, pad with fallback
-  const examQuestions = picked.length >= simulado.questionCount
-    ? picked
-    : [...picked, ...FALLBACK_QUESTIONS.slice(0, simulado.questionCount - picked.length)];
-
-  const questionIds = examQuestions.map(q => (q.id > 0 ? q.id : q.id));
 
   const [session] = await db.insert(examSessionsTable).values({
     simuladoId: simulado.id,
     userId: DEFAULT_USER_ID,
-    questionIds: questionIds.filter(id => id > 0),
+    questionIds: examQuestions.map(q => q.id).filter(id => id > 0),
   }).returning();
 
   res.json(StartSimuladoResponse.parse({
@@ -289,7 +348,7 @@ router.post("/simulados/:id/start", async (req, res): Promise<void> => {
       subject: q.subject,
       topic: q.topic,
       statement: q.statement,
-      contextText: (q as any).contextText ?? null,
+      contextText: q.contextText,
       difficulty: q.difficulty,
       estimatedTimeSeconds: q.estimatedTimeSeconds,
       alternatives: q.alternatives as Array<{ id: string; text: string }>,

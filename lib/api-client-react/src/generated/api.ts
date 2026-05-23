@@ -20,6 +20,12 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AiGenerateFlashcardsBody,
+  AiGenerateFlashcardsResponse,
+  AiGenerateQuestionsBody,
+  AiGenerateQuestionsResponse,
+  AiGenerateSimuladoBody,
+  AiGenerateSimuladoResponse,
   DashboardSummary,
   ExamSession,
   Flashcard,
@@ -2734,6 +2740,219 @@ export const usePracticeQuestion = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getPracticeQuestionMutationOptions(options));
+    }
+
+export const getAiGenerateFlashcardsUrl = () => {
+
+
+
+
+  return `/api/ai/generate/flashcards`
+}
+
+/**
+ * @summary Generate AI flashcards for a topic
+ */
+export const aiGenerateFlashcards = async (aiGenerateFlashcardsBody: AiGenerateFlashcardsBody, options?: RequestInit): Promise<AiGenerateFlashcardsResponse> => {
+
+  return customFetch<AiGenerateFlashcardsResponse>(getAiGenerateFlashcardsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiGenerateFlashcardsBody,)
+  }
+);}
+
+
+
+
+export const getAiGenerateFlashcardsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateFlashcards>>, TError,{data: BodyType<AiGenerateFlashcardsBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aiGenerateFlashcards>>, TError,{data: BodyType<AiGenerateFlashcardsBody>}, TContext> => {
+
+const mutationKey = ['aiGenerateFlashcards'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aiGenerateFlashcards>>, {data: BodyType<AiGenerateFlashcardsBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  aiGenerateFlashcards(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AiGenerateFlashcardsMutationResult = NonNullable<Awaited<ReturnType<typeof aiGenerateFlashcards>>>
+    export type AiGenerateFlashcardsMutationBody = BodyType<AiGenerateFlashcardsBody>
+    export type AiGenerateFlashcardsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI flashcards for a topic
+ */
+export const useAiGenerateFlashcards = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateFlashcards>>, TError,{data: BodyType<AiGenerateFlashcardsBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof aiGenerateFlashcards>>,
+        TError,
+        {data: BodyType<AiGenerateFlashcardsBody>},
+        TContext
+      > => {
+      return useMutation(getAiGenerateFlashcardsMutationOptions(options));
+    }
+
+export const getAiGenerateQuestionsUrl = () => {
+
+
+
+
+  return `/api/ai/generate/questions`
+}
+
+/**
+ * @summary Generate AI ENEM-style questions
+ */
+export const aiGenerateQuestions = async (aiGenerateQuestionsBody: AiGenerateQuestionsBody, options?: RequestInit): Promise<AiGenerateQuestionsResponse> => {
+
+  return customFetch<AiGenerateQuestionsResponse>(getAiGenerateQuestionsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiGenerateQuestionsBody,)
+  }
+);}
+
+
+
+
+export const getAiGenerateQuestionsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateQuestions>>, TError,{data: BodyType<AiGenerateQuestionsBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aiGenerateQuestions>>, TError,{data: BodyType<AiGenerateQuestionsBody>}, TContext> => {
+
+const mutationKey = ['aiGenerateQuestions'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aiGenerateQuestions>>, {data: BodyType<AiGenerateQuestionsBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  aiGenerateQuestions(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AiGenerateQuestionsMutationResult = NonNullable<Awaited<ReturnType<typeof aiGenerateQuestions>>>
+    export type AiGenerateQuestionsMutationBody = BodyType<AiGenerateQuestionsBody>
+    export type AiGenerateQuestionsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate AI ENEM-style questions
+ */
+export const useAiGenerateQuestions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateQuestions>>, TError,{data: BodyType<AiGenerateQuestionsBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof aiGenerateQuestions>>,
+        TError,
+        {data: BodyType<AiGenerateQuestionsBody>},
+        TContext
+      > => {
+      return useMutation(getAiGenerateQuestionsMutationOptions(options));
+    }
+
+export const getAiGenerateSimuladoUrl = () => {
+
+
+
+
+  return `/api/ai/generate/simulado`
+}
+
+/**
+ * @summary Generate a full AI simulado
+ */
+export const aiGenerateSimulado = async (aiGenerateSimuladoBody: AiGenerateSimuladoBody, options?: RequestInit): Promise<AiGenerateSimuladoResponse> => {
+
+  return customFetch<AiGenerateSimuladoResponse>(getAiGenerateSimuladoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiGenerateSimuladoBody,)
+  }
+);}
+
+
+
+
+export const getAiGenerateSimuladoMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateSimulado>>, TError,{data: BodyType<AiGenerateSimuladoBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aiGenerateSimulado>>, TError,{data: BodyType<AiGenerateSimuladoBody>}, TContext> => {
+
+const mutationKey = ['aiGenerateSimulado'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aiGenerateSimulado>>, {data: BodyType<AiGenerateSimuladoBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  aiGenerateSimulado(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AiGenerateSimuladoMutationResult = NonNullable<Awaited<ReturnType<typeof aiGenerateSimulado>>>
+    export type AiGenerateSimuladoMutationBody = BodyType<AiGenerateSimuladoBody>
+    export type AiGenerateSimuladoMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate a full AI simulado
+ */
+export const useAiGenerateSimulado = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aiGenerateSimulado>>, TError,{data: BodyType<AiGenerateSimuladoBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof aiGenerateSimulado>>,
+        TError,
+        {data: BodyType<AiGenerateSimuladoBody>},
+        TContext
+      > => {
+      return useMutation(getAiGenerateSimuladoMutationOptions(options));
     }
 
 export const getListOpenaiConversationsUrl = () => {

@@ -21,6 +21,8 @@ tags:
   - name: study-today
   - name: openai
     description: OpenAI AI chat, image, and audio operations
+  - name: ai-generate
+    description: AI-powered infinite content generation
 paths:
   /healthz:
     get:
@@ -686,6 +688,97 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PracticeResult"
+
+  /ai/generate/flashcards:
+    post:
+      operationId: aiGenerateFlashcards
+      tags: [ai-generate]
+      summary: Generate AI flashcards for a topic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topic:
+                  type: string
+                subject:
+                  type: string
+                count:
+                  type: integer
+                difficulty:
+                  type: string
+              required: [topic, subject]
+      responses:
+        "201":
+          description: Generated flashcard deck
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiGenerateFlashcardsResponse"
+
+  /ai/generate/questions:
+    post:
+      operationId: aiGenerateQuestions
+      tags: [ai-generate]
+      summary: Generate AI ENEM-style questions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject:
+                  type: string
+                topic:
+                  type: string
+                count:
+                  type: integer
+                difficulty:
+                  type: string
+                category:
+                  type: string
+              required: [subject, topic]
+      responses:
+        "201":
+          description: Generated questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiGenerateQuestionsResponse"
+
+  /ai/generate/simulado:
+    post:
+      operationId: aiGenerateSimulado
+      tags: [ai-generate]
+      summary: Generate a full AI simulado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                subjects:
+                  type: array
+                  items:
+                    type: string
+                difficulty:
+                  type: string
+                questionsPerSubject:
+                  type: integer
+              required: [title, subjects]
+      responses:
+        "201":
+          description: Generated simulado ready to start
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiGenerateSimuladoResponse"
 
   /openai/conversations:
     get:
@@ -1611,6 +1704,39 @@ components:
         xpEarned:
           type: integer
       required: [isCorrect, correctAnswer, explanation, xpEarned]
+
+    AiGenerateFlashcardsResponse:
+      type: object
+      properties:
+        deckId:
+          type: integer
+        deckTitle:
+          type: string
+        cardsCreated:
+          type: integer
+      required: [deckId, deckTitle, cardsCreated]
+
+    AiGenerateQuestionsResponse:
+      type: object
+      properties:
+        questionsCreated:
+          type: integer
+        questionIds:
+          type: array
+          items:
+            type: integer
+      required: [questionsCreated, questionIds]
+
+    AiGenerateSimuladoResponse:
+      type: object
+      properties:
+        simuladoId:
+          type: integer
+        title:
+          type: string
+        totalQuestions:
+          type: integer
+      required: [simuladoId, title, totalQuestions]
 
     StudyCard:
       type: object

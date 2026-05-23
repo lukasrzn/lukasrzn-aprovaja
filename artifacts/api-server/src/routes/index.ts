@@ -11,6 +11,7 @@ import missionsRouter from "./missions";
 import questionsRouter from "./questions";
 import studyTodayRouter from "./study-today";
 import openaiRouter from "./openai/index";
+import aiGenerateRouter from "./ai-generate.js";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(missionsRouter);
 router.use(questionsRouter);
 router.use(studyTodayRouter);
 router.use(openaiRouter);
+router.use(aiGenerateRouter);
 
 export default router;
