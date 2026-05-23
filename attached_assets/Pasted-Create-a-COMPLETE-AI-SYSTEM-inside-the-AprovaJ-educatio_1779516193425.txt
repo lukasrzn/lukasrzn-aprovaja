@@ -1,0 +1,167 @@
+Create a COMPLETE AI SYSTEM inside the “AprovaJá” educational SaaS platform.
+
+IMPORTANT:
+- ALL USER INTERFACE MUST BE IN BRAZILIAN PORTUGUESE.
+- The AI experience must feel MODERN, PREMIUM, HUMAN-LIKE, and HIGHLY INTELLIGENT.
+- The AI must become the core feature of the platform.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Integrate a powerful AI assistant capable of:
+- answering student questions
+- explaining subjects
+- generating summaries
+- creating study plans
+- correcting essays
+- generating flashcards
+- recommending topics
+- motivating students
+- analyzing performance
+
+====================================================
+AI TECHNOLOGY
+====================================================
+
+Use:
+- OpenAI API
+- GPT-based conversational system
+- Streaming responses
+- Context memory
+- Fast response architecture
+
+Environment variable:
+OPENAI_API_KEY
+
+====================================================
+AI FEATURES
+====================================================
+
+Build the following AI systems:
+
+1. AI PROFESSOR
+- Chat interface
+- Human-like responses
+- Educational explanations
+- Friendly personality
+- Intelligent tutoring
+
+2. AI STUDY PLANNER
+- Creates personalized study schedules
+- Adapts based on weak subjects
+- Recommends revisions
+
+3. AI ESSAY CORRECTOR
+- Analyze redações
+- Give score predictions
+- Grammar suggestions
+- Improvement recommendations
+
+4. AI QUESTION GENERATOR
+- Generate ENEM-style questions
+- Generate Concurso Público questions
+- Adaptive difficulty
+
+5. AI FLASHCARD GENERATOR
+- Transform summaries into flashcards
+- Smart revision system
+
+6. AI PERFORMANCE ANALYSIS
+- Analyze student performance
+- Identify weak areas
+- Generate insights
+
+====================================================
+CHAT INTERFACE
+====================================================
+
+Create a futuristic AI chat system with:
+- modern message bubbles
+- typing animations
+- streaming text
+- voice-ready interface
+- smooth transitions
+- AI avatar
+- floating chat button
+
+====================================================
+VISUAL DESIGN
+====================================================
+
+Use:
+- futuristic dashboard aesthetics
+- glassmorphism
+- neon gradients
+- smooth animations
+- premium dark mode
+- floating effects
+- rounded cards
+
+====================================================
+AI PERSONALITY
+====================================================
+
+The AI should:
+- motivate students
+- speak naturally
+- explain simply
+- adapt to difficulty level
+- encourage consistency
+- act like a premium private tutor
+
+====================================================
+DATABASE
+====================================================
+
+Create database tables for:
+- AI conversations
+- study recommendations
+- flashcards
+- essay analysis
+- generated questions
+- learning analytics
+
+====================================================
+SECURITY
+====================================================
+
+Implement:
+- secure API routes
+- rate limiting
+- authentication protection
+- encrypted environment variables
+
+====================================================
+ADVANCED FEATURES
+====================================================
+
+Add:
+- AI memory
+- conversation history
+- context awareness
+- personalized recommendations
+- AI learning profile
+- smart notifications
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+The AI experience must feel:
+- fast
+- fluid
+- premium
+- like ChatGPT-level quality
+
+====================================================
+FINAL GOAL
+====================================================
+
+The AI must become:
+- the most addictive feature
+- the main reason students stay on the platform
+- a premium intelligent tutor
+- a futuristic education assistant
+
+Generate production-ready architecture and scalable AI integration.
