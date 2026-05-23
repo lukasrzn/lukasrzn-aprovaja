@@ -965,9 +965,12 @@ components:
           type: string
         school:
           type: ["string", "null"]
+        role:
+          type: string
+          description: "user | admin"
         createdAt:
           type: string
-      required: [id, name, email, goal, createdAt]
+      required: [id, name, email, goal, role, createdAt]
 
     UserProfileUpdate:
       type: object

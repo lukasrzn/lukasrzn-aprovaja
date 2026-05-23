@@ -13,6 +13,8 @@ import studyTodayRouter from "./study-today";
 import openaiRouter from "./openai/index";
 import aiGenerateRouter from "./ai-generate.js";
 import stripeRouter from "./stripe";
+import adminRouter from "./admin";
+import authRouter from "./auth";
 import { requireSubscription } from "../middleware/requireSubscription";
 
 const router: IRouter = Router();
@@ -20,6 +22,10 @@ const router: IRouter = Router();
 // Public routes — no subscription required
 router.use(healthRouter);
 router.use(stripeRouter);
+router.use(authRouter);
+
+// Admin routes — gated by requireAdmin middleware (inside adminRouter)
+router.use(adminRouter);
 
 // Premium routes — require an active Stripe subscription
 router.use(requireSubscription);

@@ -23,6 +23,7 @@ export const GetMeResponse = zod.object({
   "avatarUrl": zod.string().nullish(),
   "goal": zod.string(),
   "school": zod.string().nullish(),
+  "role": zod.string().describe('user | admin'),
   "createdAt": zod.string()
 })
 
@@ -41,6 +42,7 @@ export const UpdateMeResponse = zod.object({
   "avatarUrl": zod.string().nullish(),
   "goal": zod.string(),
   "school": zod.string().nullish(),
+  "role": zod.string().describe('user | admin'),
   "createdAt": zod.string()
 })
 

@@ -9,6 +9,7 @@ export const usersTable = pgTable("users", {
   avatarUrl: text("avatar_url"),
   goal: text("goal").notNull().default("ENEM"),
   school: text("school"),
+  role: text("role").notNull().default("user"), // "user" | "admin"
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

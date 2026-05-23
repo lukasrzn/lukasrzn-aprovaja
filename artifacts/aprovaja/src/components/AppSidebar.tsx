@@ -31,6 +31,7 @@ import {
   LogOut,
   Loader2,
   AlertTriangle,
+  Shield,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
@@ -64,6 +65,8 @@ export function AppSidebar() {
 
   const handleCancelLogout = () => setLogoutStage("idle");
 
+  const isAdmin = user?.role === "admin";
+
   const menuItems = [
     { title: "Dashboard", icon: Home, path: "/dashboard" },
     { title: "Professor IA", icon: MessageSquareText, path: "/professor-ia" },
@@ -78,6 +81,10 @@ export function AppSidebar() {
     { title: "Ranking", icon: Trophy, path: "/ranking" },
     { title: "Perfil", icon: User, path: "/perfil" },
   ];
+
+  const adminItems = isAdmin
+    ? [{ title: "Painel Admin", icon: Shield, path: "/admin" }]
+    : [];
 
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar/50 backdrop-blur-xl">
@@ -155,6 +162,34 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Admin section — only visible to users with role=admin */}
+        {adminItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarSeparator />
+            <SidebarGroupLabel className="text-xs uppercase tracking-wider text-primary/70 font-semibold px-6 mt-1">
+              Administração
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminItems.map((item) => (
+                  <SidebarMenuItem key={item.path}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={location === item.path}
+                      className="hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      <Link href={item.path} className="flex items-center gap-3 px-4">
+                        <item.icon className="w-4 h-4 text-primary" />
+                        <span className="text-primary font-medium">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-4 space-y-2">

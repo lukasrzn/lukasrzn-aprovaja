@@ -1,0 +1,125 @@
+You are a senior full-stack engineer and authentication/security architect responsible for fixing and upgrading the “AprovaJá” SaaS platform.
+
+====================================================
+CRITICAL FEATURES TO IMPLEMENT
+====================================================
+
+You must implement TWO critical authentication features:
+
+1. Password Recovery System (Recuperação de Senha)
+2. Admin Access Control (Admin Privileges Assignment)
+
+Both features must be secure, production-ready, and fully integrated with the current auth system.
+
+====================================================
+1. PASSWORD RECOVERY SYSTEM
+====================================================
+
+Implement a complete “Forgot Password” flow.
+
+FLOW REQUIREMENTS:
+
+A) “Esqueci minha senha” option on login page
+
+B) User enters email:
+- Send secure password reset email
+- Generate time-limited reset token (expires in 15–30 minutes)
+
+C) Email must include:
+- Secure reset link
+- Token validation
+- Branding (AprovaJá)
+
+D) Reset Page (/reset-password):
+- Input: new password
+- Confirm password
+- Validate token before allowing reset
+
+E) Backend:
+- Secure token generation (random + hashed)
+- Store token with expiration
+- Validate token before password update
+- Invalidate token after use
+
+SECURITY REQUIREMENTS:
+- Prevent brute force token guessing
+- Rate limit reset requests
+- Do not expose whether email exists
+- Use HTTPS-only links
+
+====================================================
+2. ADMIN ACCESS CONTROL
+====================================================
+
+Grant ADMIN ROLE access to the following email:
+
+👉 lucasgabriel09807@gmail.com
+
+ROLE: "admin"
+
+====================================================
+ADMIN PERMISSIONS MUST INCLUDE:
+====================================================
+
+- Full dashboard access
+- User management (create, edit, delete users)
+- Subscription control (view/modify plans)
+- Access to analytics and revenue data
+- Ability to manage content (simulados, redações, flashcards)
+- System configuration access
+
+====================================================
+IMPLEMENTATION REQUIREMENTS
+====================================================
+
+A) DATABASE:
+Add role system:
+- user.role = "user" | "admin"
+
+B) BACKEND:
+- Middleware to protect admin routes
+- Role-based access control (RBAC)
+- Admin-only endpoints validation
+
+C) FRONTEND:
+- Show admin panel only for admin users
+- Hide admin features for regular users
+- Add secure route protection
+
+====================================================
+SECURITY REQUIREMENTS (CRITICAL)
+====================================================
+
+- Only the specified email must receive admin role
+- Prevent role escalation via frontend manipulation
+- Validate role on backend ONLY
+- Log admin access attempts
+- Protect sensitive endpoints
+
+====================================================
+USER EXPERIENCE
+====================================================
+
+Password recovery:
+- Simple and fast UI
+- Clear instructions
+- Success and error feedback messages
+
+Admin system:
+- Seamless admin detection
+- No UI exposure of admin controls to normal users
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- Users can securely reset their passwords anytime
+- Password recovery system is fully functional and secure
+- Admin access is correctly assigned ONLY to:
+  lucasgabriel09807@gmail.com
+- Role-based access control is enforced across the entire system
+- The platform is secure, scalable, and production-ready
+
+Generate complete frontend, backend, database schema, and security implementation.

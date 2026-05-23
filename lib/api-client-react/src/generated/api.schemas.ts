@@ -18,6 +18,8 @@ export interface UserProfile {
   goal: string;
   /** @nullable */
   school?: string | null;
+  /** user | admin */
+  role: string;
   createdAt: string;
 }
 

@@ -40,6 +40,7 @@ router.get("/users/me", async (req, res): Promise<void> => {
     avatarUrl: user.avatarUrl ?? null,
     goal: user.goal,
     school: user.school ?? null,
+    role: user.role,
     createdAt: user.createdAt.toISOString(),
   }));
 });

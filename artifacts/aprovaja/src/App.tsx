@@ -26,6 +26,8 @@ import IaConteudo from "@/pages/ia-conteudo";
 import PoliticaDePrivacidade from "@/pages/politica-de-privacidade";
 import TermosDeServico from "@/pages/termos-de-servico";
 import Sucesso from "@/pages/sucesso";
+import Admin from "@/pages/admin";
+import RecuperarSenha from "@/pages/recuperar-senha";
 import { Layout } from "@/components/Layout";
 import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
 
@@ -96,6 +98,8 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/planos" component={Planos} />
       <Route path="/sucesso" component={Sucesso} />
+      <Route path="/recuperar-senha" component={RecuperarSenha} />
+      <Route path="/admin" component={Admin} />
       <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
       <Route path="/termos-de-servico" component={TermosDeServico} />
 
