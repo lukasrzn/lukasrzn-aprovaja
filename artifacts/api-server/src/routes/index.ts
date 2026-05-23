@@ -10,6 +10,7 @@ import rankingsRouter from "./rankings";
 import missionsRouter from "./missions";
 import questionsRouter from "./questions";
 import studyTodayRouter from "./study-today";
+import openaiRouter from "./openai/index";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(rankingsRouter);
 router.use(missionsRouter);
 router.use(questionsRouter);
 router.use(studyTodayRouter);
+router.use(openaiRouter);
 
 export default router;

@@ -5,3 +5,5 @@ export * from "./simulados";
 export * from "./redacoes";
 export * from "./missions";
 export * from "./questions";
+export * from "./conversations";
+export * from "./messages";

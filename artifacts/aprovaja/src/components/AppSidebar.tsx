@@ -25,6 +25,7 @@ import {
   Zap,
   BookOpen,
   Brain,
+  MessageSquareText,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,6 +39,7 @@ export function AppSidebar() {
 
   const menuItems = [
     { title: "Dashboard", icon: Home, path: "/dashboard" },
+    { title: "Professor IA", icon: MessageSquareText, path: "/professor-ia" },
     { title: "Estudar Hoje", icon: Brain, path: "/estude-hoje" },
     { title: "Plano de Estudos", icon: Calendar, path: "/plano-de-estudos" },
     { title: "Simulados", icon: FileText, path: "/simulados" },
