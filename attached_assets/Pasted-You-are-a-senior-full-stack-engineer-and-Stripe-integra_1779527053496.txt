@@ -1,0 +1,111 @@
+You are a senior full-stack engineer and Stripe integration specialist responsible for fixing a critical payment failure in the “AprovaJá” SaaS platform.
+
+====================================================
+CRITICAL PAYMENT ERROR (PERSISTENT BUG)
+====================================================
+
+The payment system is STILL NOT WORKING even after previous attempts to fix it.
+
+Now the system is returning this exact error:
+
+❌ Error ao iniciar pagamento  
+❌ No such price: 'price_1TaAjoBT0dqwMj0IBnXj7CgL'
+
+This is a CRITICAL Stripe configuration failure and must be resolved immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+You must:
+
+1. Identify why Stripe is rejecting the price ID
+2. Fix the Stripe product/price configuration
+3. Ensure correct environment (test vs live)
+4. Repair the checkout session creation logic
+5. Guarantee payments work 100% reliably
+
+====================================================
+ROOT CAUSE INVESTIGATION REQUIRED
+====================================================
+
+Carefully analyze:
+
+STRIPE CONFIGURATION:
+- Does the price ID exist in the correct Stripe account?
+- Is it a TEST key being used with LIVE price (or vice versa)?
+- Was the price deleted or recreated in Stripe dashboard?
+- Is the correct Price ID being referenced in code?
+
+BACKEND:
+- Is the correct priceId being passed to Stripe API?
+- Are environment variables outdated or incorrect?
+- Is there a hardcoded priceId mismatch?
+
+FRONTEND:
+- Is the correct plan mapped to the correct Stripe priceId?
+- Is an old cached value being used?
+- Is the request payload correct?
+
+DEPLOYMENT:
+- Is production using old environment variables?
+- Is there mismatch between local and deployed Stripe config?
+
+====================================================
+EXPECTED FIX
+====================================================
+
+You MUST ensure:
+
+- Stripe Price ID exists and is valid in the correct Stripe environment
+- Backend uses correct and updated priceId
+- No hardcoded invalid IDs remain in codebase
+- Checkout session is created successfully
+
+====================================================
+CORRECT PAYMENT FLOW
+====================================================
+
+When user clicks “Assinar agora”:
+
+1. Frontend sends selected plan
+2. Backend maps plan → VALID Stripe priceId
+3. Stripe creates Checkout Session successfully
+4. Returns valid checkout URL
+5. User is redirected without errors
+
+====================================================
+MANDATORY FIXES
+====================================================
+
+- Remove all invalid or outdated price IDs
+- Centralize Stripe price configuration in environment variables
+- Add validation before creating checkout session:
+  - If priceId invalid → return clear error BEFORE Stripe call
+- Improve logging for Stripe failures
+- Ensure correct environment separation (test/live)
+
+====================================================
+ERROR HANDLING (IMPORTANT)
+====================================================
+
+If price is invalid:
+
+Show:
+“Plano de pagamento inválido. Por favor, tente novamente ou contate o suporte.”
+
+Do NOT break the application.
+
+====================================================
+FINAL GOAL
+====================================================
+
+After fix:
+
+- No more "No such price" errors
+- Stripe Checkout works perfectly
+- All plans correctly mapped to valid Stripe prices
+- System is stable, scalable, and production-ready
+- Payment flow is fully reliable across all environments
+
+THIS IS A CRITICAL STRIPE CONFIGURATION ISSUE — FIX ROOT CAUSE, NOT SYMPTOMS.
