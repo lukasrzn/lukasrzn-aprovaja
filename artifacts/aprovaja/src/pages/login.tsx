@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,9 +32,22 @@ const PLANS = [
 
 export default function Login() {
   const [, setLocation] = useLocation();
+  const search = useSearch();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "premium" | null>(null);
+
+  // Show toast when user returns from a cancelled payment
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    if (params.get("plano") === "cancelado") {
+      toast({
+        title: "Pagamento não concluído",
+        description: "Você pode tentar novamente quando quiser.",
+        variant: "destructive",
+      });
+    }
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,15 +59,37 @@ export default function Login() {
     }, 1000);
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPlan) return;
+
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const resp = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planSlug: selectedPlan }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error ?? `Erro ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("Resposta inválida do servidor.");
+      }
+    } catch (err: any) {
       setIsLoading(false);
-      toast({ title: "Conta criada!", description: `Plano ${selectedPlan === "pro" ? "Pro" : "Premium"} ativado. Bem-vindo ao AprovaJá!` });
-      setLocation("/dashboard");
-    }, 1200);
+      toast({
+        title: "Erro ao iniciar pagamento",
+        description: err.message ?? "Tente novamente em instantes.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

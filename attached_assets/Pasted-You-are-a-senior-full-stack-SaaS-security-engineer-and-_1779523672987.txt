@@ -1,0 +1,131 @@
+You are a senior full-stack SaaS security engineer and system architect responsible for fixing critical access control and subscription flow issues in the “AprovaJá” platform.
+
+====================================================
+CRITICAL SECURITY ISSUE
+====================================================
+
+The platform currently has a SERIOUS vulnerability:
+
+- Users WITHOUT an active paid plan are still able to access parts of the system.
+- Access control is NOT being properly enforced.
+- This creates unauthorized access to premium educational features.
+
+This is a HIGH PRIORITY security and business issue and must be fixed immediately.
+
+====================================================
+YOUR MISSION
+====================================================
+
+1. Fix ALL access control and subscription validation logic.
+2. Ensure ONLY users with an active paid subscription can access the platform.
+3. Block all unauthorized access paths.
+4. Harden the system against bypass attempts.
+
+====================================================
+CRITICAL ACCESS CONTROL FIX
+====================================================
+
+Implement strict subscription gating:
+
+- Every protected route MUST check subscription status
+- Block access if:
+  - subscriptionStatus !== "active"
+  - plan is missing
+  - payment is expired or canceled
+
+- Redirect unauthorized users to the pricing/plans page automatically
+
+====================================================
+NEW USER FLOW (IMPORTANT)
+====================================================
+
+Update the user experience flow as follows:
+
+1. When user clicks:
+   - “Assinar agora” → MUST redirect directly to Stripe Checkout session immediately.
+
+2. When user clicks:
+   - “Sua aprovação hoje” OR “Começar agora” OR main CTA buttons → MUST redirect to:
+     “Planos e Aderência” (pricing / subscription selection page)
+
+This page must:
+- show available plans
+- highlight benefits
+- allow selection
+- include Stripe checkout initiation
+
+====================================================
+CHECKOUT INTEGRATION
+====================================================
+
+Ensure:
+
+- Direct Stripe Checkout session is triggered when “Assinar agora” is clicked
+- No intermediate broken pages
+- Fast loading payment transition
+- Secure session creation via backend only
+
+====================================================
+BACKEND SECURITY REQUIREMENTS
+====================================================
+
+- Validate subscription status on EVERY API request
+- Add middleware protection for all premium routes
+- Block frontend-only access attempts
+- Prevent cached access after logout or expired subscription
+- Ensure Stripe webhook is the ONLY source of truth for payment status
+
+====================================================
+FRONTEND REQUIREMENTS
+====================================================
+
+- Remove any bypass to premium features
+- Add global auth + subscription guard
+- Add redirect logic:
+  - if no active plan → /planos
+- Improve UX messaging:
+  - “Você precisa de um plano ativo para continuar”
+
+====================================================
+DATABASE REQUIREMENTS
+====================================================
+
+Ensure correct validation of:
+- subscriptionStatus
+- planType
+- stripeSubscriptionId
+- payment expiration date
+
+====================================================
+SECURITY HARDENING
+====================================================
+
+Prevent:
+- direct URL access to premium pages
+- API abuse without subscription
+- cached session bypass
+- frontend-only protection (must be backend enforced)
+
+====================================================
+USER EXPERIENCE IMPROVEMENTS
+====================================================
+
+- Smooth redirect animations
+- Loading states during checkout
+- Clear pricing explanation
+- Premium UI for subscription page
+- Mobile optimized checkout flow
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- NO user without a paid plan can access any premium feature
+- “Assinar agora” goes directly to Stripe Checkout
+- “Sua aprovação hoje” redirects to subscription plans page
+- System is fully secure, hardened, and production-ready
+- Subscription enforcement is consistent across frontend, backend, and database
+
+Generate production-grade security fixes, routing logic, and Stripe flow improvements.
