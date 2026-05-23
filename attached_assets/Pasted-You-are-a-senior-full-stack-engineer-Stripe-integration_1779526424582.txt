@@ -1,0 +1,119 @@
+You are a senior full-stack engineer, Stripe integration specialist, and SaaS reliability expert responsible for stabilizing the payment system of the “AprovaJá” platform.
+
+====================================================
+CRITICAL STATUS UPDATE (PERSISTENT BUG)
+====================================================
+
+IMPORTANT:
+
+Even AFTER previous fixes, the payment system is STILL NOT WORKING.
+
+The issue persists:
+- Users still cannot successfully start or complete payments
+- Stripe Checkout is still failing or not redirecting properly
+- The error continues even after attempted corrections
+
+This is now a CRITICAL PRODUCTION FAILURE.
+
+====================================================
+YOUR MISSION (URGENT)
+====================================================
+
+You must:
+
+1. STOP assuming the previous fix worked.
+2. FULLY DEBUG the entire payment pipeline from scratch.
+3. IDENTIFY the real root cause of the failure.
+4. FIX the system permanently (not partial fixes).
+
+====================================================
+WHAT MUST BE INVESTIGATED
+====================================================
+
+Perform a deep diagnostic of:
+
+Frontend:
+- Checkout button logic
+- API call handling
+- Redirect flow
+- Error handling states
+- Duplicate requests or race conditions
+
+Backend:
+- Stripe session creation endpoint
+- API route stability
+- Missing or invalid environment variables
+- Authentication middleware blocking requests
+- Incorrect payload sent to Stripe
+
+Stripe Layer:
+- Invalid API keys (test vs live mismatch)
+- Missing priceId/productId
+- Webhook misconfiguration
+- Incorrect success_url or cancel_url
+- Session creation failures
+
+Infrastructure:
+- CORS issues
+- Network failures
+- Deployment environment mismatch
+- Cached old code still running
+
+====================================================
+REQUIRED OUTPUT (VERY IMPORTANT)
+====================================================
+
+You MUST clearly explain:
+
+- WHY the error is still happening
+- WHERE exactly the failure occurs (frontend, backend, Stripe, or network)
+- WHAT is breaking the flow
+- HOW you are fixing it permanently
+
+No generic answers. No assumptions. You must diagnose precisely.
+
+====================================================
+EXPECTED FIXED FLOW
+====================================================
+
+When user clicks “Assinar agora”:
+
+1. Frontend sends request to backend
+2. Backend successfully creates Stripe Checkout Session
+3. Backend returns valid session URL
+4. Frontend redirects user instantly
+5. Stripe checkout opens without any errors
+
+====================================================
+ERROR HANDLING (MANDATORY)
+====================================================
+
+If failure happens:
+- Log exact error details
+- Show user-friendly message:
+  “Não foi possível iniciar o pagamento. Estamos corrigindo isso imediatamente.”
+- Provide retry button
+- Do NOT break UI or freeze app
+
+====================================================
+SECURITY REQUIREMENTS
+====================================================
+
+- Stripe secret key MUST remain server-side only
+- All payment validation must be backend-controlled
+- Webhooks must be verified and functional
+- No fake or bypassable checkout sessions allowed
+
+====================================================
+FINAL GOAL
+====================================================
+
+After this fix:
+
+- Payment system must work 100% reliably
+- Root cause must be clearly identified and eliminated
+- No recurring checkout errors allowed
+- System must be production-grade, stable, and scalable
+- Stripe integration must be fully functional across all devices
+
+THIS IS URGENT. DO NOT APPLY SURFACE FIXES. FIND THE REAL PROBLEM AND RESOLVE IT COMPLETELY.
