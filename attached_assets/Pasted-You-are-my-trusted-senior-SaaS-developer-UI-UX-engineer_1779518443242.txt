@@ -1,0 +1,101 @@
+You are my trusted senior SaaS developer, UI/UX engineer, and AI integration expert.  
+We are building “AprovaJá”, the most powerful Brazilian educational platform, and you are my partner in making this a success.  
+
+====================================================
+ISSUE
+====================================================
+
+The “Plano de Estudos” (Study Plan) section is currently **not functioning**.  
+Students cannot view, interact with, or follow their personalized study plans.  
+This is critical and must be fixed IMMEDIATELY.
+
+Your mission:  
+- Fix all frontend and backend issues to make the Study Plan fully functional.
+- Ensure the Study Plan integrates with AI recommendations, flashcards, rankings, and gamification.
+- Make it interactive, motivating, and visually stunning.
+
+====================================================
+REQUIREMENTS
+====================================================
+
+1. **Functionality**
+- Display daily/weekly/monthly study schedules.
+- Suggest subjects and topics dynamically based on student performance.
+- Include estimated study time per topic.
+- Track completed, pending, and upcoming sessions.
+- Adapt difficulty based on previous results and AI analysis.
+- Include revision cycles and spaced repetition.
+
+2. **Integration**
+- Connect to AI tutor for automatic topic recommendations.
+- Integrate flashcards from the Flashcards section.
+- Link to quizzes, simulations, and mock tests.
+- Sync with gamification system: XP, streaks, badges, coins.
+- Update student dashboard with progress charts and completion percentage.
+
+3. **Study Content**
+Populate realistic and advanced study topics for all levels:
+
+- **Ensino Fundamental:** Portuguese, Mathematics, Science, History, Geography  
+- **Ensino Médio:** Advanced Portuguese, Algebra, Geometry, Physics, Chemistry, Biology, History, Geography  
+- **ENEM:** Interdisciplinary questions, contextual texts, TRIs, essay topics, essay correction  
+- **Concursos Públicos:** Portuguese, Raciocínio Lógico, Direito Constitucional, Administração Pública, Informática, Atualidades  
+- **Advanced Topics:** Grammar, Funções, Trigonometria, Probabilidade, Estatística, Termodinâmica, Química Orgânica, Genética, Ecologia, Filosofia, Sociologia, English comprehension  
+
+Each study topic must include:
+- Subject / Matter  
+- Topic / Chapter  
+- Difficulty Level  
+- Estimated Study Time  
+- Priority (urgent, medium, low)  
+- Revision Suggestion  
+- AI-generated hints  
+
+4. **UI / UX**
+- Modern dashboard view with daily schedule cards.
+- Interactive flip cards for topics (similar to flashcards).
+- Smooth animations for completed/ongoing sessions.
+- Color-coded priority indicators.
+- Progress rings and charts.
+- Responsive and mobile-first.
+- Motivational messages for students.
+
+5. **Backend / Database**
+- Store user-specific study plans.
+- Track completed topics and sessions.
+- Adapt AI recommendations based on history.
+- Support multiple study levels per student.
+- Log detailed study statistics for analytics.
+
+====================================================
+ADVANCED AI FEATURES
+====================================================
+
+- Recommend the best topic for today based on performance: “Qual tópico iremos estudar hoje?”  
+- Suggest revision cycles intelligently.  
+- Highlight weak areas and prioritize them.  
+- Provide AI-generated tips for faster learning.  
+- Generate daily missions and weekly challenges automatically.  
+
+====================================================
+GAMIFICATION
+====================================================
+
+- Reward students with XP, coins, streaks, and badges for completing study sessions.  
+- Track progress on the dashboard with visually engaging charts.  
+- Celebrate milestones with confetti and animations.
+
+====================================================
+FINAL GOAL
+====================================================
+
+After fixing this section:
+
+- The Study Plan must be fully functional, interactive, and addictive.  
+- Students should feel motivated to log in every day.  
+- The system must be production-ready and integrated with all other platform modules.  
+- AI, flashcards, gamification, and dashboards must all communicate seamlessly.  
+- The Study Plan must feel like a personal tutor guiding the student to success.  
+
+Remember: We are building the best educational SaaS in Brazil. This section is critical.  
+We are partners, we are unstoppable, and this must be DONE RIGHT.
