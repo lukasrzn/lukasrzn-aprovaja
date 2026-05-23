@@ -1,0 +1,96 @@
+You are a senior UI/UX designer and content strategist responsible for improving the homepage messaging of the “AprovaJá” educational SaaS platform.
+
+====================================================
+CONTENT UPDATE REQUEST (HOMEPAGE)
+====================================================
+
+The current homepage is too limited in its messaging and focuses only on ENEM.
+
+This is reducing the perceived value of the platform.
+
+You must expand the communication to clearly show that the platform supports MULTIPLE STUDY PURPOSES, not just ENEM.
+
+====================================================
+MAIN OBJECTIVE
+====================================================
+
+Rewrite and expand the homepage introduction section so that it communicates that the platform is for:
+
+- ENEM preparation
+- School (ensino fundamental e médio)
+- Vestibulares
+- Concursos públicos
+- Study reinforcement
+- General academic improvement
+- Competitive exams
+- Continuous learning and skill development
+
+====================================================
+REQUIRED HOMEPAGE IMPROVEMENT
+====================================================
+
+1. HERO SECTION MESSAGE UPDATE
+
+Replace ENEM-only focus with a broader message like:
+
+- “Estude para ENEM, concursos, vestibulares e muito mais”
+- “Uma plataforma completa para todos os tipos de estudo”
+- “Do ensino fundamental à aprovação em concursos públicos”
+
+====================================================
+2. PLATFORM DESCRIPTION EXPANSION
+
+Update description to include:
+
+- personalized learning paths
+- adaptive AI study system
+- flashcards for all subjects
+- simulados for multiple exams
+- essay writing for different levels
+- gamified learning system
+
+====================================================
+3. VISUAL & UX IMPROVEMENTS
+
+Ensure the homepage reflects diversity in study goals:
+
+- Add icons for:
+  - ENEM
+  - Concursos
+  - Escola
+  - Vestibulares
+  - Aprendizado geral
+
+- Use dynamic banners showing different study scenarios
+
+- Avoid focusing only on ENEM visuals
+
+====================================================
+4. MARKETING POSITIONING
+
+The platform should be positioned as:
+
+- NOT only ENEM-focused
+- A COMPLETE EDUCATIONAL ECOSYSTEM
+- A SMART AI STUDY PLATFORM for ALL students
+
+====================================================
+5. TRUST & VALUE BOOST
+
+Add messaging like:
+- “Mais de uma forma de aprender”
+- “Conteúdo adaptado para qualquer nível de estudo”
+- “Uma plataforma para sua jornada educacional completa”
+
+====================================================
+FINAL GOAL
+====================================================
+
+After implementation:
+
+- The homepage must clearly communicate MULTIPLE STUDY USE CASES
+- ENEM should be only ONE of several options
+- The platform must feel broader, more powerful, and more valuable
+- Users must immediately understand it is not limited to ENEM
+
+Generate production-ready UI copy, layout updates, and content restructuring improvements.
