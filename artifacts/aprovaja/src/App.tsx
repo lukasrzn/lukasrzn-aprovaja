@@ -28,6 +28,7 @@ import TermosDeServico from "@/pages/termos-de-servico";
 import Sucesso from "@/pages/sucesso";
 import Admin from "@/pages/admin";
 import RecuperarSenha from "@/pages/recuperar-senha";
+import RedefinirSenha from "@/pages/redefinir-senha";
 import { Layout } from "@/components/Layout";
 import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
 import { useSession } from "@/hooks/useSession";
@@ -117,6 +118,7 @@ function Router() {
       <Route path="/planos" component={Planos} />
       <Route path="/sucesso" component={Sucesso} />
       <Route path="/recuperar-senha" component={RecuperarSenha} />
+      <Route path="/recuperar-senha/redefinir" component={RedefinirSenha} />
       <Route path="/admin" component={Admin} />
       <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
       <Route path="/termos-de-servico" component={TermosDeServico} />

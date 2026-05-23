@@ -133,13 +133,6 @@ export default function RecuperarSenha() {
                 Não recebeu? Verifique a pasta de spam ou tente novamente em alguns minutos.
               </p>
 
-              <div className="mt-6 p-3 bg-amber-500/8 border border-amber-500/20 rounded-lg text-left">
-                <p className="text-xs text-amber-400/80 font-medium mb-1">ℹ️ Modo de desenvolvimento</p>
-                <p className="text-xs text-muted-foreground">
-                  O envio de email requer um serviço de email configurado (ex: Resend, SendGrid).
-                  O link de recuperação é gerado no backend e estará disponível nos logs do servidor.
-                </p>
-              </div>
             </motion.div>
           )}
 
