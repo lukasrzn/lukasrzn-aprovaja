@@ -15,7 +15,6 @@ export interface UserProfile {
   email: string;
   /** @nullable */
   avatarUrl?: string | null;
-  /** e.g. ENEM, Medicina, Direito, Concurso Federal */
   goal: string;
   /** @nullable */
   school?: string | null;
@@ -50,7 +49,6 @@ export interface Medal {
   earned: boolean;
   /** @nullable */
   earnedAt?: string | null;
-  /** common, rare, epic, legendary */
   rarity: string;
 }
 
@@ -77,7 +75,6 @@ export interface SubjectScore {
   score: number;
   totalQuestions: number;
   correctAnswers: number;
-  /** up, down, stable */
   trend: string;
 }
 
@@ -163,20 +160,17 @@ export interface FlashcardInput {
 }
 
 export interface FlashcardReview {
-  /** 0-5 SM2 quality rating */
   quality: number;
 }
 
 export interface Simulado {
   id: number;
   title: string;
-  /** ENEM, FUVEST, Concurso, Custom */
   type: string;
   /** @nullable */
   subject?: string | null;
   questionCount: number;
   durationMinutes: number;
-  /** facil, medio, dificil */
   difficulty: string;
   /** @nullable */
   completedAt?: string | null;
@@ -191,6 +185,20 @@ export interface SimuladoInput {
   /** @nullable */
   subject?: string | null;
   difficulty: string;
+  questionCount?: number;
+}
+
+export interface StartSimuladoInput {
+  /**
+     * Filter questions by subject
+     * @nullable
+     */
+  subject?: string | null;
+  /**
+     * Filter questions by difficulty
+     * @nullable
+     */
+  difficulty?: string | null;
 }
 
 export interface Alternative {
@@ -214,6 +222,27 @@ export interface SimuladoDetail {
   questions: Question[];
 }
 
+export interface ExamQuestion {
+  id: number;
+  subject: string;
+  topic: string;
+  statement: string;
+  /** @nullable */
+  contextText?: string | null;
+  difficulty: string;
+  estimatedTimeSeconds: number;
+  alternatives: Alternative[];
+}
+
+export interface ExamSession {
+  sessionId: number;
+  simuladoId: number;
+  title: string;
+  durationMinutes: number;
+  difficulty: string;
+  questions: ExamQuestion[];
+}
+
 export interface AnswerItem {
   questionId: number;
   selectedAlternative: string;
@@ -221,6 +250,17 @@ export interface AnswerItem {
 
 export interface SimuladoAnswers {
   answers: AnswerItem[];
+  timeSpentSeconds?: number;
+}
+
+export interface QuestionResult {
+  questionId: number;
+  subject: string;
+  topic: string;
+  selectedAlternative: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  explanation: string;
 }
 
 export interface SimuladoResult {
@@ -234,6 +274,9 @@ export interface SimuladoResult {
   timeSpentMinutes: number;
   completedAt: string;
   subjectBreakdown: SubjectScore[];
+  /** @nullable */
+  triScore?: number | null;
+  questionResults?: QuestionResult[];
 }
 
 export interface CompetenciaScore {
@@ -286,7 +329,88 @@ export interface Mission {
   completed: boolean;
   progress: number;
   target: number;
-  /** study, flashcard, simulado, redacao */
   type: string;
 }
+
+export interface QuestionSummary {
+  id: number;
+  subject: string;
+  topic: string;
+  statement: string;
+  difficulty: string;
+  category: string;
+  estimatedTimeSeconds: number;
+  tags: string[];
+}
+
+export interface QuestionsPage {
+  questions: QuestionSummary[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface QuestionWithAnswer {
+  id: number;
+  subject: string;
+  topic: string;
+  statement: string;
+  /** @nullable */
+  contextText?: string | null;
+  difficulty: string;
+  category: string;
+  alternatives: Alternative[];
+  correctAnswer: string;
+  explanation: string;
+  tags: string[];
+  estimatedTimeSeconds: number;
+}
+
+export interface QuestionInput {
+  subject: string;
+  topic: string;
+  statement: string;
+  /** @nullable */
+  contextText?: string | null;
+  difficulty: string;
+  category: string;
+  alternatives: Alternative[];
+  correctAnswer: string;
+  explanation: string;
+  tags: string[];
+  estimatedTimeSeconds: number;
+}
+
+export type SubjectSummaryDifficulties = {
+  facil: number;
+  medio: number;
+  dificil: number;
+};
+
+export interface SubjectSummary {
+  subject: string;
+  questionCount: number;
+  topics: string[];
+  difficulties: SubjectSummaryDifficulties;
+}
+
+export interface PracticeAnswer {
+  selectedAlternative: string;
+}
+
+export interface PracticeResult {
+  isCorrect: boolean;
+  correctAnswer: string;
+  explanation: string;
+  xpEarned: number;
+}
+
+export type GetQuestionsParams = {
+subject?: string;
+topic?: string;
+difficulty?: string;
+category?: string;
+limit?: number;
+offset?: number;
+};
 

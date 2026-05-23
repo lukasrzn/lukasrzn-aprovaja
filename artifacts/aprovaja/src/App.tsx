@@ -13,6 +13,9 @@ import Flashcards from "@/pages/flashcards";
 import Ranking from "@/pages/ranking";
 import Perfil from "@/pages/perfil";
 import Missoes from "@/pages/missoes";
+import SimuladoExam from "@/pages/simulado-exam";
+import SimuladoResultado from "@/pages/simulado-resultado";
+import Pratica from "@/pages/pratica";
 import { Layout } from "@/components/Layout";
 
 const queryClient = new QueryClient();
@@ -41,7 +44,10 @@ function Router() {
       <Route path="/ranking"><AuthRoute component={Ranking} /></Route>
       <Route path="/perfil"><AuthRoute component={Perfil} /></Route>
       <Route path="/missoes"><AuthRoute component={Missoes} /></Route>
-      
+      <Route path="/pratica"><AuthRoute component={Pratica} /></Route>
+      <Route path="/simulados/:id/resultado/:resultId"><AuthRoute component={SimuladoResultado} /></Route>
+      <Route path="/simulados/:id/exam" component={SimuladoExam} />
+
       <Route component={NotFound} />
     </Switch>
   );

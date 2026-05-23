@@ -8,6 +8,7 @@ import simuladosRouter from "./simulados";
 import redacoesRouter from "./redacoes";
 import rankingsRouter from "./rankings";
 import missionsRouter from "./missions";
+import questionsRouter from "./questions";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(simuladosRouter);
 router.use(redacoesRouter);
 router.use(rankingsRouter);
 router.use(missionsRouter);
+router.use(questionsRouter);
 
 export default router;

@@ -16,6 +16,5 @@ export interface Mission {
   completed: boolean;
   progress: number;
   target: number;
-  /** study, flashcard, simulado, redacao */
   type: string;
 }

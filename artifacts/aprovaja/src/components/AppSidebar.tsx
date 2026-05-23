@@ -22,7 +22,8 @@ import {
   User, 
   Target,
   Flame,
-  Zap
+  Zap,
+  BookOpen
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,6 +39,7 @@ export function AppSidebar() {
     { title: "Dashboard", icon: Home, path: "/dashboard" },
     { title: "Plano de Estudos", icon: Calendar, path: "/plano-de-estudos" },
     { title: "Simulados", icon: FileText, path: "/simulados" },
+    { title: "Praticar", icon: BookOpen, path: "/pratica" },
     { title: "Redação", icon: PenTool, path: "/redacao" },
     { title: "Flashcards", icon: Layers, path: "/flashcards" },
     { title: "Missões", icon: Target, path: "/missoes" },

@@ -12,7 +12,6 @@ export interface UserProfile {
   email: string;
   /** @nullable */
   avatarUrl?: string | null;
-  /** e.g. ENEM, Medicina, Direito, Concurso Federal */
   goal: string;
   /** @nullable */
   school?: string | null;

@@ -5,6 +5,7 @@
  * AprovaJá API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { QuestionResult } from './questionResult';
 import type { SubjectScore } from './subjectScore';
 
 export interface SimuladoResult {
@@ -18,4 +19,7 @@ export interface SimuladoResult {
   timeSpentMinutes: number;
   completedAt: string;
   subjectBreakdown: SubjectScore[];
+  /** @nullable */
+  triScore?: number | null;
+  questionResults?: QuestionResult[];
 }

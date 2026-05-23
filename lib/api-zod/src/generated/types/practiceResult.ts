@@ -6,10 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface SubjectScore {
-  subject: string;
-  score: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  trend: string;
+export interface PracticeResult {
+  isCorrect: boolean;
+  correctAnswer: string;
+  explanation: string;
+  xpEarned: number;
 }

@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface FlashcardReview {
-  quality: number;
-}
+export type SubjectSummaryDifficulties = {
+  facil: number;
+  medio: number;
+  dificil: number;
+};

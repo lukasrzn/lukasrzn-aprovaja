@@ -8,25 +8,16 @@ servers:
     description: Base API path
 tags:
   - name: health
-    description: Health operations
   - name: users
-    description: User operations
   - name: gamification
-    description: XP, streaks, coins, medals
   - name: study-plans
-    description: AI study planner
   - name: flashcards
-    description: Flashcard system
   - name: simulados
-    description: Mock exams
   - name: redacao
-    description: Essay correction
   - name: rankings
-    description: Leaderboards
   - name: missions
-    description: Daily missions
   - name: dashboard
-    description: Dashboard summaries
+  - name: questions
 paths:
   /healthz:
     get:
@@ -41,12 +32,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
-  # ── Users ──────────────────────────────────────────────────────────────────
   /users/me:
     get:
       operationId: getMe
       tags: [users]
-      summary: Get current user profile
       responses:
         "200":
           description: User profile
@@ -57,7 +46,6 @@ paths:
     patch:
       operationId: updateMe
       tags: [users]
-      summary: Update user profile
       requestBody:
         required: true
         content:
@@ -72,12 +60,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserProfile"
 
-  # ── Gamification ───────────────────────────────────────────────────────────
   /gamification/stats:
     get:
       operationId: getGamificationStats
       tags: [gamification]
-      summary: Get user XP, level, streaks, coins, medals
       responses:
         "200":
           description: Gamification stats
@@ -90,7 +76,6 @@ paths:
     get:
       operationId: getMedals
       tags: [gamification]
-      summary: List all medals (earned and locked)
       responses:
         "200":
           description: Medals list
@@ -101,12 +86,10 @@ paths:
                 items:
                   $ref: "#/components/schemas/Medal"
 
-  # ── Dashboard ──────────────────────────────────────────────────────────────
   /dashboard/summary:
     get:
       operationId: getDashboardSummary
       tags: [dashboard]
-      summary: Get dashboard overview stats
       responses:
         "200":
           description: Dashboard summary
@@ -119,7 +102,6 @@ paths:
     get:
       operationId: getPerformanceData
       tags: [dashboard]
-      summary: Get weekly/monthly performance chart data
       responses:
         "200":
           description: Performance data
@@ -134,7 +116,6 @@ paths:
     get:
       operationId: getWeakSubjects
       tags: [dashboard]
-      summary: Get subjects needing attention
       responses:
         "200":
           description: Weak subjects
@@ -145,12 +126,10 @@ paths:
                 items:
                   $ref: "#/components/schemas/SubjectScore"
 
-  # ── Study Plans ────────────────────────────────────────────────────────────
   /study-plans:
     get:
       operationId: getStudyPlans
       tags: [study-plans]
-      summary: List user study plans
       responses:
         "200":
           description: Study plans
@@ -163,7 +142,6 @@ paths:
     post:
       operationId: createStudyPlan
       tags: [study-plans]
-      summary: Create a new study plan
       requestBody:
         required: true
         content:
@@ -182,7 +160,6 @@ paths:
     get:
       operationId: getStudyPlan
       tags: [study-plans]
-      summary: Get a specific study plan
       parameters:
         - name: id
           in: path
@@ -199,7 +176,6 @@ paths:
     patch:
       operationId: updateStudyPlan
       tags: [study-plans]
-      summary: Update a study plan
       parameters:
         - name: id
           in: path
@@ -222,7 +198,6 @@ paths:
     delete:
       operationId: deleteStudyPlan
       tags: [study-plans]
-      summary: Delete a study plan
       parameters:
         - name: id
           in: path
@@ -237,7 +212,6 @@ paths:
     get:
       operationId: getStudySessions
       tags: [study-plans]
-      summary: Get study sessions for a plan
       parameters:
         - name: id
           in: path
@@ -256,7 +230,6 @@ paths:
     post:
       operationId: createStudySession
       tags: [study-plans]
-      summary: Log a study session
       parameters:
         - name: id
           in: path
@@ -277,12 +250,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/StudySession"
 
-  # ── Flashcards ─────────────────────────────────────────────────────────────
   /flashcards:
     get:
       operationId: getFlashcards
       tags: [flashcards]
-      summary: List flashcard decks
       responses:
         "200":
           description: Flashcard decks
@@ -295,7 +266,6 @@ paths:
     post:
       operationId: createFlashcardDeck
       tags: [flashcards]
-      summary: Create a flashcard deck
       requestBody:
         required: true
         content:
@@ -314,7 +284,6 @@ paths:
     get:
       operationId: getFlashcardCards
       tags: [flashcards]
-      summary: Get cards in a deck
       parameters:
         - name: deckId
           in: path
@@ -333,7 +302,6 @@ paths:
     post:
       operationId: createFlashcard
       tags: [flashcards]
-      summary: Add a card to a deck
       parameters:
         - name: deckId
           in: path
@@ -358,7 +326,6 @@ paths:
     post:
       operationId: reviewFlashcard
       tags: [flashcards]
-      summary: Submit a flashcard review result
       parameters:
         - name: deckId
           in: path
@@ -384,12 +351,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Flashcard"
 
-  # ── Simulados ──────────────────────────────────────────────────────────────
   /simulados:
     get:
       operationId: getSimulados
       tags: [simulados]
-      summary: List available mock exams
       responses:
         "200":
           description: Mock exams
@@ -402,7 +367,6 @@ paths:
     post:
       operationId: createSimulado
       tags: [simulados]
-      summary: Create a mock exam attempt
       requestBody:
         required: true
         content:
@@ -417,11 +381,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/Simulado"
 
+  /simulados/recent-results:
+    get:
+      operationId: getRecentSimuladoResults
+      tags: [simulados]
+      responses:
+        "200":
+          description: Recent results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SimuladoResult"
+
   /simulados/{id}:
     get:
       operationId: getSimulado
       tags: [simulados]
-      summary: Get a simulado with questions
       parameters:
         - name: id
           in: path
@@ -436,11 +413,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/SimuladoDetail"
 
+  /simulados/{id}/start:
+    post:
+      operationId: startSimulado
+      tags: [simulados]
+      summary: Start a simulado session, returns questions from question bank
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartSimuladoInput"
+      responses:
+        "200":
+          description: Exam session with questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExamSession"
+
   /simulados/{id}/submit:
     post:
       operationId: submitSimulado
       tags: [simulados]
-      summary: Submit simulado answers
       parameters:
         - name: id
           in: path
@@ -461,27 +462,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/SimuladoResult"
 
-  /simulados/recent-results:
-    get:
-      operationId: getRecentSimuladoResults
-      tags: [simulados]
-      summary: Get recent simulado results for the user
-      responses:
-        "200":
-          description: Recent results
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SimuladoResult"
-
-  # ── Redação ────────────────────────────────────────────────────────────────
   /redacoes:
     get:
       operationId: getRedacoes
       tags: [redacao]
-      summary: List user essays
       responses:
         "200":
           description: Essays
@@ -494,7 +478,6 @@ paths:
     post:
       operationId: submitRedacao
       tags: [redacao]
-      summary: Submit an essay for AI correction
       requestBody:
         required: true
         content:
@@ -513,7 +496,6 @@ paths:
     get:
       operationId: getRedacao
       tags: [redacao]
-      summary: Get essay with AI feedback
       parameters:
         - name: id
           in: path
@@ -528,12 +510,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Redacao"
 
-  # ── Rankings ───────────────────────────────────────────────────────────────
   /rankings/global:
     get:
       operationId: getGlobalRanking
       tags: [rankings]
-      summary: Get global XP leaderboard
       responses:
         "200":
           description: Global ranking
@@ -548,7 +528,6 @@ paths:
     get:
       operationId: getWeeklyRanking
       tags: [rankings]
-      summary: Get weekly XP leaderboard
       responses:
         "200":
           description: Weekly ranking
@@ -559,12 +538,10 @@ paths:
                 items:
                   $ref: "#/components/schemas/RankingEntry"
 
-  # ── Daily Missions ─────────────────────────────────────────────────────────
   /missions/today:
     get:
       operationId: getTodayMissions
       tags: [missions]
-      summary: Get today's daily missions
       responses:
         "200":
           description: Today's missions
@@ -579,7 +556,6 @@ paths:
     post:
       operationId: completeMission
       tags: [missions]
-      summary: Mark a mission as complete
       parameters:
         - name: id
           in: path
@@ -593,6 +569,120 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Mission"
+
+  # ── Questions ──────────────────────────────────────────────────────────────
+  /questions:
+    get:
+      operationId: getQuestions
+      tags: [questions]
+      summary: List questions with optional filters
+      parameters:
+        - name: subject
+          in: query
+          schema:
+            type: string
+        - name: topic
+          in: query
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Questions list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionsPage"
+    post:
+      operationId: createQuestion
+      tags: [questions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionInput"
+      responses:
+        "201":
+          description: Created question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionWithAnswer"
+
+  /questions/subjects:
+    get:
+      operationId: getQuestionSubjects
+      tags: [questions]
+      summary: Get list of distinct subjects and their question counts
+      responses:
+        "200":
+          description: Subjects list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubjectSummary"
+
+  /questions/{id}:
+    get:
+      operationId: getQuestion
+      tags: [questions]
+      summary: Get a single question including correct answer and explanation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Question with answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionWithAnswer"
+
+  /questions/{id}/practice:
+    post:
+      operationId: practiceQuestion
+      tags: [questions]
+      summary: Answer a single question in practice mode
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PracticeAnswer"
+      responses:
+        "200":
+          description: Practice result with explanation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeResult"
 
 components:
   schemas:
@@ -616,7 +706,6 @@ components:
           type: ["string", "null"]
         goal:
           type: string
-          description: e.g. ENEM, Medicina, Direito, Concurso Federal
         school:
           type: ["string", "null"]
         createdAt:
@@ -673,7 +762,6 @@ components:
           type: ["string", "null"]
         rarity:
           type: string
-          description: common, rare, epic, legendary
       required: [id, name, description, icon, earned, rarity]
 
     DashboardSummary:
@@ -723,7 +811,6 @@ components:
           type: integer
         trend:
           type: string
-          description: up, down, stable
       required: [subject, score, totalQuestions, correctAnswers, trend]
 
     StudyPlan:
@@ -877,7 +964,6 @@ components:
       properties:
         quality:
           type: integer
-          description: 0-5 SM2 quality rating
       required: [quality]
 
     Simulado:
@@ -889,7 +975,6 @@ components:
           type: string
         type:
           type: string
-          description: ENEM, FUVEST, Concurso, Custom
         subject:
           type: ["string", "null"]
         questionCount:
@@ -898,7 +983,6 @@ components:
           type: integer
         difficulty:
           type: string
-          description: facil, medio, dificil
         completedAt:
           type: ["string", "null"]
         score:
@@ -918,7 +1002,20 @@ components:
           type: ["string", "null"]
         difficulty:
           type: string
+        questionCount:
+          type: integer
       required: [title, type, difficulty]
+
+    StartSimuladoInput:
+      type: object
+      properties:
+        subject:
+          type: ["string", "null"]
+          description: Filter questions by subject
+        difficulty:
+          type: ["string", "null"]
+          description: Filter questions by difficulty
+      required: []
 
     SimuladoDetail:
       type: object
@@ -938,6 +1035,48 @@ components:
           items:
             $ref: "#/components/schemas/Question"
       required: [id, title, type, difficulty, durationMinutes, questions]
+
+    ExamSession:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+        simuladoId:
+          type: integer
+        title:
+          type: string
+        durationMinutes:
+          type: integer
+        difficulty:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExamQuestion"
+      required: [sessionId, simuladoId, title, durationMinutes, difficulty, questions]
+
+    ExamQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+        subject:
+          type: string
+        topic:
+          type: string
+        statement:
+          type: string
+        contextText:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+        estimatedTimeSeconds:
+          type: integer
+        alternatives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alternative"
+      required: [id, subject, topic, statement, difficulty, estimatedTimeSeconds, alternatives]
 
     Question:
       type: object
@@ -970,6 +1109,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AnswerItem"
+        timeSpentSeconds:
+          type: integer
       required: [answers]
 
     AnswerItem:
@@ -1006,7 +1147,32 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/SubjectScore"
+        triScore:
+          type: ["number", "null"]
+        questionResults:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionResult"
       required: [id, simuladoId, simuladoTitle, score, correctCount, totalCount, xpEarned, timeSpentMinutes, completedAt, subjectBreakdown]
+
+    QuestionResult:
+      type: object
+      properties:
+        questionId:
+          type: integer
+        subject:
+          type: string
+        topic:
+          type: string
+        selectedAlternative:
+          type: string
+        correctAnswer:
+          type: string
+        isCorrect:
+          type: boolean
+        explanation:
+          type: string
+      required: [questionId, subject, topic, selectedAlternative, correctAnswer, isCorrect, explanation]
 
     Redacao:
       type: object
@@ -1101,5 +1267,149 @@ components:
           type: integer
         type:
           type: string
-          description: study, flashcard, simulado, redacao
       required: [id, title, description, icon, xpReward, coinReward, completed, progress, target, type]
+
+    QuestionsPage:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionSummary"
+        total:
+          type: integer
+        offset:
+          type: integer
+        limit:
+          type: integer
+      required: [questions, total, offset, limit]
+
+    QuestionSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        subject:
+          type: string
+        topic:
+          type: string
+        statement:
+          type: string
+        difficulty:
+          type: string
+        category:
+          type: string
+        estimatedTimeSeconds:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required: [id, subject, topic, statement, difficulty, category, estimatedTimeSeconds, tags]
+
+    QuestionWithAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+        subject:
+          type: string
+        topic:
+          type: string
+        statement:
+          type: string
+        contextText:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+        category:
+          type: string
+        alternatives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alternative"
+        correctAnswer:
+          type: string
+        explanation:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        estimatedTimeSeconds:
+          type: integer
+      required: [id, subject, topic, statement, difficulty, category, alternatives, correctAnswer, explanation, tags, estimatedTimeSeconds]
+
+    QuestionInput:
+      type: object
+      properties:
+        subject:
+          type: string
+        topic:
+          type: string
+        statement:
+          type: string
+        contextText:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+        category:
+          type: string
+        alternatives:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alternative"
+        correctAnswer:
+          type: string
+        explanation:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        estimatedTimeSeconds:
+          type: integer
+      required: [subject, topic, statement, difficulty, category, alternatives, correctAnswer, explanation, tags, estimatedTimeSeconds]
+
+    SubjectSummary:
+      type: object
+      properties:
+        subject:
+          type: string
+        questionCount:
+          type: integer
+        topics:
+          type: array
+          items:
+            type: string
+        difficulties:
+          type: object
+          properties:
+            facil:
+              type: integer
+            medio:
+              type: integer
+            dificil:
+              type: integer
+          required: [facil, medio, dificil]
+      required: [subject, questionCount, topics, difficulties]
+
+    PracticeAnswer:
+      type: object
+      properties:
+        selectedAlternative:
+          type: string
+      required: [selectedAlternative]
+
+    PracticeResult:
+      type: object
+      properties:
+        isCorrect:
+          type: boolean
+        correctAnswer:
+          type: string
+        explanation:
+          type: string
+        xpEarned:
+          type: integer
+      required: [isCorrect, correctAnswer, explanation, xpEarned]

@@ -9,4 +9,5 @@ import type { AnswerItem } from './answerItem';
 
 export interface SimuladoAnswers {
   answers: AnswerItem[];
+  timeSpentSeconds?: number;
 }

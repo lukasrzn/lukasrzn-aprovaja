@@ -45,9 +45,11 @@ router.post("/study-plans", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const { targetDate, ...rest } = parsed.data;
   const [plan] = await db.insert(studyPlansTable).values({
-    ...parsed.data,
+    ...rest,
     userId: DEFAULT_USER_ID,
+    ...(targetDate ? { targetDate: new Date(targetDate) } : {}),
   }).returning();
   res.status(201).json(GetStudyPlanResponse.parse(formatPlan(plan)));
 });
@@ -78,8 +80,9 @@ router.patch("/study-plans/:id", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const { targetDate: td, ...restUpdate } = parsed.data;
   const [plan] = await db.update(studyPlansTable)
-    .set(parsed.data)
+    .set({ ...restUpdate, ...(td !== undefined ? { targetDate: td ? new Date(td) : null } : {}) })
     .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, DEFAULT_USER_ID)))
     .returning();
   if (!plan) {

@@ -12,4 +12,5 @@ export interface SimuladoInput {
   /** @nullable */
   subject?: string | null;
   difficulty: string;
+  questionCount?: number;
 }

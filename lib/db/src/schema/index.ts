@@ -4,3 +4,4 @@ export * from "./flashcards";
 export * from "./simulados";
 export * from "./redacoes";
 export * from "./missions";
+export * from "./questions";

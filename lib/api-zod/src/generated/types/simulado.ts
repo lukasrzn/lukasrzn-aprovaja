@@ -9,13 +9,11 @@
 export interface Simulado {
   id: number;
   title: string;
-  /** ENEM, FUVEST, Concurso, Custom */
   type: string;
   /** @nullable */
   subject?: string | null;
   questionCount: number;
   durationMinutes: number;
-  /** facil, medio, dificil */
   difficulty: string;
   /** @nullable */
   completedAt?: string | null;

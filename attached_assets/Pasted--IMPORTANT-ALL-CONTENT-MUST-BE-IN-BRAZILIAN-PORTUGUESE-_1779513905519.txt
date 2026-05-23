@@ -1,0 +1,229 @@
+
+IMPORTANT:
+- ALL CONTENT MUST BE IN BRAZILIAN PORTUGUESE.
+- Questions, subjects, explanations, and simulations must feel PROFESSIONAL and REALISTIC.
+- The platform must look capable of competing with the best ENEM and Concurso Público platforms in Brazil.
+
+====================================================
+OBJECTIVE
+====================================================
+
+Generate a COMPLETE ADVANCED QUESTION DATABASE and SMART SIMULATION SYSTEM for:
+
+- ENEM
+- Vestibulares
+- Concursos Públicos
+- Ensino Fundamental
+- Ensino Médio
+- Cursos Técnicos
+- Reforço Escolar
+
+====================================================
+ADVANCED SUBJECTS
+====================================================
+
+Create thousands of advanced questions and simulations for:
+
+PORTUGUÊS
+- Interpretação de texto
+- Figuras de linguagem
+- Gramática avançada
+- Sintaxe
+- Redação
+- Literatura brasileira
+- Modernismo
+- Concordância verbal
+- Regência
+- Ortografia
+
+MATEMÁTICA
+- Funções
+- Geometria analítica
+- Probabilidade
+- Estatística
+- Trigonometria
+- Logaritmos
+- Progressões
+- Matemática financeira
+- Análise combinatória
+- Razão e proporção
+
+FÍSICA
+- Cinemática
+- Dinâmica
+- Eletricidade
+- Magnetismo
+- Ondulatória
+- Termologia
+- Óptica
+- Hidrostática
+
+QUÍMICA
+- Química orgânica
+- Estequiometria
+- Ligações químicas
+- Eletroquímica
+- Termoquímica
+- pH e pOH
+- Soluções
+- Radioatividade
+
+BIOLOGIA
+- Genética
+- Ecologia
+- Citologia
+- Evolução
+- Sistema nervoso
+- Bioquímica
+- Zoologia
+- Botânica
+
+HISTÓRIA
+- História do Brasil
+- Ditadura militar
+- Revolução Industrial
+- Guerras Mundiais
+- Idade Média
+- Brasil República
+- História contemporânea
+
+GEOGRAFIA
+- Globalização
+- Geopolítica
+- Climatologia
+- Urbanização
+- Demografia
+- Cartografia
+- Questões ambientais
+
+FILOSOFIA
+- Sócrates
+- Platão
+- Aristóteles
+- Ética
+- Política
+- Filosofia moderna
+
+SOCIOLOGIA
+- Cultura
+- Movimentos sociais
+- Cidadania
+- Política brasileira
+- Trabalho e sociedade
+
+INGLÊS
+- Reading comprehension
+- Grammar
+- Vocabulary
+- Interpretation
+
+====================================================
+CONCURSO PÚBLICO CONTENT
+====================================================
+
+Add advanced simulations for:
+- Português
+- Direito Constitucional
+- Direito Administrativo
+- Raciocínio Lógico
+- Informática
+- Atualidades
+- Administração Pública
+
+====================================================
+SMART SIMULATION SYSTEM
+====================================================
+
+Build:
+- adaptive simulations
+- AI-generated questions
+- difficulty scaling
+- timed simulations
+- automatic correction
+- score prediction
+- ranking system
+- ENEM TRI simulation logic
+- detailed performance analysis
+
+====================================================
+QUESTION FORMAT
+====================================================
+
+Each question must contain:
+- statement
+- 5 alternatives
+- correct answer
+- detailed explanation
+- difficulty level
+- subject category
+- estimated response time
+- tags
+- AI learning recommendation
+
+====================================================
+AI FEATURES
+====================================================
+
+Create AI systems that:
+- identify student weaknesses
+- generate personalized questions
+- create revision plans
+- generate summaries
+- suggest focus areas
+- simulate real exams
+
+====================================================
+VISUAL EXPERIENCE
+====================================================
+
+The simulation interface must include:
+- modern progress bars
+- animated timers
+- futuristic charts
+- ranking dashboards
+- premium dark mode
+- focus mode
+- smooth transitions
+- glassmorphism effects
+- interactive analytics
+
+====================================================
+ENGAGEMENT FEATURES
+====================================================
+
+Add:
+- XP rewards
+- medals
+- streaks
+- daily missions
+- challenge system
+- competitive rankings
+- weekly goals
+- study achievements
+
+====================================================
+ENEM EXPERIENCE
+====================================================
+
+Simulations must feel identical to the real ENEM experience:
+- realistic question structure
+- long contextual texts
+- interdisciplinary questions
+- human sciences style
+- TRI scoring simulation
+- essay correction system
+
+====================================================
+FINAL GOAL
+====================================================
+
+The result must feel like:
+- a billion-dollar EdTech platform
+- highly intelligent
+- realistic
+- addictive
+- modern
+- premium
+- capable of massively increasing student approval rates
+
+Generate production-level educational content and scalable architecture for massive student usage.

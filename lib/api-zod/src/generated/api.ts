@@ -16,23 +16,17 @@ export const HealthCheckResponse = zod.object({
 })
 
 
-/**
- * @summary Get current user profile
- */
 export const GetMeResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "email": zod.string(),
   "avatarUrl": zod.string().nullish(),
-  "goal": zod.string().describe('e.g. ENEM, Medicina, Direito, Concurso Federal'),
+  "goal": zod.string(),
   "school": zod.string().nullish(),
   "createdAt": zod.string()
 })
 
 
-/**
- * @summary Update user profile
- */
 export const UpdateMeBody = zod.object({
   "name": zod.string().optional(),
   "avatarUrl": zod.string().nullish(),
@@ -45,15 +39,12 @@ export const UpdateMeResponse = zod.object({
   "name": zod.string(),
   "email": zod.string(),
   "avatarUrl": zod.string().nullish(),
-  "goal": zod.string().describe('e.g. ENEM, Medicina, Direito, Concurso Federal'),
+  "goal": zod.string(),
   "school": zod.string().nullish(),
   "createdAt": zod.string()
 })
 
 
-/**
- * @summary Get user XP, level, streaks, coins, medals
- */
 export const GetGamificationStatsResponse = zod.object({
   "xp": zod.number(),
   "level": zod.number(),
@@ -66,9 +57,6 @@ export const GetGamificationStatsResponse = zod.object({
 })
 
 
-/**
- * @summary List all medals (earned and locked)
- */
 export const GetMedalsResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string(),
@@ -76,14 +64,11 @@ export const GetMedalsResponseItem = zod.object({
   "icon": zod.string(),
   "earned": zod.boolean(),
   "earnedAt": zod.string().nullish(),
-  "rarity": zod.string().describe('common, rare, epic, legendary')
+  "rarity": zod.string()
 })
 export const GetMedalsResponse = zod.array(GetMedalsResponseItem)
 
 
-/**
- * @summary Get dashboard overview stats
- */
 export const GetDashboardSummaryResponse = zod.object({
   "studyMinutesToday": zod.number(),
   "questionsAnsweredToday": zod.number(),
@@ -95,9 +80,6 @@ export const GetDashboardSummaryResponse = zod.object({
 })
 
 
-/**
- * @summary Get weekly/monthly performance chart data
- */
 export const GetPerformanceDataResponseItem = zod.object({
   "date": zod.string(),
   "xpEarned": zod.number(),
@@ -108,22 +90,16 @@ export const GetPerformanceDataResponseItem = zod.object({
 export const GetPerformanceDataResponse = zod.array(GetPerformanceDataResponseItem)
 
 
-/**
- * @summary Get subjects needing attention
- */
 export const GetWeakSubjectsResponseItem = zod.object({
   "subject": zod.string(),
   "score": zod.number(),
   "totalQuestions": zod.number(),
   "correctAnswers": zod.number(),
-  "trend": zod.string().describe('up, down, stable')
+  "trend": zod.string()
 })
 export const GetWeakSubjectsResponse = zod.array(GetWeakSubjectsResponseItem)
 
 
-/**
- * @summary List user study plans
- */
 export const GetStudyPlansResponseItem = zod.object({
   "id": zod.number(),
   "title": zod.string(),
@@ -137,9 +113,6 @@ export const GetStudyPlansResponseItem = zod.object({
 export const GetStudyPlansResponse = zod.array(GetStudyPlansResponseItem)
 
 
-/**
- * @summary Create a new study plan
- */
 export const CreateStudyPlanBody = zod.object({
   "title": zod.string(),
   "goal": zod.string(),
@@ -149,9 +122,6 @@ export const CreateStudyPlanBody = zod.object({
 })
 
 
-/**
- * @summary Get a specific study plan
- */
 export const GetStudyPlanParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -168,9 +138,6 @@ export const GetStudyPlanResponse = zod.object({
 })
 
 
-/**
- * @summary Update a study plan
- */
 export const UpdateStudyPlanParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -195,17 +162,11 @@ export const UpdateStudyPlanResponse = zod.object({
 })
 
 
-/**
- * @summary Delete a study plan
- */
 export const DeleteStudyPlanParams = zod.object({
   "id": zod.coerce.number()
 })
 
 
-/**
- * @summary Get study sessions for a plan
- */
 export const GetStudySessionsParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -222,9 +183,6 @@ export const GetStudySessionsResponseItem = zod.object({
 export const GetStudySessionsResponse = zod.array(GetStudySessionsResponseItem)
 
 
-/**
- * @summary Log a study session
- */
 export const CreateStudySessionParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -236,9 +194,6 @@ export const CreateStudySessionBody = zod.object({
 })
 
 
-/**
- * @summary List flashcard decks
- */
 export const GetFlashcardsResponseItem = zod.object({
   "id": zod.number(),
   "title": zod.string(),
@@ -251,18 +206,12 @@ export const GetFlashcardsResponseItem = zod.object({
 export const GetFlashcardsResponse = zod.array(GetFlashcardsResponseItem)
 
 
-/**
- * @summary Create a flashcard deck
- */
 export const CreateFlashcardDeckBody = zod.object({
   "title": zod.string(),
   "subject": zod.string()
 })
 
 
-/**
- * @summary Get cards in a deck
- */
 export const GetFlashcardCardsParams = zod.object({
   "deckId": zod.coerce.number()
 })
@@ -281,9 +230,6 @@ export const GetFlashcardCardsResponseItem = zod.object({
 export const GetFlashcardCardsResponse = zod.array(GetFlashcardCardsResponseItem)
 
 
-/**
- * @summary Add a card to a deck
- */
 export const CreateFlashcardParams = zod.object({
   "deckId": zod.coerce.number()
 })
@@ -294,16 +240,13 @@ export const CreateFlashcardBody = zod.object({
 })
 
 
-/**
- * @summary Submit a flashcard review result
- */
 export const ReviewFlashcardParams = zod.object({
   "deckId": zod.coerce.number(),
   "cardId": zod.coerce.number()
 })
 
 export const ReviewFlashcardBody = zod.object({
-  "quality": zod.number().describe('0-5 SM2 quality rating')
+  "quality": zod.number()
 })
 
 export const ReviewFlashcardResponse = zod.object({
@@ -319,17 +262,14 @@ export const ReviewFlashcardResponse = zod.object({
 })
 
 
-/**
- * @summary List available mock exams
- */
 export const GetSimuladosResponseItem = zod.object({
   "id": zod.number(),
   "title": zod.string(),
-  "type": zod.string().describe('ENEM, FUVEST, Concurso, Custom'),
+  "type": zod.string(),
   "subject": zod.string().nullish(),
   "questionCount": zod.number(),
   "durationMinutes": zod.number(),
-  "difficulty": zod.string().describe('facil, medio, dificil'),
+  "difficulty": zod.string(),
   "completedAt": zod.string().nullish(),
   "score": zod.number().nullish(),
   "createdAt": zod.string()
@@ -337,20 +277,46 @@ export const GetSimuladosResponseItem = zod.object({
 export const GetSimuladosResponse = zod.array(GetSimuladosResponseItem)
 
 
-/**
- * @summary Create a mock exam attempt
- */
 export const CreateSimuladoBody = zod.object({
   "title": zod.string(),
   "type": zod.string(),
   "subject": zod.string().nullish(),
-  "difficulty": zod.string()
+  "difficulty": zod.string(),
+  "questionCount": zod.number().optional()
 })
 
 
-/**
- * @summary Get a simulado with questions
- */
+export const GetRecentSimuladoResultsResponseItem = zod.object({
+  "id": zod.number(),
+  "simuladoId": zod.number(),
+  "simuladoTitle": zod.string(),
+  "score": zod.number(),
+  "correctCount": zod.number(),
+  "totalCount": zod.number(),
+  "xpEarned": zod.number(),
+  "timeSpentMinutes": zod.number(),
+  "completedAt": zod.string(),
+  "subjectBreakdown": zod.array(zod.object({
+  "subject": zod.string(),
+  "score": zod.number(),
+  "totalQuestions": zod.number(),
+  "correctAnswers": zod.number(),
+  "trend": zod.string()
+})),
+  "triScore": zod.number().nullish(),
+  "questionResults": zod.array(zod.object({
+  "questionId": zod.number(),
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "selectedAlternative": zod.string(),
+  "correctAnswer": zod.string(),
+  "isCorrect": zod.boolean(),
+  "explanation": zod.string()
+})).optional()
+})
+export const GetRecentSimuladoResultsResponse = zod.array(GetRecentSimuladoResultsResponseItem)
+
+
 export const GetSimuladoParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -374,8 +340,39 @@ export const GetSimuladoResponse = zod.object({
 
 
 /**
- * @summary Submit simulado answers
+ * @summary Start a simulado session, returns questions from question bank
  */
+export const StartSimuladoParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const StartSimuladoBody = zod.object({
+  "subject": zod.string().nullish().describe('Filter questions by subject'),
+  "difficulty": zod.string().nullish().describe('Filter questions by difficulty')
+})
+
+export const StartSimuladoResponse = zod.object({
+  "sessionId": zod.number(),
+  "simuladoId": zod.number(),
+  "title": zod.string(),
+  "durationMinutes": zod.number(),
+  "difficulty": zod.string(),
+  "questions": zod.array(zod.object({
+  "id": zod.number(),
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "statement": zod.string(),
+  "contextText": zod.string().nullish(),
+  "difficulty": zod.string(),
+  "estimatedTimeSeconds": zod.number(),
+  "alternatives": zod.array(zod.object({
+  "id": zod.string(),
+  "text": zod.string()
+}))
+}))
+})
+
+
 export const SubmitSimuladoParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -384,7 +381,8 @@ export const SubmitSimuladoBody = zod.object({
   "answers": zod.array(zod.object({
   "questionId": zod.number(),
   "selectedAlternative": zod.string()
-}))
+})),
+  "timeSpentSeconds": zod.number().optional()
 })
 
 export const SubmitSimuladoResponse = zod.object({
@@ -402,38 +400,21 @@ export const SubmitSimuladoResponse = zod.object({
   "score": zod.number(),
   "totalQuestions": zod.number(),
   "correctAnswers": zod.number(),
-  "trend": zod.string().describe('up, down, stable')
-}))
-})
-
-
-/**
- * @summary Get recent simulado results for the user
- */
-export const GetRecentSimuladoResultsResponseItem = zod.object({
-  "id": zod.number(),
-  "simuladoId": zod.number(),
-  "simuladoTitle": zod.string(),
-  "score": zod.number(),
-  "correctCount": zod.number(),
-  "totalCount": zod.number(),
-  "xpEarned": zod.number(),
-  "timeSpentMinutes": zod.number(),
-  "completedAt": zod.string(),
-  "subjectBreakdown": zod.array(zod.object({
+  "trend": zod.string()
+})),
+  "triScore": zod.number().nullish(),
+  "questionResults": zod.array(zod.object({
+  "questionId": zod.number(),
   "subject": zod.string(),
-  "score": zod.number(),
-  "totalQuestions": zod.number(),
-  "correctAnswers": zod.number(),
-  "trend": zod.string().describe('up, down, stable')
-}))
+  "topic": zod.string(),
+  "selectedAlternative": zod.string(),
+  "correctAnswer": zod.string(),
+  "isCorrect": zod.boolean(),
+  "explanation": zod.string()
+})).optional()
 })
-export const GetRecentSimuladoResultsResponse = zod.array(GetRecentSimuladoResultsResponseItem)
 
 
-/**
- * @summary List user essays
- */
 export const GetRedacoesResponseItem = zod.object({
   "id": zod.number(),
   "theme": zod.string(),
@@ -453,18 +434,12 @@ export const GetRedacoesResponseItem = zod.object({
 export const GetRedacoesResponse = zod.array(GetRedacoesResponseItem)
 
 
-/**
- * @summary Submit an essay for AI correction
- */
 export const SubmitRedacaoBody = zod.object({
   "theme": zod.string(),
   "content": zod.string()
 })
 
 
-/**
- * @summary Get essay with AI feedback
- */
 export const GetRedacaoParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -487,9 +462,6 @@ export const GetRedacaoResponse = zod.object({
 })
 
 
-/**
- * @summary Get global XP leaderboard
- */
 export const GetGlobalRankingResponseItem = zod.object({
   "rank": zod.number(),
   "userId": zod.number(),
@@ -504,9 +476,6 @@ export const GetGlobalRankingResponseItem = zod.object({
 export const GetGlobalRankingResponse = zod.array(GetGlobalRankingResponseItem)
 
 
-/**
- * @summary Get weekly XP leaderboard
- */
 export const GetWeeklyRankingResponseItem = zod.object({
   "rank": zod.number(),
   "userId": zod.number(),
@@ -521,9 +490,6 @@ export const GetWeeklyRankingResponseItem = zod.object({
 export const GetWeeklyRankingResponse = zod.array(GetWeeklyRankingResponseItem)
 
 
-/**
- * @summary Get today's daily missions
- */
 export const GetTodayMissionsResponseItem = zod.object({
   "id": zod.number(),
   "title": zod.string(),
@@ -534,14 +500,11 @@ export const GetTodayMissionsResponseItem = zod.object({
   "completed": zod.boolean(),
   "progress": zod.number(),
   "target": zod.number(),
-  "type": zod.string().describe('study, flashcard, simulado, redacao')
+  "type": zod.string()
 })
 export const GetTodayMissionsResponse = zod.array(GetTodayMissionsResponseItem)
 
 
-/**
- * @summary Mark a mission as complete
- */
 export const CompleteMissionParams = zod.object({
   "id": zod.coerce.number()
 })
@@ -556,7 +519,115 @@ export const CompleteMissionResponse = zod.object({
   "completed": zod.boolean(),
   "progress": zod.number(),
   "target": zod.number(),
-  "type": zod.string().describe('study, flashcard, simulado, redacao')
+  "type": zod.string()
+})
+
+
+/**
+ * @summary List questions with optional filters
+ */
+export const GetQuestionsQueryParams = zod.object({
+  "subject": zod.coerce.string().optional(),
+  "topic": zod.coerce.string().optional(),
+  "difficulty": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "limit": zod.coerce.number().optional(),
+  "offset": zod.coerce.number().optional()
+})
+
+export const GetQuestionsResponse = zod.object({
+  "questions": zod.array(zod.object({
+  "id": zod.number(),
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "statement": zod.string(),
+  "difficulty": zod.string(),
+  "category": zod.string(),
+  "estimatedTimeSeconds": zod.number(),
+  "tags": zod.array(zod.string())
+})),
+  "total": zod.number(),
+  "offset": zod.number(),
+  "limit": zod.number()
+})
+
+
+export const CreateQuestionBody = zod.object({
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "statement": zod.string(),
+  "contextText": zod.string().nullish(),
+  "difficulty": zod.string(),
+  "category": zod.string(),
+  "alternatives": zod.array(zod.object({
+  "id": zod.string(),
+  "text": zod.string()
+})),
+  "correctAnswer": zod.string(),
+  "explanation": zod.string(),
+  "tags": zod.array(zod.string()),
+  "estimatedTimeSeconds": zod.number()
+})
+
+
+/**
+ * @summary Get list of distinct subjects and their question counts
+ */
+export const GetQuestionSubjectsResponseItem = zod.object({
+  "subject": zod.string(),
+  "questionCount": zod.number(),
+  "topics": zod.array(zod.string()),
+  "difficulties": zod.object({
+  "facil": zod.number(),
+  "medio": zod.number(),
+  "dificil": zod.number()
+})
+})
+export const GetQuestionSubjectsResponse = zod.array(GetQuestionSubjectsResponseItem)
+
+
+/**
+ * @summary Get a single question including correct answer and explanation
+ */
+export const GetQuestionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetQuestionResponse = zod.object({
+  "id": zod.number(),
+  "subject": zod.string(),
+  "topic": zod.string(),
+  "statement": zod.string(),
+  "contextText": zod.string().nullish(),
+  "difficulty": zod.string(),
+  "category": zod.string(),
+  "alternatives": zod.array(zod.object({
+  "id": zod.string(),
+  "text": zod.string()
+})),
+  "correctAnswer": zod.string(),
+  "explanation": zod.string(),
+  "tags": zod.array(zod.string()),
+  "estimatedTimeSeconds": zod.number()
+})
+
+
+/**
+ * @summary Answer a single question in practice mode
+ */
+export const PracticeQuestionParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const PracticeQuestionBody = zod.object({
+  "selectedAlternative": zod.string()
+})
+
+export const PracticeQuestionResponse = zod.object({
+  "isCorrect": zod.boolean(),
+  "correctAnswer": zod.string(),
+  "explanation": zod.string(),
+  "xpEarned": zod.number()
 })
 
 

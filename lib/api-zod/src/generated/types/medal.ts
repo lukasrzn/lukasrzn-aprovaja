@@ -14,6 +14,5 @@ export interface Medal {
   earned: boolean;
   /** @nullable */
   earnedAt?: string | null;
-  /** common, rare, epic, legendary */
   rarity: string;
 }
