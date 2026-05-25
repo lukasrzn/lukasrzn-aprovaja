@@ -509,10 +509,10 @@ export default function Landing() {
                 APROVAÇÃO GARANTIDA
               </div>
               <CardContent className="p-8 flex-1 flex flex-col">
-                <h3 className="text-2xl font-bold mb-2 text-accent">Premium</h3>
+                <h3 className="text-2xl font-bold mb-2 text-accent">Vitalício</h3>
                 <p className="text-muted-foreground mb-6">Pague uma vez. Estude para sempre.</p>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">R$ 100</span>
+                  <span className="text-4xl font-bold">R$ 95,90</span>
                   <span className="text-muted-foreground"> · pagamento único</span>
                   <p className="text-xs text-accent font-semibold mt-1.5 uppercase tracking-wider">Acesso vitalício</p>
                 </div>
@@ -532,7 +532,7 @@ export default function Landing() {
                 >
                   {checkoutLoading === "premium" ? (
                     <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Abrindo checkout…</span>
-                  ) : "Garantir Premium Vitalício"}
+                  ) : "Garantir acesso Vitalício"}
                 </Button>
               </CardContent>
             </Card>

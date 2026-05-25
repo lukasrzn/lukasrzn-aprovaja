@@ -20,8 +20,8 @@ const PLAN_INFO = {
     ],
   },
   premium: {
-    name: "Premium Vitalício",
-    price: "R$ 100 · Acesso vitalício",
+    name: "Vitalício",
+    price: "R$ 95,90 · Acesso vitalício",
     color: "text-accent",
     glow: "shadow-[0_0_60px_rgba(var(--accent),0.25)]",
     border: "border-accent/40",

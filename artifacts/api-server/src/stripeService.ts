@@ -15,9 +15,9 @@ const PLAN_CONFIG = {
     billingType: 'subscription' as const, // recurring monthly
   },
   premium: {
-    name: 'Premium',
-    amountCentavos: 10000,
-    nickname: 'Premium Vitalício',
+    name: 'Vitalício',
+    amountCentavos: 9590,
+    nickname: 'Vitalício',
     billingType: 'lifetime' as const, // one-time payment
   },
 } as const;

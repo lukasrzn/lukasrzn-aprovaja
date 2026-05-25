@@ -29,9 +29,9 @@ const PLANS = [
   },
   {
     id: "premium" as const,
-    name: "Premium",
-    price: "R$ 100",
-    period: " · Vitalício",
+    name: "Vitalício",
+    price: "R$ 95,90",
+    period: " · pagamento único",
     badge: "Acesso vitalício",
     color: "accent" as const,
     glow: "shadow-[0_0_40px_rgba(var(--accent),0.2)]",
