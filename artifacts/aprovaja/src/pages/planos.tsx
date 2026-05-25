@@ -188,8 +188,10 @@ export default function Planos() {
                     </p>
 
                     <div className="mb-8">
-                      <span className="text-5xl font-black">{plan.price}</span>
-                      <span className="text-muted-foreground text-sm">{plan.period}</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-5xl font-black">{plan.price}</span>
+                      </div>
+                      <span className="text-muted-foreground text-sm">{plan.period.replace(/^\s*·\s*/, "")}</span>
                     </div>
 
                     <ul className="space-y-3 mb-10 flex-1">
@@ -205,7 +207,7 @@ export default function Planos() {
                       size="lg"
                       onClick={() => handleCheckout(plan.id)}
                       disabled={loadingPlan !== null}
-                      className={`w-full h-13 text-base font-bold transition-all ${
+                      className={`w-full h-auto min-h-14 py-2.5 px-4 text-base font-bold transition-all whitespace-normal ${
                         isPro
                           ? "bg-primary hover:bg-primary/90 text-white shadow-[0_0_24px_rgba(var(--primary),0.4)]"
                           : "bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white shadow-[0_0_24px_rgba(var(--accent),0.3)]"
@@ -217,7 +219,12 @@ export default function Planos() {
                           Abrindo checkout seguro…
                         </span>
                       ) : (
-                        `Assinar ${plan.name} — ${plan.price}${plan.period}`
+                        <span className="flex flex-col items-center justify-center leading-tight gap-0.5">
+                          <span className="text-base">Assinar {plan.name}</span>
+                          <span className="text-xs font-medium opacity-90">
+                            {plan.price}{plan.period}
+                          </span>
+                        </span>
                       )}
                     </Button>
                   </CardContent>
