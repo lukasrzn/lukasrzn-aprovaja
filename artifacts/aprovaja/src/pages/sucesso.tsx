@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 const PLAN_INFO = {
   pro: {
     name: "Pro",
-    price: "R$ 29,90/mês",
+    price: "R$ 34,90/mês",
     color: "text-primary",
     glow: "shadow-[0_0_60px_rgba(var(--primary),0.3)]",
     border: "border-primary/40",

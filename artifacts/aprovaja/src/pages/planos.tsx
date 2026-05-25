@@ -11,7 +11,7 @@ const PLANS = [
   {
     id: "pro" as const,
     name: "Pro",
-    price: "R$ 29,90",
+    price: "R$ 34,90",
     period: "/mês",
     badge: "Mais popular",
     color: "primary" as const,

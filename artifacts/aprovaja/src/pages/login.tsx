@@ -13,7 +13,7 @@ const PLANS = [
   {
     id: "pro",
     name: "Pro",
-    price: "R$ 29,90",
+    price: "R$ 34,90",
     period: "/mês",
     color: "primary",
     badge: "Mais popular",
@@ -306,7 +306,7 @@ export default function Login() {
                   {isLoading
                     ? "Criando sua conta…"
                     : selectedPlan
-                      ? `Assinar plano ${selectedPlan === "pro" ? "Pro — R$ 29,90/mês" : "Premium — R$ 59,90/mês"}`
+                      ? `Assinar plano ${selectedPlan === "pro" ? "Pro — R$ 34,90/mês" : "Vitalício — R$ 95,90"}`
                       : "Selecione um plano para continuar"}
                 </Button>
                 <p className="text-[10px] text-muted-foreground/50 text-center">

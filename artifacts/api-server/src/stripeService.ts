@@ -10,7 +10,7 @@ const DEFAULT_USER_ID = 1;
 const PLAN_CONFIG = {
   pro: {
     name: 'Pro',
-    amountCentavos: 2990,
+    amountCentavos: 3490,
     nickname: 'Pro Mensal',
     billingType: 'subscription' as const, // recurring monthly
   },

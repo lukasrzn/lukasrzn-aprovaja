@@ -480,7 +480,7 @@ export default function Landing() {
                 <h3 className="text-2xl font-bold mb-2 text-primary">Pro</h3>
                 <p className="text-muted-foreground mb-6">O essencial para qualquer aprovação</p>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">R$ 29,90</span>
+                  <span className="text-4xl font-bold">R$ 34,90</span>
                   <span className="text-muted-foreground">/mês</span>
                 </div>
                 <div className="space-y-4 mb-8 flex-1">
