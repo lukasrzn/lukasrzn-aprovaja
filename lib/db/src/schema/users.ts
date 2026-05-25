@@ -12,6 +12,9 @@ export const usersTable = pgTable("users", {
   role: text("role").notNull().default("user"), // "user" | "admin"
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
+  lifetimeAccess: boolean("lifetime_access").notNull().default(false),
+  lifetimePlan: text("lifetime_plan"),
+  lifetimeGrantedAt: timestamp("lifetime_granted_at", { withTimezone: true }),
   passwordHash: text("password_hash"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),

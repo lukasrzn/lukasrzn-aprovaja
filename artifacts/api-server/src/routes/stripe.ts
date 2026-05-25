@@ -33,10 +33,41 @@ router.get("/stripe/plans", async (_req, res) => {
   res.json({ data: Array.from(productsMap.values()) });
 });
 
-// GET /stripe/subscription — current user subscription status
+// GET /stripe/subscription — current user subscription status (incl. lifetime)
 router.get("/stripe/subscription", async (_req, res) => {
+  const user = await stripeStorage.getDefaultUser();
+  if (user?.lifetimeAccess) {
+    res.json({
+      subscription: {
+        id: "lifetime",
+        status: "active",
+        current_period_end: null,
+        cancel_at_period_end: false,
+        lifetime: true,
+        plan: user.lifetimePlan ?? "premium",
+        granted_at: user.lifetimeGrantedAt?.toISOString() ?? null,
+      },
+    });
+    return;
+  }
   const subscription = await stripeStorage.getSubscriptionByUser(1);
   res.json({ subscription: subscription ?? null });
+});
+
+// POST /stripe/verify-session — confirm completed checkout, grant lifetime if applicable
+router.post("/stripe/verify-session", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { sessionId } = req.body as { sessionId?: string };
+    if (!sessionId || typeof sessionId !== "string") {
+      res.status(400).json({ error: "sessionId is required" });
+      return;
+    }
+    const result = await stripeService.verifyAndGrantLifetimeAccess(sessionId);
+    res.json(result);
+  } catch (err) {
+    logger.error({ err }, "Failed to verify checkout session");
+    next(err);
+  }
 });
 
 // Resolve the public HTTPS base URL for success/cancel/return URLs.
@@ -62,7 +93,7 @@ router.post("/stripe/checkout", async (req: Request, res: Response, next: NextFu
 
     const baseUrl = getBaseUrl(req);
     const cancelPath = (req.body as any)?.cancelPath ?? "/planos";
-    const successUrl = `${baseUrl}/sucesso?plano=ativo&plan=${planSlug}`;
+    const successUrl = `${baseUrl}/sucesso?plano=ativo&plan=${planSlug}&session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl  = `${baseUrl}${cancelPath}?plano=cancelado`;
 
     const session = await stripeService.createCheckoutSession(

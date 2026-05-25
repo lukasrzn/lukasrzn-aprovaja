@@ -30,9 +30,9 @@ const PLANS = [
   {
     id: "premium" as const,
     name: "Premium",
-    price: "R$ 59,90",
-    period: "/mês",
-    badge: "Nota 1000 no ENEM",
+    price: "R$ 100",
+    period: " · Vitalício",
+    badge: "Acesso vitalício",
     color: "accent" as const,
     glow: "shadow-[0_0_40px_rgba(var(--accent),0.2)]",
     borderActive: "border-accent",

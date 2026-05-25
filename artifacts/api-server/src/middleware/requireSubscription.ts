@@ -11,13 +11,13 @@ export async function requireSubscription(
   next: NextFunction
 ): Promise<void> {
   try {
-    // Admin users bypass the subscription gate entirely
+    // Admin users + lifetime access bypass the subscription gate
     const [user] = await db
-      .select({ role: usersTable.role })
+      .select({ role: usersTable.role, lifetimeAccess: usersTable.lifetimeAccess })
       .from(usersTable)
       .where(eq(usersTable.id, DEFAULT_USER_ID));
 
-    if (user?.role === "admin") {
+    if (user?.role === "admin" || user?.lifetimeAccess) {
       next();
       return;
     }

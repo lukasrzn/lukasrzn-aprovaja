@@ -25,6 +25,19 @@ export class StripeStorage {
     return user;
   }
 
+  async grantLifetimeAccess(userId: number, plan: string) {
+    const [user] = await db
+      .update(usersTable)
+      .set({
+        lifetimeAccess: true,
+        lifetimePlan: plan,
+        lifetimeGrantedAt: new Date(),
+      })
+      .where(eq(usersTable.id, userId))
+      .returning();
+    return user;
+  }
+
   async listProductsWithPrices() {
     const result = await db.execute(sql`
       SELECT

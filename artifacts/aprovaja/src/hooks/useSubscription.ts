@@ -5,6 +5,9 @@ export interface SubscriptionData {
   status: string;
   current_period_end: number | null;
   cancel_at_period_end: boolean | null;
+  lifetime?: boolean;
+  plan?: string;
+  granted_at?: string | null;
   _raw_data?: Record<string, unknown>;
 }
 

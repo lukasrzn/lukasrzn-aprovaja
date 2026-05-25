@@ -20,8 +20,8 @@ const PLAN_INFO = {
     ],
   },
   premium: {
-    name: "Premium",
-    price: "R$ 59,90/mês",
+    name: "Premium Vitalício",
+    price: "R$ 100 · Acesso vitalício",
     color: "text-accent",
     glow: "shadow-[0_0_60px_rgba(var(--accent),0.25)]",
     border: "border-accent/40",
@@ -42,9 +42,23 @@ export default function Sucesso() {
   const search = useSearch();
   const params = new URLSearchParams(search);
   const planSlug = (params.get("plan") ?? "pro") as keyof typeof PLAN_INFO;
+  const sessionId = params.get("session_id");
   const plan = PLAN_INFO[planSlug] ?? PLAN_INFO.pro;
 
   const [countdown, setCountdown] = useState(REDIRECT_AFTER_SECONDS);
+
+  // For lifetime plans (one-time payment), verify the session with the backend
+  // so it can flip the user's lifetime_access flag. Idempotent — safe on reload.
+  useEffect(() => {
+    if (!sessionId || planSlug !== "premium") return;
+    fetch("/api/stripe/verify-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+    }).catch(() => {
+      // Non-fatal — webhook flow or a retry from the dashboard will resolve it.
+    });
+  }, [sessionId, planSlug]);
 
   // Auto-redirect to dashboard after countdown — passes ?plano=ativo so
   // SubscriptionGuard knows to retry the subscription check while webhook settles.
