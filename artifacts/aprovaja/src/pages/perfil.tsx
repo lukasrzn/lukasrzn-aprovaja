@@ -18,7 +18,10 @@ import {
   PenTool, Crown, BookOpen, Brain, ChevronRight,
   Lock, Sparkles, TrendingUp, Medal as MedalIcon,
   Shield, Sword, Gem, LogOut, AlertTriangle, Loader2,
+  Trash2,
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useSession } from "@/hooks/useSession";
 
 // ─── Icon registry ────────────────────────────────────────────────────────────
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -255,7 +258,34 @@ export default function Perfil() {
 
   const [activeTab, setActiveTab] = useState<"conquistas" | "estatisticas">("conquistas");
   const [logoutStage, setLogoutStage] = useState<"idle" | "confirm" | "loading">("idle");
+  const [deleteStage, setDeleteStage] = useState<"idle" | "confirm" | "typing" | "loading">("idle");
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const { data: session } = useSession();
+
+  const handleDeleteAccount = async () => {
+    setDeleteStage("loading");
+    try {
+      const res = await fetch("/api/auth/me", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "Erro ao excluir conta.");
+      try { localStorage.clear(); sessionStorage.clear(); } catch {}
+      toast({ title: "Conta excluída", description: "Todos os seus dados foram removidos." });
+      setTimeout(() => navigate("/?conta=excluida"), 600);
+    } catch (err: any) {
+      setDeleteStage("idle");
+      setDeleteConfirmText("");
+      toast({
+        title: "Não foi possível excluir",
+        description: err.message ?? "Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleLogout = () => {
     if (logoutStage === "idle") { setLogoutStage("confirm"); return; }
@@ -636,6 +666,109 @@ export default function Perfil() {
           </AnimatePresence>
         </div>
       </motion.div>
+
+      {/* ── Danger zone: Delete account (LGPD) ─────────────────────── */}
+      {!session?.isAdmin && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="rounded-2xl border border-rose-500/20 bg-rose-500/[0.03] overflow-hidden"
+        >
+          <div className="px-5 py-4 border-b border-rose-500/15">
+            <p className="text-xs font-semibold text-rose-400/80 uppercase tracking-wider">Zona de Perigo</p>
+          </div>
+
+          <div className="p-4">
+            <AnimatePresence mode="wait">
+              {deleteStage === "loading" ? (
+                <motion.div
+                  key="del-loading"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="flex items-center justify-center gap-3 py-4"
+                >
+                  <Loader2 className="w-5 h-5 text-rose-400 animate-spin" />
+                  <span className="text-sm text-muted-foreground">Excluindo sua conta e todos os dados…</span>
+                </motion.div>
+              ) : deleteStage === "confirm" || deleteStage === "typing" ? (
+                <motion.div
+                  key="del-confirm"
+                  initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                  transition={{ duration: 0.18 }}
+                  className="rounded-xl border border-rose-500/30 bg-rose-500/[0.07] p-4 space-y-3"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-rose-500/15 border border-rose-500/30 flex items-center justify-center shrink-0">
+                      <AlertTriangle className="w-4 h-4 text-rose-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Excluir conta permanentemente?</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Esta ação é <strong className="text-rose-300">irreversível</strong>. Seus dados de estudo, simulados, redações, flashcards e conversas com a IA serão apagados.
+                        {session?.email && <> Se você tem uma assinatura ativa, ela será cancelada no Stripe.</>}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-[11px] text-muted-foreground">
+                      Para confirmar, digite <code className="font-mono text-rose-300 bg-rose-500/10 px-1 py-0.5 rounded">EXCLUIR</code> abaixo:
+                    </p>
+                    <input
+                      type="text"
+                      value={deleteConfirmText}
+                      onChange={(e) => {
+                        setDeleteConfirmText(e.target.value);
+                        setDeleteStage("typing");
+                      }}
+                      placeholder="EXCLUIR"
+                      autoComplete="off"
+                      className="w-full h-9 px-3 rounded-lg bg-background/60 border border-white/[0.1] focus:border-rose-500/50 focus:outline-none text-sm text-white font-mono"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => { setDeleteStage("idle"); setDeleteConfirmText(""); }}
+                      className="flex-1 border-white/[0.12] text-xs"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      size="sm"
+                      disabled={deleteConfirmText !== "EXCLUIR"}
+                      onClick={handleDeleteAccount}
+                      className="flex-1 bg-rose-500/15 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 hover:text-rose-200 hover:border-rose-500/60 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                      variant="outline"
+                    >
+                      Excluir minha conta
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.button
+                  key="del-idle"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  whileHover={{ x: 3 }}
+                  onClick={() => setDeleteStage("confirm")}
+                  className="group w-full flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-rose-500/25 hover:bg-rose-500/[0.06] transition-all text-left"
+                >
+                  <div className="w-10 h-10 rounded-xl border border-white/[0.08] bg-white/[0.04] group-hover:border-rose-500/35 group-hover:bg-rose-500/10 flex items-center justify-center transition-all shrink-0">
+                    <Trash2 className="w-4 h-4 text-muted-foreground/50 group-hover:text-rose-400 transition-colors" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white/80 group-hover:text-rose-400 transition-colors">Excluir minha conta</p>
+                    <p className="text-xs text-muted-foreground/60">Direito ao esquecimento (LGPD) — apaga todos os dados</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-rose-400/50 transition-colors shrink-0" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
 
     </div>
   );

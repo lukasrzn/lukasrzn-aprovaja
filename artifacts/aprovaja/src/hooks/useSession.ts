@@ -4,6 +4,10 @@ export interface SessionData {
   authenticated: boolean;
   role: "user" | "admin";
   isAdmin: boolean;
+  userId?: number;
+  name?: string;
+  email?: string;
+  emailVerified?: boolean;
 }
 
 async function fetchSession(): Promise<SessionData> {

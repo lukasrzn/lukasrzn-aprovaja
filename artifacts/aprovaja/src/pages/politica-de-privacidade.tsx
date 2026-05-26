@@ -80,7 +80,7 @@ const SECTIONS = [
     list: [
       "Acesso: solicitar uma cópia de todos os dados pessoais que temos sobre você.",
       "Correção: corrigir dados incompletos, inexatos ou desatualizados diretamente nas configurações da conta.",
-      "Exclusão: solicitar a exclusão dos seus dados pessoais, exceto quando a retenção for exigida por lei.",
+      "Exclusão: você pode excluir sua conta e todos os dados associados a qualquer momento, diretamente pela página de Perfil → Zona de Perigo → 'Excluir minha conta'. A exclusão é imediata, irreversível e cancela automaticamente qualquer assinatura ativa.",
       "Portabilidade: receber seus dados em formato estruturado e legível por máquina.",
       "Revogação de consentimento: retirar seu consentimento para o tratamento de dados a qualquer momento.",
       "Oposição: opor-se ao tratamento de dados em determinadas situações previstas em lei.",

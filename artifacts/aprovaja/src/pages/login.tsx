@@ -102,8 +102,12 @@ export default function Login() {
       toast({ title: "Preencha todos os campos.", variant: "destructive" });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: "Senha muito curta", description: "Use ao menos 6 caracteres.", variant: "destructive" });
+    if (password.length < 8) {
+      toast({ title: "Senha muito curta", description: "Use ao menos 8 caracteres.", variant: "destructive" });
+      return;
+    }
+    if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+      toast({ title: "Senha fraca", description: "Use pelo menos uma letra e um número.", variant: "destructive" });
       return;
     }
 
@@ -351,9 +355,9 @@ export default function Login() {
                     name="password-register"
                     type="password"
                     required
-                    minLength={6}
+                    minLength={8}
                     autoComplete="new-password"
-                    placeholder="Mínimo 6 caracteres"
+                    placeholder="Mínimo 8 caracteres com letras e números"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>

@@ -29,6 +29,7 @@ import Sucesso from "@/pages/sucesso";
 import Admin from "@/pages/admin";
 import RecuperarSenha from "@/pages/recuperar-senha";
 import RedefinirSenha from "@/pages/redefinir-senha";
+import VerificarEmail from "@/pages/verificar-email";
 import { Layout } from "@/components/Layout";
 import { useSubscription, isSubscriptionActive } from "@/hooks/useSubscription";
 import { useSession } from "@/hooks/useSession";
@@ -117,6 +118,26 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
   );
 }
 
+// Auth-only guard — accessible to any logged-in user regardless of subscription.
+// Used for /perfil so users without an active subscription can still access
+// the LGPD "delete account" flow.
+function AuthGuard({ component: Component }: { component: React.ComponentType }) {
+  const { data: session, isLoading } = useSession();
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!session?.authenticated) return <Redirect to="/login" />;
+  return (
+    <Layout>
+      <Component />
+    </Layout>
+  );
+}
+
 function AdminGuard({ component: Component }: { component: React.ComponentType }) {
   const { data: session, isLoading } = useSession();
   if (isLoading) {
@@ -141,6 +162,7 @@ function Router() {
       <Route path="/sucesso" component={Sucesso} />
       <Route path="/recuperar-senha" component={RecuperarSenha} />
       <Route path="/recuperar-senha/redefinir" component={RedefinirSenha} />
+      <Route path="/verificar-email" component={VerificarEmail} />
       <Route path="/admin"><AdminGuard component={Admin} /></Route>
       <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
       <Route path="/termos-de-servico" component={TermosDeServico} />
@@ -153,7 +175,7 @@ function Router() {
       <Route path="/flashcards"><SubscriptionGuard component={Flashcards} /></Route>
       <Route path="/flashcards/revisar/:deckId"><SubscriptionGuard component={FlashcardReview} /></Route>
       <Route path="/ranking"><SubscriptionGuard component={Ranking} /></Route>
-      <Route path="/perfil"><SubscriptionGuard component={Perfil} /></Route>
+      <Route path="/perfil"><AuthGuard component={Perfil} /></Route>
       <Route path="/missoes"><SubscriptionGuard component={Missoes} /></Route>
       <Route path="/pratica"><SubscriptionGuard component={Pratica} /></Route>
       <Route path="/estude-hoje"><SubscriptionGuard component={EstudeHoje} /></Route>

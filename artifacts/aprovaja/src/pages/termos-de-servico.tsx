@@ -89,7 +89,7 @@ const SECTIONS = [
       "Tentativas de acesso não autorizado a dados de outros usuários.",
       "Inadimplência não sanada dentro do prazo estabelecido.",
       "Solicitação do próprio usuário (direito ao esquecimento, conforme LGPD).",
-      "O usuário pode solicitar o encerramento da conta a qualquer momento pelo e-mail cttvertice@gmail.com. Após confirmação, os dados serão eliminados de acordo com nossa Política de Privacidade.",
+      "O usuário pode encerrar a conta a qualquer momento diretamente pela página de Perfil → Zona de Perigo → 'Excluir minha conta'. A exclusão é imediata e remove permanentemente todos os dados associados, conforme nossa Política de Privacidade. Em caso de dúvidas, contato pelo e-mail cttvertice@gmail.com.",
       "O AprovaJá não se responsabiliza por perda de progresso, dados ou conteúdo em caso de encerramento por violação dos termos.",
     ],
   },
