@@ -15,19 +15,23 @@ import aiGenerateRouter from "./ai-generate.js";
 import stripeRouter from "./stripe";
 import adminRouter from "./admin";
 import authRouter from "./auth";
+import { requireAuth } from "../middleware/requireAuth";
 import { requireSubscription } from "../middleware/requireSubscription";
 
 const router: IRouter = Router();
 
-// Public routes — no subscription required
+// Public routes — no auth/subscription required
 router.use(healthRouter);
-router.use(stripeRouter);
 router.use(authRouter);
 
-// Admin routes — gated by requireAdmin middleware (inside adminRouter)
+// Stripe router — handles its own auth per route (plans is public, checkout requires auth)
+router.use(stripeRouter);
+
+// Admin routes — requireAdmin (inside adminRouter) also requires auth
 router.use(adminRouter);
 
-// Premium routes — require an active Stripe subscription
+// Premium routes — require auth + active subscription
+router.use(requireAuth);
 router.use(requireSubscription);
 router.use(usersRouter);
 router.use(dashboardRouter);

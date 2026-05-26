@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { eq, and, gte } from "drizzle-orm";
 import { db, missionsTable, gamificationTable } from "@workspace/db";
 import {
@@ -8,7 +9,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 const DEFAULT_MISSIONS = [
   { title: "Estudar por 30 minutos", description: "Complete uma sessão de estudos de pelo menos 30 minutos", icon: "BookOpen", xpReward: 50, coinReward: 10, target: 1, type: "study" },
@@ -36,7 +36,7 @@ async function ensureTodayMissions(userId: number) {
 }
 
 router.get("/missions/today", async (req, res): Promise<void> => {
-  const missions = await ensureTodayMissions(DEFAULT_USER_ID);
+  const missions = await ensureTodayMissions(getUserId(req));
   res.json(GetTodayMissionsResponse.parse(missions.map(m => ({
     id: m.id,
     title: m.title,
@@ -58,7 +58,8 @@ router.post("/missions/:id/complete", async (req, res): Promise<void> => {
     return;
   }
 
-  const [mission] = await db.select().from(missionsTable).where(eq(missionsTable.id, params.data.id));
+  const [mission] = await db.select().from(missionsTable)
+    .where(and(eq(missionsTable.id, params.data.id), eq(missionsTable.userId, getUserId(req))));
   if (!mission) {
     res.status(404).json({ error: "Missão não encontrada" });
     return;
@@ -85,12 +86,12 @@ router.post("/missions/:id/complete", async (req, res): Promise<void> => {
     .where(eq(missionsTable.id, params.data.id))
     .returning();
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
     await db.update(gamificationTable).set({
       xp: g.xp + mission.xpReward,
       coins: g.coins + mission.coinReward,
-    }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+    }).where(eq(gamificationTable.userId, getUserId(req)));
   }
 
   res.json(CompleteMissionResponse.parse({

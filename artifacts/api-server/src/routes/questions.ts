@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { eq, and, sql, ilike } from "drizzle-orm";
 import { db, questionsTable, gamificationTable } from "@workspace/db";
 import {
@@ -13,7 +14,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 function formatQuestion(q: typeof questionsTable.$inferSelect, includeAnswer = false) {
   const base = {
@@ -137,10 +137,10 @@ router.post("/questions/:id/practice", async (req, res): Promise<void> => {
   const isCorrect = parsed.data.selectedAlternative === q.correctAnswer;
   const xpEarned = isCorrect ? (q.difficulty === "dificil" ? 30 : q.difficulty === "medio" ? 20 : 10) : 5;
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
     await db.update(gamificationTable).set({ xp: g.xp + xpEarned, coins: g.coins + (isCorrect ? 2 : 0) })
-      .where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+      .where(eq(gamificationTable.userId, getUserId(req)));
   }
 
   res.json(PracticeQuestionResponse.parse({

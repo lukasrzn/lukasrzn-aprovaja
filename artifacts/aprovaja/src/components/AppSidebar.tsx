@@ -52,14 +52,16 @@ export function AppSidebar() {
     }
     if (logoutStage === "confirm") {
       setLogoutStage("loading");
-      // Clear any stored state
-      try {
-        localStorage.clear();
-        sessionStorage.clear();
-      } catch {}
-      setTimeout(() => {
-        navigate("/?saiu=true");
-      }, 900);
+      // Call backend to destroy the session, then clear local state
+      fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+        .catch(() => {})
+        .finally(() => {
+          try {
+            localStorage.clear();
+            sessionStorage.clear();
+          } catch {}
+          window.location.href = "/?saiu=true";
+        });
     }
   };
 

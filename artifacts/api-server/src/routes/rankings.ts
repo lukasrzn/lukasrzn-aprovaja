@@ -1,5 +1,7 @@
 import { Router, type IRouter } from "express";
+import { eq } from "drizzle-orm";
 import { db, gamificationTable, usersTable } from "@workspace/db";
+import { getUserId } from "../middleware/requireAuth";
 import {
   GetGlobalRankingResponse,
   GetWeeklyRankingResponse,
@@ -21,18 +23,25 @@ const MOCK_RANKING = [
 ];
 
 router.get("/rankings/global", async (req, res): Promise<void> => {
-  const [user] = await db.select({ name: usersTable.name }).from(usersTable);
-  const [g] = await db.select().from(gamificationTable);
+  const userId = getUserId(req);
+  const [user] = await db
+    .select({ name: usersTable.name, goal: usersTable.goal, avatarUrl: usersTable.avatarUrl })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+  const [g] = await db
+    .select()
+    .from(gamificationTable)
+    .where(eq(gamificationTable.userId, userId));
 
   const userEntry = {
     rank: 5,
-    userId: 1,
+    userId,
     name: user?.name ?? "Estudante AprovaJá",
-    avatarUrl: null,
-    xp: g?.xp ?? 500,
-    level: Math.floor(Math.sqrt((g?.xp ?? 500) / 100)) + 1,
-    streak: g?.streak ?? 3,
-    goal: "ENEM 2026",
+    avatarUrl: user?.avatarUrl ?? null,
+    xp: g?.xp ?? 0,
+    level: Math.floor(Math.sqrt((g?.xp ?? 0) / 100)) + 1,
+    streak: g?.streak ?? 0,
+    goal: user?.goal ?? "ENEM 2026",
     isCurrentUser: true,
   };
 

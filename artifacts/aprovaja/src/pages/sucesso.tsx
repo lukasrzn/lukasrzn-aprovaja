@@ -47,18 +47,19 @@ export default function Sucesso() {
 
   const [countdown, setCountdown] = useState(REDIRECT_AFTER_SECONDS);
 
-  // For lifetime plans (one-time payment), verify the session with the backend
-  // so it can flip the user's lifetime_access flag. Idempotent — safe on reload.
+  // Verify the session with the backend so it can link the subscription
+  // (or flip lifetime_access for premium). Idempotent — safe on reload.
   useEffect(() => {
-    if (!sessionId || planSlug !== "premium") return;
+    if (!sessionId) return;
     fetch("/api/stripe/verify-session", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId }),
     }).catch(() => {
       // Non-fatal — webhook flow or a retry from the dashboard will resolve it.
     });
-  }, [sessionId, planSlug]);
+  }, [sessionId]);
 
   // Auto-redirect to dashboard after countdown — passes ?plano=ativo so
   // SubscriptionGuard knows to retry the subscription check while webhook settles.

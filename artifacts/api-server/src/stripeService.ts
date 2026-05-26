@@ -3,8 +3,6 @@ import { stripeStorage } from './stripeStorage';
 import { getUncachableStripeClient } from './stripeClient';
 import { logger } from './lib/logger';
 
-const DEFAULT_USER_ID = 1;
-
 // Plan definitions — single source of truth for product/price config.
 // Amounts in smallest currency unit (centavos).
 const PLAN_CONFIG = {
@@ -27,21 +25,12 @@ type PlanSlug = keyof typeof PLAN_CONFIG;
 // In-memory cache of resolved live price IDs. Populated on first checkout.
 const livePriceIdCache = new Map<PlanSlug, string>();
 
-/**
- * Resolves the live Stripe Price ID for a plan by querying the Stripe API
- * directly. Creates the product and/or price in Stripe if they don't exist.
- *
- * For 'subscription' billing type: looks for/creates a recurring monthly BRL price.
- * For 'lifetime' billing type: looks for/creates a one-time BRL price with
- *   matching amount (so changing the lifetime price doesn't reuse a stale one).
- */
 async function resolveLivePriceId(stripe: Stripe, planSlug: PlanSlug): Promise<string> {
   const cached = livePriceIdCache.get(planSlug);
   if (cached) return cached;
 
   const cfg = PLAN_CONFIG[planSlug];
 
-  // 1. Find or create the product by exact name match.
   const productsResp = await stripe.products.list({ active: true, limit: 100 });
   let product = productsResp.data.find(
     (p) => p.name.toLowerCase() === cfg.name.toLowerCase()
@@ -55,7 +44,6 @@ async function resolveLivePriceId(stripe: Stripe, planSlug: PlanSlug): Promise<s
     });
   }
 
-  // 2. Find or create the active BRL price matching the billing type.
   const pricesResp = await stripe.prices.list({
     product: product.id,
     active: true,
@@ -67,7 +55,6 @@ async function resolveLivePriceId(stripe: Stripe, planSlug: PlanSlug): Promise<s
     if (cfg.billingType === 'subscription') {
       return p.recurring?.interval === 'month';
     }
-    // lifetime: one-time price with the exact configured amount
     return p.recurring === null && p.unit_amount === cfg.amountCentavos;
   });
 
@@ -123,19 +110,20 @@ export class StripeService {
   }
 
   async createCheckoutSession(
+    userId: number,
     planSlug: PlanSlug,
     successUrl: string,
     cancelUrl: string,
   ) {
     const stripe = await getUncachableStripeClient();
-    const user = await stripeStorage.getDefaultUser();
+    const user = await stripeStorage.getUserById(userId);
 
     if (!user) throw new Error('User not found');
 
     const cfg = PLAN_CONFIG[planSlug];
     const priceId = await resolveLivePriceId(stripe, planSlug);
 
-    let customerId = await this.getOrCreateCustomer(DEFAULT_USER_ID, user.email);
+    let customerId = await this.getOrCreateCustomer(userId, user.email);
 
     const buildParams = (cid: string): Stripe.Checkout.SessionCreateParams => {
       const base: Stripe.Checkout.SessionCreateParams = {
@@ -146,15 +134,16 @@ export class StripeService {
         success_url: successUrl,
         cancel_url: cancelUrl,
         locale: 'pt-BR',
-        metadata: { userId: String(DEFAULT_USER_ID), plan: planSlug },
+        client_reference_id: String(userId),
+        metadata: { userId: String(userId), plan: planSlug },
       };
       if (cfg.billingType === 'subscription') {
         base.subscription_data = {
-          metadata: { userId: String(DEFAULT_USER_ID), plan: planSlug },
+          metadata: { userId: String(userId), plan: planSlug },
         };
       } else {
         base.payment_intent_data = {
-          metadata: { userId: String(DEFAULT_USER_ID), plan: planSlug, billing_type: 'lifetime' },
+          metadata: { userId: String(userId), plan: planSlug, billing_type: 'lifetime' },
         };
       }
       return base;
@@ -168,7 +157,7 @@ export class StripeService {
           { staleCustomerId: customerId },
           'Stale Stripe customer ID — creating fresh customer and retrying',
         );
-        const freshId = await this.forceCreateCustomer(DEFAULT_USER_ID, user.email);
+        const freshId = await this.forceCreateCustomer(userId, user.email);
         return await stripe.checkout.sessions.create(buildParams(freshId));
       }
       throw err;
@@ -176,40 +165,67 @@ export class StripeService {
   }
 
   /**
-   * Verifies a completed checkout session and grants lifetime access if the
-   * payment is confirmed for a lifetime plan. Idempotent — safe to call multiple times.
-   * Called from the success page after Stripe redirect.
+   * Verifies a completed checkout session and:
+   * - For lifetime plans: grants lifetime access to the user in metadata
+   * - For subscription plans: stores stripeSubscriptionId on the user
+   * Idempotent — safe to call multiple times.
    */
-  async verifyAndGrantLifetimeAccess(sessionId: string): Promise<{
+  async verifyAndGrantAccess(sessionId: string): Promise<{
     granted: boolean;
     plan: string | null;
     alreadyGranted: boolean;
+    type: 'lifetime' | 'subscription' | null;
   }> {
     const stripe = await getUncachableStripeClient();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status !== 'paid') {
-      return { granted: false, plan: null, alreadyGranted: false };
+      return { granted: false, plan: null, alreadyGranted: false, type: null };
     }
 
     const plan = session.metadata?.plan ?? null;
-    const cfg = plan && plan in PLAN_CONFIG ? PLAN_CONFIG[plan as PlanSlug] : null;
-    if (!plan || !cfg || cfg.billingType !== 'lifetime') {
-      return { granted: false, plan, alreadyGranted: false };
+    const userIdStr = session.metadata?.userId ?? session.client_reference_id;
+    const userId = userIdStr ? Number(userIdStr) : null;
+
+    if (!plan || !userId || Number.isNaN(userId)) {
+      return { granted: false, plan, alreadyGranted: false, type: null };
     }
 
-    const existing = await stripeStorage.getUserById(DEFAULT_USER_ID);
-    if (existing?.lifetimeAccess) {
-      return { granted: true, plan, alreadyGranted: true };
+    const cfg = plan in PLAN_CONFIG ? PLAN_CONFIG[plan as PlanSlug] : null;
+    if (!cfg) {
+      return { granted: false, plan, alreadyGranted: false, type: null };
     }
 
-    await stripeStorage.grantLifetimeAccess(DEFAULT_USER_ID, plan);
-    logger.info({ userId: DEFAULT_USER_ID, plan, sessionId }, 'Granted lifetime access');
-    return { granted: true, plan, alreadyGranted: false };
+    if (cfg.billingType === 'lifetime') {
+      const existing = await stripeStorage.getUserById(userId);
+      if (existing?.lifetimeAccess) {
+        return { granted: true, plan, alreadyGranted: true, type: 'lifetime' };
+      }
+      await stripeStorage.grantLifetimeAccess(userId, plan);
+      logger.info({ userId, plan, sessionId }, 'Granted lifetime access');
+      return { granted: true, plan, alreadyGranted: false, type: 'lifetime' };
+    }
+
+    // Subscription plan — link the subscription to the user
+    const subscriptionId = typeof session.subscription === 'string'
+      ? session.subscription
+      : session.subscription?.id;
+    if (!subscriptionId) {
+      return { granted: false, plan, alreadyGranted: false, type: 'subscription' };
+    }
+
+    const existing = await stripeStorage.getUserById(userId);
+    if (existing?.stripeSubscriptionId === subscriptionId) {
+      return { granted: true, plan, alreadyGranted: true, type: 'subscription' };
+    }
+
+    await stripeStorage.updateUserStripeInfo(userId, { stripeSubscriptionId: subscriptionId });
+    logger.info({ userId, plan, sessionId, subscriptionId }, 'Linked subscription to user');
+    return { granted: true, plan, alreadyGranted: false, type: 'subscription' };
   }
 
-  async createPortalSession(returnUrl: string) {
-    const user = await stripeStorage.getDefaultUser();
+  async createPortalSession(userId: number, returnUrl: string) {
+    const user = await stripeStorage.getUserById(userId);
     if (!user?.stripeCustomerId) throw new Error('No Stripe customer found for this user');
 
     const stripe = await getUncachableStripeClient();

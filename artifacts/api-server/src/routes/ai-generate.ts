@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { db, flashcardDecksTable, flashcardsTable, questionsTable, simuladosTable } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import {
@@ -8,7 +9,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 const MODEL = "gpt-4o-mini";
 
 // ─── Flashcard generation ─────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ Regras:
 
   const deckTitle = `${subject}: ${topic}`;
   const [deck] = await db.insert(flashcardDecksTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     title: deckTitle,
     subject,
   }).returning();
@@ -273,7 +273,7 @@ PT-BR acadêmico. Estilo autêntico ENEM.`;
   const durationMinutes = Math.round(questionCount * 2.5);
 
   const [simulado] = await db.insert(simuladosTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     title,
     type: "ENEM",
     difficulty,

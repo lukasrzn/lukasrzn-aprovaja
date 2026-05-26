@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Zap, CheckCircle2, Star, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PLANS = [
   {
@@ -21,12 +22,12 @@ const PLANS = [
   },
   {
     id: "premium",
-    name: "Premium",
-    price: "R$ 59,90",
-    period: "/mês",
+    name: "Vitalício",
+    price: "R$ 95,90",
+    period: "",
     color: "accent",
-    badge: "Nota 1000",
-    features: ["Tudo do Pro", "Redações ilimitadas", "Professor IA 24/7", "Simulados semanais inéditos"],
+    badge: "Melhor custo",
+    features: ["Tudo do Pro", "Redações ilimitadas", "Professor IA 24/7", "Acesso vitalício"],
   },
 ] as const;
 
@@ -34,10 +35,10 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const search = useSearch();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "premium" | null>(null);
 
-  // Show toast when user returns from a cancelled payment
   useEffect(() => {
     const params = new URLSearchParams(search);
     if (params.get("plano") === "cancelado") {
@@ -49,44 +50,100 @@ export default function Login() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)?.value;
+
+    if (!email || !password) {
+      toast({ title: "Preencha email e senha.", variant: "destructive" });
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const resp = await fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        throw new Error(data.error ?? "Erro ao fazer login.");
+      }
+      // Invalidate caches so app refetches with new identity
+      await queryClient.invalidateQueries();
       toast({ title: "Bem-vindo de volta!", description: "Seu cockpit de estudos está pronto." });
       setLocation("/dashboard");
-    }, 1000);
+    } catch (err: any) {
+      toast({
+        title: "Erro ao entrar",
+        description: err.message ?? "Verifique seus dados e tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPlan) return;
 
+    const form = e.currentTarget as HTMLFormElement;
+    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
+    const email = (form.elements.namedItem("email-register") as HTMLInputElement)?.value;
+    const goal = (form.elements.namedItem("goal") as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem("password-register") as HTMLInputElement)?.value;
+
+    if (!name || !email || !password) {
+      toast({ title: "Preencha todos os campos.", variant: "destructive" });
+      return;
+    }
+    if (password.length < 6) {
+      toast({ title: "Senha muito curta", description: "Use ao menos 6 caracteres.", variant: "destructive" });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const resp = await fetch("/api/stripe/checkout", {
+      // 1) Create the account (also sets the session cookie)
+      const regResp = await fetch("/api/auth/register", {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, goal }),
+      });
+      const regData = await regResp.json().catch(() => ({}));
+      if (!regResp.ok) {
+        throw new Error(regData.error ?? "Erro ao criar conta.");
+      }
+
+      await queryClient.invalidateQueries();
+
+      // 2) Start Stripe checkout for the chosen plan
+      const checkoutResp = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planSlug: selectedPlan }),
       });
-
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        throw new Error(err.error ?? `Erro ${resp.status}`);
+      const checkoutData = await checkoutResp.json().catch(() => ({}));
+      if (!checkoutResp.ok) {
+        throw new Error(checkoutData.error ?? "Erro ao iniciar pagamento.");
       }
 
-      const data = await resp.json();
-      if (data.url) {
-        // Break out of any iframe so Stripe Checkout loads at top-level context
-        (window.top ?? window).location.href = data.url;
+      if (checkoutData.url) {
+        (window.top ?? window).location.href = checkoutData.url;
       } else {
         throw new Error("Resposta inválida do servidor.");
       }
     } catch (err: any) {
       setIsLoading(false);
       toast({
-        title: "Erro ao iniciar pagamento",
+        title: "Erro ao criar conta",
         description: err.message ?? "Tente novamente em instantes.",
         variant: "destructive",
       });
@@ -95,10 +152,9 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 relative overflow-hidden">
-      {/* Background decorations */}
       <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxwYXRoIGQ9Ik0wIDBIMVYxSDBaTTIgMEgzVjFIMlpNMSAxSDJWMkgxWk0zIDFINFYySDNaTTAgMkgxVjNIMFpNMiAySDNWM0gyWk0xIDNIMlY0SDFaTTMgM0g0VjRIM1oiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none opacity-[0.03]"></div>
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none blur-[100px]"></div>
-      
+
       <Link href="/" className="flex items-center gap-2 mb-8 relative z-10 cursor-pointer">
         <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary),0.5)]">
           <Zap className="w-6 h-6 text-white" />
@@ -118,7 +174,7 @@ export default function Login() {
               Cadastrar
             </TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="login" className="m-0">
             <form onSubmit={handleLogin}>
               <CardHeader>
@@ -132,9 +188,11 @@ export default function Login() {
                   <Label htmlFor="email">E-mail</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     placeholder="voce@exemplo.com"
                     required
+                    autoComplete="email"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>
@@ -147,8 +205,10 @@ export default function Login() {
                   </div>
                   <Input
                     id="password"
+                    name="password"
                     type="password"
                     required
+                    autoComplete="current-password"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>
@@ -174,7 +234,6 @@ export default function Login() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-5">
-                {/* Plan selector */}
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-primary" /> Escolha seu plano
@@ -198,7 +257,6 @@ export default function Login() {
                               : "border-white/[0.08] bg-white/[0.02] hover:border-white/[0.18]"
                           }`}
                         >
-                          {/* Selected checkmark */}
                           <AnimatePresence>
                             {isSelected && (
                               <motion.div
@@ -239,7 +297,6 @@ export default function Login() {
                     })}
                   </div>
 
-                  {/* Guard message */}
                   <AnimatePresence>
                     {!selectedPlan && (
                       <motion.p
@@ -254,13 +311,14 @@ export default function Login() {
                   </AnimatePresence>
                 </div>
 
-                {/* Form fields */}
                 <div className="space-y-2">
                   <Label htmlFor="name">Nome completo</Label>
                   <Input
                     id="name"
+                    name="name"
                     placeholder="João Silva"
                     required
+                    autoComplete="name"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>
@@ -268,9 +326,11 @@ export default function Login() {
                   <Label htmlFor="email-register">E-mail</Label>
                   <Input
                     id="email-register"
+                    name="email-register"
                     type="email"
                     placeholder="voce@exemplo.com"
                     required
+                    autoComplete="email"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>
@@ -278,6 +338,7 @@ export default function Login() {
                   <Label htmlFor="goal">Objetivo Principal</Label>
                   <Input
                     id="goal"
+                    name="goal"
                     placeholder="Ex: Medicina ENEM, Concurso PF"
                     required
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
@@ -287,8 +348,12 @@ export default function Login() {
                   <Label htmlFor="password-register">Senha</Label>
                   <Input
                     id="password-register"
+                    name="password-register"
                     type="password"
                     required
+                    minLength={6}
+                    autoComplete="new-password"
+                    placeholder="Mínimo 6 caracteres"
                     className="bg-background/50 border-white/10 focus-visible:ring-primary"
                   />
                 </div>
@@ -317,7 +382,7 @@ export default function Login() {
           </TabsContent>
         </Tabs>
       </Card>
-      
+
       <p className="mt-8 text-sm text-muted-foreground relative z-10 text-center max-w-sm">
         Ao continuar, você concorda com nossos{" "}
         <Link href="/termos-de-servico" className="underline hover:text-foreground">Termos de Serviço</Link>

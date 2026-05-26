@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { incrementMissionProgress } from "./mission-progress.js";
 import { eq, and, inArray } from "drizzle-orm";
 import { db, simuladosTable, simuladoResultsTable, gamificationTable, performanceLogTable, questionsTable, examSessionsTable } from "@workspace/db";
@@ -17,7 +18,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 // Fallback questions if DB has none
 const FALLBACK_QUESTIONS = [
@@ -120,11 +120,11 @@ function getFallbackCorrectAnswer(qId: number): string {
 
 router.get("/simulados", async (req, res): Promise<void> => {
   const simulados = await db.select().from(simuladosTable)
-    .where(eq(simuladosTable.userId, DEFAULT_USER_ID))
+    .where(eq(simuladosTable.userId, getUserId(req)))
     .orderBy(simuladosTable.createdAt);
 
   const results = await db.select().from(simuladoResultsTable)
-    .where(eq(simuladoResultsTable.userId, DEFAULT_USER_ID));
+    .where(eq(simuladoResultsTable.userId, getUserId(req)));
 
   const resultMap = new Map(results.map(r => [r.simuladoId, r]));
 
@@ -155,7 +155,7 @@ router.post("/simulados", async (req, res): Promise<void> => {
   const durationMinutes = Math.round(questionCount * 2.5);
 
   const [simulado] = await db.insert(simuladosTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     title: parsed.data.title,
     type: parsed.data.type,
     subject: parsed.data.subject ?? null,
@@ -180,7 +180,7 @@ router.post("/simulados", async (req, res): Promise<void> => {
 
 router.get("/simulados/recent-results", async (req, res): Promise<void> => {
   const results = await db.select().from(simuladoResultsTable)
-    .where(eq(simuladoResultsTable.userId, DEFAULT_USER_ID))
+    .where(eq(simuladoResultsTable.userId, getUserId(req)))
     .orderBy(simuladoResultsTable.completedAt);
 
   const enriched = await Promise.all(results.slice(-10).map(async r => {
@@ -211,7 +211,7 @@ router.get("/simulados/:id", async (req, res): Promise<void> => {
     return;
   }
   const [simulado] = await db.select().from(simuladosTable)
-    .where(and(eq(simuladosTable.id, params.data.id), eq(simuladosTable.userId, DEFAULT_USER_ID)));
+    .where(and(eq(simuladosTable.id, params.data.id), eq(simuladosTable.userId, getUserId(req))));
   if (!simulado) {
     res.status(404).json({ error: "Simulado não encontrado" });
     return;
@@ -255,7 +255,7 @@ router.post("/simulados/:id/start", async (req, res): Promise<void> => {
   const body = StartSimuladoBody.safeParse(req.body);
 
   const [simulado] = await db.select().from(simuladosTable)
-    .where(and(eq(simuladosTable.id, params.data.id), eq(simuladosTable.userId, DEFAULT_USER_ID)));
+    .where(and(eq(simuladosTable.id, params.data.id), eq(simuladosTable.userId, getUserId(req))));
   if (!simulado) {
     res.status(404).json({ error: "Simulado não encontrado" });
     return;
@@ -333,7 +333,7 @@ router.post("/simulados/:id/start", async (req, res): Promise<void> => {
 
   const [session] = await db.insert(examSessionsTable).values({
     simuladoId: simulado.id,
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     questionIds: examQuestions.map(q => q.id).filter(id => id > 0),
   }).returning();
 
@@ -368,7 +368,8 @@ router.post("/simulados/:id/submit", async (req, res): Promise<void> => {
     return;
   }
 
-  const [simulado] = await db.select().from(simuladosTable).where(eq(simuladosTable.id, params.data.id));
+  const [simulado] = await db.select().from(simuladosTable)
+    .where(and(eq(simuladosTable.id, params.data.id), eq(simuladosTable.userId, getUserId(req))));
   if (!simulado) {
     res.status(404).json({ error: "Simulado não encontrado" });
     return;
@@ -431,7 +432,7 @@ router.post("/simulados/:id/submit", async (req, res): Promise<void> => {
 
   const [result] = await db.insert(simuladoResultsTable).values({
     simuladoId: simulado.id,
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     score: rawScore,
     correctCount: correct,
     totalCount: total,
@@ -442,20 +443,20 @@ router.post("/simulados/:id/submit", async (req, res): Promise<void> => {
 
   await db.update(simuladosTable).set({ completedAt: new Date(), score: rawScore }).where(eq(simuladosTable.id, simulado.id));
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
-    await db.update(gamificationTable).set({ xp: g.xp + xpEarned }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+    await db.update(gamificationTable).set({ xp: g.xp + xpEarned }).where(eq(gamificationTable.userId, getUserId(req)));
   }
 
   await db.insert(performanceLogTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     xpEarned,
     minutesStudied: timeSpentMinutes,
     questionsCorrect: correct,
     questionsTotal: total,
   });
 
-  await incrementMissionProgress("simulado", 1);
+  await incrementMissionProgress("simulado", 1, getUserId(req));
 
   res.json(SubmitSimuladoResponse.parse({
     id: result.id,

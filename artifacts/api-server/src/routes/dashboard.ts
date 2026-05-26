@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { eq, gte, sql } from "drizzle-orm";
 import { db, gamificationTable, studySessionsTable, simuladoResultsTable, flashcardsTable, flashcardDecksTable, performanceLogTable } from "@workspace/db";
 import {
@@ -8,21 +9,20 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 router.get("/dashboard/summary", async (req, res): Promise<void> => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
 
   const sessions = await db.select().from(studySessionsTable)
-    .where(eq(studySessionsTable.userId, DEFAULT_USER_ID));
+    .where(eq(studySessionsTable.userId, getUserId(req)));
   const todaySessions = sessions.filter(s => s.createdAt >= today);
   const studyMinutesToday = todaySessions.reduce((acc, s) => acc + s.durationMinutes, 0);
 
   const results = await db.select().from(simuladoResultsTable)
-    .where(eq(simuladoResultsTable.userId, DEFAULT_USER_ID));
+    .where(eq(simuladoResultsTable.userId, getUserId(req)));
   const simuladosCompleted = results.length;
   const questionsAnsweredToday = results
     .filter(r => r.completedAt >= today)
@@ -30,7 +30,7 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
 
   const deckIds = await db.select({ id: flashcardDecksTable.id })
     .from(flashcardDecksTable)
-    .where(eq(flashcardDecksTable.userId, DEFAULT_USER_ID));
+    .where(eq(flashcardDecksTable.userId, getUserId(req)));
 
   const deckIdList = deckIds.map(d => d.id);
   let flashcardsReviewedToday = 0;
@@ -45,7 +45,7 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
   const weekLogs = await db.select().from(performanceLogTable)
-    .where(eq(performanceLogTable.userId, DEFAULT_USER_ID));
+    .where(eq(performanceLogTable.userId, getUserId(req)));
   const xpThisWeek = weekLogs
     .filter(l => l.date >= weekAgo)
     .reduce((acc, l) => acc + l.xpEarned, 0);
@@ -63,7 +63,7 @@ router.get("/dashboard/summary", async (req, res): Promise<void> => {
 
 router.get("/dashboard/performance", async (req, res): Promise<void> => {
   const logs = await db.select().from(performanceLogTable)
-    .where(eq(performanceLogTable.userId, DEFAULT_USER_ID));
+    .where(eq(performanceLogTable.userId, getUserId(req)));
 
   const byDate: Record<string, { xpEarned: number; minutesStudied: number; questionsCorrect: number; questionsTotal: number }> = {};
   for (const log of logs) {
@@ -85,7 +85,7 @@ router.get("/dashboard/performance", async (req, res): Promise<void> => {
 
 router.get("/dashboard/weak-subjects", async (req, res): Promise<void> => {
   const results = await db.select().from(simuladoResultsTable)
-    .where(eq(simuladoResultsTable.userId, DEFAULT_USER_ID));
+    .where(eq(simuladoResultsTable.userId, getUserId(req)));
 
   const subjectMap: Record<string, { correct: number; total: number }> = {};
   for (const r of results) {

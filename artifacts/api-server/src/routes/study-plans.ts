@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { incrementMissionProgress } from "./mission-progress.js";
 import { eq, and } from "drizzle-orm";
 import { db, studyPlansTable, studySessionsTable, gamificationTable, performanceLogTable } from "@workspace/db";
@@ -18,7 +19,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 function formatPlan(plan: typeof studyPlansTable.$inferSelect) {
   return {
@@ -35,7 +35,7 @@ function formatPlan(plan: typeof studyPlansTable.$inferSelect) {
 
 router.get("/study-plans", async (req, res): Promise<void> => {
   const plans = await db.select().from(studyPlansTable)
-    .where(eq(studyPlansTable.userId, DEFAULT_USER_ID))
+    .where(eq(studyPlansTable.userId, getUserId(req)))
     .orderBy(studyPlansTable.createdAt);
   res.json(GetStudyPlansResponse.parse(plans.map(formatPlan)));
 });
@@ -49,7 +49,7 @@ router.post("/study-plans", async (req, res): Promise<void> => {
   const { targetDate, ...rest } = parsed.data;
   const [plan] = await db.insert(studyPlansTable).values({
     ...rest,
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     ...(targetDate ? { targetDate: new Date(targetDate) } : {}),
   }).returning();
   res.status(201).json(GetStudyPlanResponse.parse(formatPlan(plan)));
@@ -62,7 +62,7 @@ router.get("/study-plans/:id", async (req, res): Promise<void> => {
     return;
   }
   const [plan] = await db.select().from(studyPlansTable)
-    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, DEFAULT_USER_ID)));
+    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, getUserId(req))));
   if (!plan) {
     res.status(404).json({ error: "Plano não encontrado" });
     return;
@@ -84,7 +84,7 @@ router.patch("/study-plans/:id", async (req, res): Promise<void> => {
   const { targetDate: td, ...restUpdate } = parsed.data;
   const [plan] = await db.update(studyPlansTable)
     .set({ ...restUpdate, ...(td !== undefined ? { targetDate: td ? new Date(td) : null } : {}) })
-    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, DEFAULT_USER_ID)))
+    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, getUserId(req))))
     .returning();
   if (!plan) {
     res.status(404).json({ error: "Plano não encontrado" });
@@ -100,14 +100,25 @@ router.delete("/study-plans/:id", async (req, res): Promise<void> => {
     return;
   }
   await db.delete(studyPlansTable)
-    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, DEFAULT_USER_ID)));
+    .where(and(eq(studyPlansTable.id, params.data.id), eq(studyPlansTable.userId, getUserId(req))));
   res.sendStatus(204);
 });
+
+async function assertPlanOwned(planId: number, userId: number): Promise<boolean> {
+  const [plan] = await db.select({ id: studyPlansTable.id })
+    .from(studyPlansTable)
+    .where(and(eq(studyPlansTable.id, planId), eq(studyPlansTable.userId, userId)));
+  return !!plan;
+}
 
 router.get("/study-plans/:id/sessions", async (req, res): Promise<void> => {
   const params = GetStudySessionsParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });
+    return;
+  }
+  if (!(await assertPlanOwned(params.data.id, getUserId(req)))) {
+    res.status(404).json({ error: "Plano não encontrado" });
     return;
   }
   const sessions = await db.select().from(studySessionsTable)
@@ -135,10 +146,14 @@ router.post("/study-plans/:id/sessions", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  if (!(await assertPlanOwned(params.data.id, getUserId(req)))) {
+    res.status(404).json({ error: "Plano não encontrado" });
+    return;
+  }
   const xpEarned = Math.floor(parsed.data.durationMinutes * 1.5);
   const [session] = await db.insert(studySessionsTable).values({
     planId: params.data.id,
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     subject: parsed.data.subject,
     durationMinutes: parsed.data.durationMinutes,
     notes: parsed.data.notes ?? null,
@@ -146,24 +161,24 @@ router.post("/study-plans/:id/sessions", async (req, res): Promise<void> => {
   }).returning();
 
   // Update gamification
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
     await db.update(gamificationTable).set({
       xp: g.xp + xpEarned,
       totalStudyMinutes: g.totalStudyMinutes + parsed.data.durationMinutes,
-    }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+    }).where(eq(gamificationTable.userId, getUserId(req)));
   }
 
   // Log performance
   await db.insert(performanceLogTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     xpEarned,
     minutesStudied: parsed.data.durationMinutes,
     questionsCorrect: 0,
     questionsTotal: 0,
   });
 
-  await incrementMissionProgress("study", 1);
+  await incrementMissionProgress("study", 1, getUserId(req));
 
   res.status(201).json({
     id: session.id,

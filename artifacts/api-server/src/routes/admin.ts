@@ -2,17 +2,20 @@ import { Router, type IRouter } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 import { requireAdmin } from "../middleware/requireAdmin";
+import { getUserId } from "../middleware/requireAuth";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
-// All routes here require admin role
-router.use(requireAdmin);
+// All routes here require admin role (which already enforces auth)
+// Only gate /admin/* paths — otherwise non-admin requests would 403 here
+// before falling through to other routers mounted alongside this one.
+router.use("/admin", requireAdmin);
 
 // GET /admin/stats — platform overview for admin dashboard
-router.get("/admin/stats", async (_req, res, next) => {
+router.get("/admin/stats", async (req, res, next) => {
   try {
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, 1));
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, getUserId(req)));
 
     // Subscription summary from stripe schema
     const subResult = await db.execute(sql`
@@ -77,9 +80,9 @@ router.get("/admin/stats", async (_req, res, next) => {
 });
 
 // GET /admin/user — current user details
-router.get("/admin/user", async (_req, res, next) => {
+router.get("/admin/user", async (req, res, next) => {
   try {
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, 1));
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, getUserId(req)));
     res.json({ user: user ?? null });
   } catch (err) {
     next(err);
@@ -107,7 +110,7 @@ router.patch("/admin/user", async (req, res, next) => {
     const [updated] = await db
       .update(usersTable)
       .set(updates)
-      .where(eq(usersTable.id, 1))
+      .where(eq(usersTable.id, getUserId(req)))
       .returning();
 
     logger.info({ updates }, "Admin updated user record");

@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { incrementMissionProgress } from "./mission-progress.js";
 import { eq, and, gte } from "drizzle-orm";
 import { db, flashcardDecksTable, flashcardsTable, gamificationTable } from "@workspace/db";
@@ -15,11 +16,10 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 router.get("/flashcards", async (req, res): Promise<void> => {
   const decks = await db.select().from(flashcardDecksTable)
-    .where(eq(flashcardDecksTable.userId, DEFAULT_USER_ID))
+    .where(eq(flashcardDecksTable.userId, getUserId(req)))
     .orderBy(flashcardDecksTable.createdAt);
 
   const deckData = await Promise.all(decks.map(async (deck) => {
@@ -47,7 +47,7 @@ router.post("/flashcards", async (req, res): Promise<void> => {
   }
   const [deck] = await db.insert(flashcardDecksTable).values({
     ...parsed.data,
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
   }).returning();
   res.status(201).json({
     id: deck.id,
@@ -60,10 +60,21 @@ router.post("/flashcards", async (req, res): Promise<void> => {
   });
 });
 
+async function assertDeckOwned(deckId: number, userId: number): Promise<boolean> {
+  const [deck] = await db.select({ id: flashcardDecksTable.id })
+    .from(flashcardDecksTable)
+    .where(and(eq(flashcardDecksTable.id, deckId), eq(flashcardDecksTable.userId, userId)));
+  return !!deck;
+}
+
 router.get("/flashcards/:deckId/cards", async (req, res): Promise<void> => {
   const params = GetFlashcardCardsParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });
+    return;
+  }
+  if (!(await assertDeckOwned(params.data.deckId, getUserId(req)))) {
+    res.status(404).json({ error: "Deck não encontrado" });
     return;
   }
   const cards = await db.select().from(flashcardsTable)
@@ -90,6 +101,10 @@ router.post("/flashcards/:deckId/cards", async (req, res): Promise<void> => {
   const parsed = CreateFlashcardBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  if (!(await assertDeckOwned(params.data.deckId, getUserId(req)))) {
+    res.status(404).json({ error: "Deck não encontrado" });
     return;
   }
   const [card] = await db.insert(flashcardsTable).values({
@@ -122,6 +137,10 @@ router.post("/flashcards/:deckId/cards/:cardId/review", async (req, res): Promis
     return;
   }
 
+  if (!(await assertDeckOwned(params.data.deckId, getUserId(req)))) {
+    res.status(404).json({ error: "Card não encontrado" });
+    return;
+  }
   const [card] = await db.select().from(flashcardsTable)
     .where(and(eq(flashcardsTable.id, params.data.cardId), eq(flashcardsTable.deckId, params.data.deckId)));
   if (!card) {
@@ -158,14 +177,14 @@ router.post("/flashcards/:deckId/cards/:cardId/review", async (req, res): Promis
   }).where(eq(flashcardsTable.id, params.data.cardId)).returning();
 
   const xpGained = q >= 5 ? 15 : q >= 4 ? 10 : q >= 2 ? 5 : 2;
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
     await db.update(gamificationTable).set({
       xp: g.xp + xpGained,
-    }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+    }).where(eq(gamificationTable.userId, getUserId(req)));
   }
 
-  await incrementMissionProgress("flashcard", 1);
+  await incrementMissionProgress("flashcard", 1, getUserId(req));
 
   res.json(ReviewFlashcardResponse.parse({
     id: updated.id,

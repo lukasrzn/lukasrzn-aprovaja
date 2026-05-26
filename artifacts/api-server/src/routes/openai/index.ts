@@ -1,7 +1,8 @@
 import { Router, type IRouter } from "express";
-import { eq, asc } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 import { db, conversations, messages } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { getUserId } from "../../middleware/requireAuth";
 import {
   ListOpenaiConversationsResponse,
   CreateOpenaiConversationBody,
@@ -45,8 +46,17 @@ Formatação:
 
 Lembre-se: você está aqui para ajudar o estudante a ser APROVADO. Cada resposta deve agregar valor real ao aprendizado.`;
 
+// Verify that conversation `id` belongs to `userId`. Returns the row or null.
+async function getOwnedConversation(id: number, userId: number) {
+  const [conv] = await db.select().from(conversations)
+    .where(and(eq(conversations.id, id), eq(conversations.userId, userId)));
+  return conv ?? null;
+}
+
 router.get("/openai/conversations", async (req, res): Promise<void> => {
-  const rows = await db.select().from(conversations).orderBy(asc(conversations.createdAt));
+  const rows = await db.select().from(conversations)
+    .where(eq(conversations.userId, getUserId(req)))
+    .orderBy(asc(conversations.createdAt));
   res.json(ListOpenaiConversationsResponse.parse(rows.map(r => ({
     id: r.id,
     title: r.title,
@@ -60,7 +70,10 @@ router.post("/openai/conversations", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const [conv] = await db.insert(conversations).values({ title: parsed.data.title }).returning();
+  const [conv] = await db.insert(conversations).values({
+    title: parsed.data.title,
+    userId: getUserId(req),
+  }).returning();
   res.status(201).json({
     id: conv.id,
     title: conv.title,
@@ -70,7 +83,7 @@ router.post("/openai/conversations", async (req, res): Promise<void> => {
 
 router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
   const id = Number(req.params.id);
-  const [conv] = await db.select().from(conversations).where(eq(conversations.id, id));
+  const conv = await getOwnedConversation(id, getUserId(req));
   if (!conv) {
     res.status(404).json({ error: "Conversa não encontrada" });
     return;
@@ -92,7 +105,7 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
 
 router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
   const id = Number(req.params.id);
-  const [conv] = await db.select().from(conversations).where(eq(conversations.id, id));
+  const conv = await getOwnedConversation(id, getUserId(req));
   if (!conv) {
     res.status(404).json({ error: "Conversa não encontrada" });
     return;
@@ -104,6 +117,11 @@ router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
 
 router.get("/openai/conversations/:id/messages", async (req, res): Promise<void> => {
   const id = Number(req.params.id);
+  const conv = await getOwnedConversation(id, getUserId(req));
+  if (!conv) {
+    res.status(404).json({ error: "Conversa não encontrada" });
+    return;
+  }
   const msgs = await db.select().from(messages).where(eq(messages.conversationId, id)).orderBy(asc(messages.createdAt));
   res.json(ListOpenaiMessagesResponse.parse(msgs.map(m => ({
     id: m.id,
@@ -122,7 +140,7 @@ router.post("/openai/conversations/:id/messages", async (req, res): Promise<void
     return;
   }
 
-  const [conv] = await db.select().from(conversations).where(eq(conversations.id, id));
+  const conv = await getOwnedConversation(id, getUserId(req));
   if (!conv) {
     res.status(404).json({ error: "Conversa não encontrada" });
     return;

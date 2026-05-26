@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { incrementMissionProgress } from "./mission-progress.js";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { db, redacoesTable, gamificationTable } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 async function generateAiFeedback(theme: string, content: string) {
   const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
@@ -103,7 +103,7 @@ Responda SOMENTE com JSON válido:
 
 router.get("/redacoes", async (req, res): Promise<void> => {
   const redacoes = await db.select().from(redacoesTable)
-    .where(eq(redacoesTable.userId, DEFAULT_USER_ID))
+    .where(eq(redacoesTable.userId, getUserId(req)))
     .orderBy(redacoesTable.createdAt);
 
   res.json(GetRedacoesResponse.parse(redacoes.map(r => ({
@@ -129,7 +129,7 @@ router.post("/redacoes", async (req, res): Promise<void> => {
   const xpEarned = Math.floor(score / 20);
 
   const [redacao] = await db.insert(redacoesTable).values({
-    userId: DEFAULT_USER_ID,
+    userId: getUserId(req),
     theme: parsed.data.theme,
     content: parsed.data.content,
     score,
@@ -138,12 +138,12 @@ router.post("/redacoes", async (req, res): Promise<void> => {
     competencias,
   }).returning();
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
   if (g) {
-    await db.update(gamificationTable).set({ xp: g.xp + xpEarned }).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+    await db.update(gamificationTable).set({ xp: g.xp + xpEarned }).where(eq(gamificationTable.userId, getUserId(req)));
   }
 
-  await incrementMissionProgress("redacao", 1);
+  await incrementMissionProgress("redacao", 1, getUserId(req));
 
   res.status(201).json({
     id: redacao.id,
@@ -164,7 +164,7 @@ router.get("/redacoes/:id", async (req, res): Promise<void> => {
     return;
   }
   const [redacao] = await db.select().from(redacoesTable)
-    .where(eq(redacoesTable.id, params.data.id));
+    .where(and(eq(redacoesTable.id, params.data.id), eq(redacoesTable.userId, getUserId(req))));
   if (!redacao) {
     res.status(404).json({ error: "Redação não encontrada" });
     return;

@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { getUserId } from "../middleware/requireAuth";
 import { eq, inArray } from "drizzle-orm";
 import { db, gamificationTable, simuladoResultsTable, questionsTable } from "@workspace/db";
 import {
@@ -6,7 +7,6 @@ import {
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();
-const DEFAULT_USER_ID = 1;
 
 const ENEM_WEIGHTS: Record<string, number> = {
   "Matemática": 90,
@@ -124,8 +124,8 @@ function buildRecommendations(
 router.get("/study-today/recommendation", async (req, res): Promise<void> => {
   const refresh = req.query.refresh === "true";
 
-  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
-  const results = await db.select().from(simuladoResultsTable).where(eq(simuladoResultsTable.userId, DEFAULT_USER_ID));
+  const [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, getUserId(req)));
+  const results = await db.select().from(simuladoResultsTable).where(eq(simuladoResultsTable.userId, getUserId(req)));
 
   const subjectScores: Record<string, { correct: number; total: number }> = {};
   for (const r of results) {

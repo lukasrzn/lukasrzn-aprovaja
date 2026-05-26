@@ -45,8 +45,11 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
   const isPostPayment = new URLSearchParams(window.location.search).get("plano") === "ativo";
   const [retryCount, setRetryCount] = useState(0);
 
-  // Check session role first — admin users bypass subscription entirely
+  // Check session first — must be authenticated
   const { data: session, isLoading: isSessionLoading } = useSession();
+  const isAuthed = session?.authenticated === true;
+
+  // Only fetch subscription if authenticated (otherwise API will 401)
   const { data, isLoading: isSubLoading, isError, refetch } = useSubscription();
 
   const isAdmin = session?.isAdmin === true;
@@ -88,6 +91,11 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
     );
   }
 
+  // Not authenticated → login page
+  if (!isAuthed) {
+    return <Redirect to="/login" />;
+  }
+
   // Admins always get in regardless of subscription status
   if (isAdmin) {
     return (
@@ -109,6 +117,20 @@ function SubscriptionGuard({ component: Component }: { component: React.Componen
   );
 }
 
+function AdminGuard({ component: Component }: { component: React.ComponentType }) {
+  const { data: session, isLoading } = useSession();
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!session?.authenticated) return <Redirect to="/login" />;
+  if (!session.isAdmin) return <Redirect to="/dashboard" />;
+  return <Component />;
+}
+
 function Router() {
   return (
     <Switch>
@@ -119,7 +141,7 @@ function Router() {
       <Route path="/sucesso" component={Sucesso} />
       <Route path="/recuperar-senha" component={RecuperarSenha} />
       <Route path="/recuperar-senha/redefinir" component={RedefinirSenha} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin"><AdminGuard component={Admin} /></Route>
       <Route path="/politica-de-privacidade" component={PoliticaDePrivacidade} />
       <Route path="/termos-de-servico" component={TermosDeServico} />
 

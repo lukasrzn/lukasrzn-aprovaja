@@ -1,11 +1,33 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import { pool } from "@workspace/db";
+
+// Pre-create the session table ourselves so we don't rely on
+// connect-pg-simple's bundled table.sql (which esbuild can't bundle).
+async function ensureSessionTable(): Promise<void> {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS "user_sessions" (
+      "sid"    varchar      NOT NULL COLLATE "default",
+      "sess"   json         NOT NULL,
+      "expire" timestamp(6) NOT NULL,
+      CONSTRAINT "user_sessions_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+    ) WITH (OIDS=FALSE);
+    CREATE INDEX IF NOT EXISTS "IDX_user_sessions_expire" ON "user_sessions" ("expire");
+  `);
+}
+void ensureSessionTable().catch((err) => {
+  logger.error({ err }, "Failed to ensure user_sessions table exists");
+});
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { WebhookHandlers } from "./webhookHandlers";
 
 const app: Express = express();
+
+app.set("trust proxy", 1);
 
 app.use(
   pinoHttp({
@@ -56,9 +78,35 @@ app.post(
   },
 );
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware — must come AFTER body parsers, BEFORE routes
+const PgStore = connectPgSimple(session);
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error("SESSION_SECRET environment variable is required.");
+}
+app.use(
+  session({
+    store: new PgStore({
+      pool,
+      tableName: "user_sessions",
+      createTableIfMissing: false,
+    }),
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+  }),
+);
 
 app.use("/api", router);
 

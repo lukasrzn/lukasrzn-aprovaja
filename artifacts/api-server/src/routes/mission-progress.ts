@@ -1,16 +1,14 @@
 import { and, eq, gte, lt, sql } from "drizzle-orm";
 import { db, missionsTable, gamificationTable } from "@workspace/db";
 
-const DEFAULT_USER_ID = 1;
-
 /**
- * Increment progress on today's missions of a given type.
+ * Increment progress on today's missions of a given type for a specific user.
  * Auto-awards XP/coins when a mission reaches its target.
  */
 export async function incrementMissionProgress(
   type: string,
-  amount = 1,
-  userId = DEFAULT_USER_ID,
+  amount: number,
+  userId: number,
 ): Promise<void> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);

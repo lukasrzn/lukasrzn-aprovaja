@@ -8,10 +8,9 @@ import {
   GetGamificationStatsResponse,
   GetMedalsResponse,
 } from "@workspace/api-zod";
+import { getUserId } from "../middleware/requireAuth";
 
 const router: IRouter = Router();
-
-const DEFAULT_USER_ID = 1;
 
 function calcLevel(xp: number): number {
   return Math.floor(Math.sqrt(xp / 100)) + 1;
@@ -24,14 +23,11 @@ function calcXpToNextLevel(xp: number): number {
 }
 
 router.get("/users/me", async (req, res): Promise<void> => {
-  let [user] = await db.select().from(usersTable).where(eq(usersTable.id, DEFAULT_USER_ID));
+  const userId = getUserId(req);
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   if (!user) {
-    [user] = await db.insert(usersTable).values({
-      name: "Estudante AprovaJá",
-      email: "estudante@aprovaja.com.br",
-      goal: "ENEM 2026",
-    }).returning();
-    await db.insert(gamificationTable).values({ userId: user.id });
+    res.status(404).json({ error: "Usuário não encontrado." });
+    return;
   }
   res.json(GetMeResponse.parse({
     id: user.id,
@@ -46,6 +42,7 @@ router.get("/users/me", async (req, res): Promise<void> => {
 });
 
 router.patch("/users/me", async (req, res): Promise<void> => {
+  const userId = getUserId(req);
   const parsed = UpdateMeBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -53,7 +50,7 @@ router.patch("/users/me", async (req, res): Promise<void> => {
   }
   const [user] = await db.update(usersTable)
     .set(parsed.data)
-    .where(eq(usersTable.id, DEFAULT_USER_ID))
+    .where(eq(usersTable.id, userId))
     .returning();
   if (!user) {
     res.status(404).json({ error: "Usuário não encontrado" });
@@ -71,12 +68,13 @@ router.patch("/users/me", async (req, res): Promise<void> => {
 });
 
 router.get("/gamification/stats", async (req, res): Promise<void> => {
-  let [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, DEFAULT_USER_ID));
+  const userId = getUserId(req);
+  let [g] = await db.select().from(gamificationTable).where(eq(gamificationTable.userId, userId));
   if (!g) {
-    [g] = await db.insert(gamificationTable).values({ userId: DEFAULT_USER_ID }).returning();
+    [g] = await db.insert(gamificationTable).values({ userId }).returning();
   }
   const medals = await db.select().from(medalsTable)
-    .where(eq(medalsTable.userId, DEFAULT_USER_ID));
+    .where(eq(medalsTable.userId, userId));
   const medalsEarned = medals.filter(m => m.earned === "true").length;
   res.json(GetGamificationStatsResponse.parse({
     xp: g.xp,
@@ -91,8 +89,9 @@ router.get("/gamification/stats", async (req, res): Promise<void> => {
 });
 
 router.get("/gamification/medals", async (req, res): Promise<void> => {
+  const userId = getUserId(req);
   const medals = await db.select().from(medalsTable)
-    .where(eq(medalsTable.userId, DEFAULT_USER_ID));
+    .where(eq(medalsTable.userId, userId));
   res.json(GetMedalsResponse.parse(medals.map(m => ({
     id: m.id,
     name: m.name,

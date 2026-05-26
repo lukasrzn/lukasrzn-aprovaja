@@ -1,16 +1,10 @@
 import { db, usersTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 
-const DEFAULT_USER_ID = 1;
-
 export class StripeStorage {
   async getUserById(id: number) {
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, id));
     return user ?? null;
-  }
-
-  async getDefaultUser() {
-    return this.getUserById(DEFAULT_USER_ID);
   }
 
   async updateUserStripeInfo(userId: number, info: {
