@@ -28,7 +28,7 @@ async function sendResetEmail(toEmail: string, resetUrl: string): Promise<void> 
   const response = await connectors.proxy("resend", "/emails", {
     method: "POST",
     body: JSON.stringify({
-      from: "AprovaJá <noreply@aprovaja.com.br>",
+      from: "AprovaJá <noreply@aprovaja.api.br>",
       to: [toEmail],
       subject: "Recuperação de Senha — AprovaJá",
       html: `
