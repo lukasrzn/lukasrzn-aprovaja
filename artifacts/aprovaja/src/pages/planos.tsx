@@ -80,9 +80,16 @@ export default function Planos() {
     try {
       const resp = await fetch("/api/stripe/checkout", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planSlug: planId, cancelPath: "/planos" }),
       });
+
+      if (resp.status === 401) {
+        // Logged-out user — route to login/register and resume checkout after sign-in.
+        navigate(`/login?checkout=${planId}`);
+        return;
+      }
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));

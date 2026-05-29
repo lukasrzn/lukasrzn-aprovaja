@@ -37,7 +37,11 @@ export default function Login() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"pro" | "premium" | null>(null);
+  const initialPlan = (() => {
+    const p = new URLSearchParams(search).get("checkout");
+    return p === "pro" || p === "premium" ? p : null;
+  })();
+  const [selectedPlan, setSelectedPlan] = useState<"pro" | "premium" | null>(initialPlan);
 
   useEffect(() => {
     const params = new URLSearchParams(search);
@@ -75,6 +79,32 @@ export default function Login() {
       }
       // Invalidate caches so app refetches with new identity
       await queryClient.invalidateQueries();
+
+      // If the user came here trying to subscribe (redirected from a checkout
+      // attempt while logged out), resume that checkout instead of going to the
+      // dashboard.
+      const pendingPlan = new URLSearchParams(search).get("checkout");
+      if (pendingPlan === "pro" || pendingPlan === "premium") {
+        // Login already succeeded — isolate the checkout resume so any failure
+        // here (network/runtime) never surfaces as a login error; we simply
+        // fall through to the dashboard instead of stranding the user.
+        try {
+          const checkoutResp = await fetch("/api/stripe/checkout", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ planSlug: pendingPlan, cancelPath: "/planos" }),
+          });
+          const checkoutData = await checkoutResp.json().catch(() => ({}));
+          if (checkoutResp.ok && checkoutData.url) {
+            (window.top ?? window).location.href = checkoutData.url;
+            return;
+          }
+        } catch {
+          // Ignore — fall through to the dashboard below.
+        }
+      }
+
       toast({ title: "Bem-vindo de volta!", description: "Seu cockpit de estudos está pronto." });
       setLocation("/dashboard");
     } catch (err: any) {

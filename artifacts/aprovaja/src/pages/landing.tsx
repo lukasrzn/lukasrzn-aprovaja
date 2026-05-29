@@ -14,9 +14,16 @@ import {
 async function startCheckout(planSlug: "pro" | "premium"): Promise<string> {
   const resp = await fetch("/api/stripe/checkout", {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ planSlug, cancelPath: "/planos" }),
   });
+  if (resp.status === 401) {
+    // Not logged in — signal the caller to route to login/register.
+    const e = new Error("AUTH_REQUIRED") as Error & { authRequired?: boolean };
+    e.authRequired = true;
+    throw e;
+  }
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
     throw new Error((err as any).error ?? `Erro ${resp.status}`);
@@ -60,6 +67,12 @@ export default function Landing() {
       redirectToCheckout(url);
     } catch (err: unknown) {
       setCheckoutLoading(null);
+      // Logged-out users must authenticate first — send them to login/register
+      // with the chosen plan so checkout resumes automatically after sign-in.
+      if (err instanceof Error && (err as Error & { authRequired?: boolean }).authRequired) {
+        navigate(`/login?checkout=${plan}`);
+        return;
+      }
       toast({
         title: "Erro ao iniciar pagamento",
         description: err instanceof Error ? err.message : "Tente novamente em instantes.",
