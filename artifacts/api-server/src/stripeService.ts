@@ -126,9 +126,13 @@ export class StripeService {
     let customerId = await this.getOrCreateCustomer(userId, user.email);
 
     const buildParams = (cid: string): Stripe.Checkout.SessionCreateParams => {
+      // Omitting `payment_method_types` lets Stripe Checkout show the methods
+      // enabled in the Dashboard, automatically filtered by mode:
+      // - subscription (Pro): only recurring-capable methods (card) are offered.
+      // - payment (Vitalício): card + Pix + Boleto (if enabled in Dashboard).
+      // Pix/Boleto cannot be used for recurring subscriptions — that's a Stripe rule.
       const base: Stripe.Checkout.SessionCreateParams = {
         customer: cid,
-        payment_method_types: ['card'],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: cfg.billingType === 'subscription' ? 'subscription' : 'payment',
         success_url: successUrl,
@@ -142,6 +146,9 @@ export class StripeService {
           metadata: { userId: String(userId), plan: planSlug },
         };
       } else {
+        // Boleto requires the payer's full billing address + CPF, which Stripe
+        // Checkout collects automatically once Boleto is an available method.
+        base.billing_address_collection = 'required';
         base.payment_intent_data = {
           metadata: { userId: String(userId), plan: planSlug, billing_type: 'lifetime' },
         };
